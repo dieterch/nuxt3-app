@@ -1,0 +1,24 @@
+{
+  "name": "nuxt-app",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "seed": "node prisma/seed.js"
+  },
+  "dependencies": {
+    "@mdi/font": "^7.4.47",
+    "@prisma/client": "^5.19.0",
+    "nuxt": "^3.13.0",
+    "vite-plugin-vuetify": "^2.0.4",
+    "vue": "latest",
+    "vuetify": "^3.7.1"
+  },
+  "devDependencies": {
+    "prisma": "^5.19.0"
+  }
+}

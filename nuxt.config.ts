@@ -11,12 +11,26 @@ export default defineNuxtConfig({
   },
   css: ['@mdi/font/css/materialdesignicons.min.css'],
   vite: {
+    build: {
+      target: 'esnext'
+    },
+    resolve: {
+      alias: {
+        'vite': 'vite/dist/node/esm.js', // Force ESM version of Vite
+      },
+      extensions: ['.js', '.ts', '.mjs'],
+    },
+    optimizeDeps: {
+      esbuildOptions: {
+        format: 'esm', // Force Vite to handle modules as ESM
+      },
+    },
     plugins: [
       vuetify(),
     ],
-    define: {
-      'process.env.DEBUG': false,
-    },
+    // define: {
+    //  'process.env.DEBUG': false,
+    // },
   },
   plugins: ['@/plugins/vuetify'],  
 })

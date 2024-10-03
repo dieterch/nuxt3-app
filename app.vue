@@ -6,44 +6,37 @@
 </template-->
 
 <template>
-  <v-container>
-    <v-row>
-      <v-col>
-        <v-data-table :headers="user_headers" :items="users"></v-data-table>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col>
-        <v-data-table :headers="expense_headers" :items="expenses"></v-data-table>
-      </v-col>
-    </v-row>
-  </v-container>
+  <v-app>
+
+    <v-app-bar app color="primary" dark>
+      <v-toolbar-title>Expense Management</v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-btn text to="/">Home</v-btn>
+      <v-btn text to="/dialogtrips">Dialog Trips</v-btn>
+      <v-btn text to="/trips">Trips</v-btn>
+      <v-btn text to="/expenses">Expenses</v-btn>
+      <v-btn text to="/users">Users</v-btn>
+      <v-btn text to="/categories">Categories</v-btn>
+      </v-app-bar>
+      
+      <v-main>
+        <nuxt-page />
+      </v-main>
+
+      <v-footer app>
+        <v-spacer></v-spacer>
+        <v-col class="text-center">
+          &copy; {{ new Date().getFullYear() }} - Expense Management
+        </v-col>
+        <v-spacer></v-spacer>
+      </v-footer>
+
+    </v-app>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-
-const users = ref([])
-const expenses = ref([])
-
-onMounted(async () => {
-  users.value = await $fetch('/api/users')
-  expenses.value = await $fetch('/api/expenses')
-})
-
-const user_headers_no = [
-  { text: 'ID', value: 'id' },
-  { text: 'Name', value: 'name' },
-  { text: 'Email', value: 'email' },
-]
-
-const expense_headers_no = [
-  { text: 'ID', value: 'id' },
-  { text: 'Date', value: 'date' },
-  { text: 'Trip', value: 'tripid' },
-  { text: 'Description', value: 'description' },
-  { text: 'Amount', value: 'amount' },
-  { text: 'Currency', value: 'currency' },
-]
-
 </script>
+
+<style>
+/* Falls nötig, hier zusätzliche globale Stile hinzufügen */
+</style>

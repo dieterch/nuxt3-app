@@ -6,9 +6,6 @@ import vuetify from 'vite-plugin-vuetify'
 export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
   devtools: { enabled: true },
-  alias: {
-    '@prisma': '/usr/local/src/prog/node/nuxt3-app/prisma',
-  },
   build: {
     transpile: ['vuetify'],
   },

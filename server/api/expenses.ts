@@ -1,7 +1,7 @@
-// server/api/users.ts
+// server/api/expenses.ts
 import prisma from '~/prisma/client.js'
 
 export default defineEventHandler(async (event) => {
-  const users = await prisma.user.findMany()
-  return users
+  const expenses = await prisma.expense.findMany()
+  return expenses
 })

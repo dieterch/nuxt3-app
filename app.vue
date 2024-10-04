@@ -12,12 +12,12 @@
       <v-toolbar-title>Expense Management</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn text to="/">Home</v-btn>
-      <v-btn text to="/dialogtrips">Dialog Trips</v-btn>
-      <v-btn text to="/trips">Trips</v-btn>
+      <v-btn text to="/dialogtrips">Trips</v-btn>
+      <v-btn text to="/dialogusers">Users</v-btn>
+      <v-btn text to="/dialogcategories">Categories</v-btn>
+      <v-btn text to="/dialogexpenses">Dialog Expenses</v-btn>
       <v-btn text to="/expenses">Expenses</v-btn>
-      <v-btn text to="/users">Users</v-btn>
-      <v-btn text to="/categories">Categories</v-btn>
-      </v-app-bar>
+    </v-app-bar>
       
       <v-main>
         <nuxt-page />

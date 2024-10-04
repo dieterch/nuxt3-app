@@ -63,16 +63,7 @@ async function main() {
     },
   });
 
-  // Prozentuale Aufteilung der Tripkosten auf die Benutzer
-  await prisma.tripShare.createMany({
-    data: [
-      { tripId: trip1.id, userId: user1.id, percentage: 33.33 },
-      { tripId: trip1.id, userId: user2.id, percentage: 33.33 },
-      { tripId: trip1.id, userId: user3.id, percentage: 33.34 },
-    ],
-  });
-
-  // Ausgaben erstellen (keine Beträge für einzelne Shares mehr nötig)
+  // Ausgaben erstellen und aufteilen
 
   // Beispiel 1: Hotel-Ausgabe
   const expense1 = await prisma.expense.create({
@@ -85,6 +76,13 @@ async function main() {
       description: 'Hotel for 3 nights',
       tripId: trip1.id,
       userId: user1.id, // Alice hat diese Ausgabe getätigt
+      shares: {
+        create: [
+          { userId: user1.id, amount: 100.0 },
+          { userId: user2.id, amount: 100.0 },
+          { userId: user3.id, amount: 100.0 },
+        ],
+      },
     },
   });
 
@@ -99,6 +97,13 @@ async function main() {
       description: 'Dinner at a restaurant',
       tripId: trip1.id,
       userId: user2.id, // Bob hat diese Ausgabe getätigt
+      shares: {
+        create: [
+          { userId: user1.id, amount: 50.0 },  // Alice zahlt 50 EUR
+          { userId: user2.id, amount: 75.0 },  // Bob zahlt 75 EUR
+          { userId: user3.id, amount: 25.0 },  // Carol zahlt 25 EUR
+        ],
+      },
     },
   });
 
@@ -117,14 +122,6 @@ async function main() {
     },
   });
 
-  // Prozentuale Aufteilung der Tripkosten auf die Benutzer (Trip 2)
-  await prisma.tripShare.createMany({
-    data: [
-      { tripId: trip2.id, userId: user1.id, percentage: 50.0 },
-      { tripId: trip2.id, userId: user3.id, percentage: 50.0 },
-    ],
-  });
-
   const expense3 = await prisma.expense.create({
     data: {
       amount: 200.0,
@@ -135,10 +132,16 @@ async function main() {
       description: 'Train tickets',
       tripId: trip2.id,
       userId: user3.id, // Carol hat diese Ausgabe getätigt
+      shares: {
+        create: [
+          { userId: user1.id, amount: 100.0 }, // Alice zahlt 100 JPY
+          { userId: user3.id, amount: 100.0 }, // Carol zahlt 100 JPY
+        ],
+      },
     },
   });
 
-  console.log('Seed data with categories and trips created successfully!');
+  console.log('Seed data with categories created successfully!');
 }
 
 main()

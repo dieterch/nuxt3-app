@@ -1,8 +1,14 @@
 <template>
     <v-container>
         <h2>Manage Trips</h2>
+      <v-row>
+            <v-col>
+                <v-data-table :items="dialogtrips"></v-data-table>
+            </v-col>
+      </v-row>
+      <v-divider></v-divider>
         <!-- Hier fügst du das Formular für Trips ein-->
-      <v-form v-model="isFormValid" ref="form">
+        <v-form v-model="isFormValid" ref="form">
         <v-text-field label="Trip Name" v-model="dialogtrip.name" :rules="nameRules" required></v-text-field>
         <v-row>
             <v-col>
@@ -25,20 +31,7 @@
   
         <v-btn @click="submitForm">Add Trip</v-btn>
       </v-form>
-      <v-divider></v-divider>
-        <v-row>
-            <v-col>
-                <v-data-table :items="dialogtrips"></v-data-table>
-            </v-col>
-        </v-row>
-      <!--v-list>
-        <v-list-item v-for="ltrip in dialogtrips" :key="dialogtrip.id">
-          <v-list-item-content>
-            <v-list-item-title>{{ ltrip.name }}</v-list-item-title>
-            <v-list-item-subtitle>{{ ltrip.startDate }} - {{ ltrip.endDate }}</v-list-item-subtitle>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list-->
+
     </v-container>
   </template>
   

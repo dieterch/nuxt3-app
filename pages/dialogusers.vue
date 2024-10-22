@@ -3,7 +3,31 @@
         <h2>Manage Users</h2>
       <v-row>
         <v-col>
-          <v-data-table :items="dialogusers"></v-data-table>
+          <v-data-table 
+            :items="dialogusers"
+            :headers="users_header"
+            density="compact"
+            hide-default-footer
+            hide-default-header
+          >
+          <template v-slot:item="row">
+                    <tr>
+                      <td> {{ row.item.name }} </td>
+                      <td> {{ row.item.email }} </td>
+                      <td>
+                        <v-btn
+                          class="ma-2"
+                          rounded="0"
+                          size="x-small" 
+                          color="grey"
+                          elevation="8"
+                          @click="deleteUser(row.item)"
+                          icon="mdi-delete">
+                        </v-btn>
+                      </td>
+                    </tr>
+                  </template>
+          </v-data-table>
         </v-col>
       </v-row>
       <v-divider></v-divider>
@@ -49,6 +73,20 @@
     const { data } = await useFetch('/api/dialogusers')
     dialogusers.value = data.value
   }
+
+  const deleteUser = async (item) => {
+    await $fetch('/api/dialogusers', {
+      method: 'DELETE',
+      body: item
+    })
+    const { data } = await useFetch('/api/dialogusers')
+    dialogusers.value = data.value
+  }
+
+  const users_header = [
+    { title: 'Name', key: 'name', align: 'start' },
+    { title: 'Email', key: 'email', align: 'start' },
+  ]
 
   </script>
   

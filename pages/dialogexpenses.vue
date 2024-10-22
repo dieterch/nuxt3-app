@@ -69,14 +69,14 @@
             ></v-text-field>
           </v-col>
   
-          <!-- Date Picker -->
+          <!-- Date Input -->
           <v-col cols="12" md="6">
-            <v-date-picker
+            <v-date-input
               v-model="formData.date"
               label="Expense Date"
               required
               :rules="[v => !!v || 'Date is required']"
-            ></v-date-picker>
+            ></v-date-input>
           </v-col>
         </v-row>
   

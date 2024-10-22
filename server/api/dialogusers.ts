@@ -11,5 +11,20 @@ export default defineEventHandler(async (event) => {
       data: body,
     })
   }
+
+  if (event.node.req.method === 'DELETE') {
+    const body = await readBody(event) // Verwende readBody statt useBody
+
+    // finally delete the trip
+    const user = await prisma.user.delete({
+      where: {
+        id: body.id
+      }
+    })
+    console.log(
+      "\nUser", user,
+    '\ndeleted.')
+  }
+
 })
 

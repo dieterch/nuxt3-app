@@ -2,8 +2,14 @@ import prisma from '~/prisma/client.js'
 
 export default defineEventHandler(async (event) => {
   if (event.node.req.method === 'GET') {
-    return await prisma.user.findMany()
- }
+    return await prisma.user.findMany({
+      include: {
+        trips:true,
+        expenses:true,
+        shares:true
+      }
+    })
+  }
 
   if (event.node.req.method === 'POST') {
     const body = await readBody(event) // Verwende readBody statt useBody

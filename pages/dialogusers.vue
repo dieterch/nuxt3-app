@@ -30,7 +30,10 @@
           </v-data-table>
         </v-col>
       </v-row>
-      <v-divider></v-divider>
+      <v-divider
+        color="black"
+        thickness="1"
+      ></v-divider>
         <!-- Hier fügst du das Formular für Users ein-->
         <v-form v-model="isFormValid" ref="form">
         <v-text-field label="User Name" v-model="dialoguser.name" :rules="nameRules" required></v-text-field>

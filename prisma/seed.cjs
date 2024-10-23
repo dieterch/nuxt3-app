@@ -7,21 +7,28 @@ async function main() {
   const hotelCategory = await prisma.category.create({
     data: {
       name: 'Hotel',
-      icon: '🏨',
+      icon: 'mdi-bed',
     },
   });
 
   const restaurantCategory = await prisma.category.create({
     data: {
       name: 'Restaurant',
-      icon: '🍽️',
+      icon: 'mdi-silverware-fork-knife',
     },
   });
 
   const transportationCategory = await prisma.category.create({
     data: {
       name: 'Transportation',
-      icon: '🚆',
+      icon: 'mdi-train-car',
+    },
+  });
+
+  const winterCategory = await prisma.category.create({
+    data: {
+      name: 'Winter',
+      icon: 'mdi-snowflake-thermometer',
     },
   });
 
@@ -78,7 +85,7 @@ async function main() {
   const expense1 = await prisma.expense.create({
     data: {
       amount: 300.0,
-      currency: 'EUR',
+      currency: '€',
       date: new Date('2024-09-02'),
       location: 'Paris',
       categoryId: hotelCategory.id, // Kategorie: Hotel
@@ -92,7 +99,7 @@ async function main() {
   const expense2 = await prisma.expense.create({
     data: {
       amount: 150.0,
-      currency: 'EUR',
+      currency: '€',
       date: new Date('2024-09-03'),
       location: 'Paris',
       categoryId: restaurantCategory.id, // Kategorie: Restaurant
@@ -128,7 +135,7 @@ async function main() {
   const expense3 = await prisma.expense.create({
     data: {
       amount: 200.0,
-      currency: 'JPY',
+      currency: '¥',
       date: new Date('2024-10-07'),
       location: 'Tokyo',
       categoryId: transportationCategory.id, // Kategorie: Transport

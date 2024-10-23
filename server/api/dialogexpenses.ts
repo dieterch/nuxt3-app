@@ -1,4 +1,4 @@
-// server/api/expenses.ts
+// server/api/dialogexpenses.ts
 import prisma from '~/prisma/client.js'
 
 export default defineEventHandler(async (event) => {

@@ -2,7 +2,16 @@
     <v-container>
         <v-row>
             <v-col>
-                <v-data-table :items="expenses"></v-data-table>
+                <v-data-table 
+                    :items="expenses"
+                    :headers="expense_headers"
+                    density="compact"
+                    hide-default-footer
+                >
+                  <template v-slot:item.category.icon="{ item }">
+                    <v-icon :icon=item.category.icon></v-icon>
+                  </template>              
+                </v-data-table>
             </v-col>
         </v-row>
     </v-container>
@@ -18,13 +27,15 @@ onMounted(async () => {
   expenses.value = await $fetch('/api/expenses')
 })
 
-const expense_headers_no = [
-  { text: 'ID', value: 'id' },
-  { text: 'Date', value: 'date' },
-  { text: 'Trip', value: 'tripid' },
-  { text: 'Description', value: 'description' },
-  { text: 'Amount', value: 'amount' },
-  { text: 'Currency', value: 'currency' },
+const expense_headers = [
+  { title: 'Date', key: 'formateddate', value: item => new Date(item.date).toLocaleDateString()},
+  { title: 'Trip', key: 'trip.name' },
+  { title: 'Cat', key: 'category.icon', width: "5%", align: "left" },
+  { title: 'Description', key: 'description', width: "30%", align: "left" },
+  { title: 'Expense', 
+    key: 'expense',
+    value: item => `${item.amount} ${item.currency}`},
+  { title: 'User', key: 'user.name' },
 ]
 
 </script>

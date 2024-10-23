@@ -8,8 +8,6 @@
           :headers="tripsHeaders"
           density="compact"
           hide-default-footer
-
-          select-strategy="single"
         >
           <template v-slot:item.startDate="{ item }">
             {{ new Date(item.startDate).toLocaleDateString() }}
@@ -21,6 +19,8 @@
           </template>
           <template v-slot:item.actions="{ item }">
             <v-btn
+              class="ma-2"
+              rounded="0"
               size="x-small"
               color="grey"
               elevation="2"
@@ -98,6 +98,15 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <v-btn
+            text="Debug"
+            color="surface"
+            class="ml-2 mt-2"
+            variant="flat"
+            @click="debug = !debug"
+          ></v-btn>
+      <pre v-if="debug">{{ dialogtrips }}</pre>
   </v-container>
 </template>
 
@@ -118,20 +127,21 @@ const selected = ref([]) // Keep track of selected users
 const isFormValid = ref(false)
 const isDialogOpen = ref(false)
 const userError = ref(false) // Error for user selection
+const debug = ref(false)
 
 // Validation Rules
 const nameRules = [v => !!v || 'Name is required']
 
 // Data Table Headers
 const tripsHeaders = [
-  { text: 'Start Date', value: 'startDate' },
-  { text: 'Trip Name', value: 'name' },
-  { text: 'Participants', value: 'users' },
-  { text: 'Actions', value: 'actions', sortable: false },
+  { title: 'Start Date', key: 'startDate' },
+  { title: 'Trip Name', key: 'name' },
+  { title: 'Participants', key: 'users' },
+  { title: 'Actions', key: 'actions', align: 'center', sortable: false },
 ]
 
 const usersHeaders = [
-  { text: 'Name', value: 'name' },
+  { title: 'Name', key: 'name' },
 ]
 
 // Fetch Data

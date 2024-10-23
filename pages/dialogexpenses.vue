@@ -6,7 +6,7 @@
           <v-col cols="12" md="4">
             <v-select
               density="compact"
-              v-model="formData.trip"
+              v-model="formData.tripId"
               :items="dialogtrips"
               item-title="name"
               item-value="id"
@@ -30,7 +30,7 @@
           <v-col cols="12" md="4">
             <v-select
               density="compact"
-              v-model="formData.user"
+              v-model="formData.userId"
               :items="dialogusers"
               item-title="name"
               item-value="id"
@@ -56,10 +56,10 @@
           <v-col cols="12" md="3">
             <v-select
               density="compact"
-              v-model="formData.category"
+              v-model="formData.categoryId"
               :items="dialogcategories"
               item-title="name"
-              item-value="name"
+              item-value="id"
               label="Select Category"
               required
               :rules="[v => !!v || 'required']"
@@ -71,8 +71,8 @@
             <v-text-field
               density="compact"
               v-model="formData.amount"
-              label="Amount"
               type="number"
+              label="Amount"
               required
               :rules="[v => !!v || 'Amount is required']"
             ></v-text-field>
@@ -123,10 +123,12 @@
     currency: '',
     date: null,
     location: '',
-    category: '',
+    categoryId: null,
     description: '',
-    trip: '',
-    user: '',
+    //trip: null,
+    tripId: '',
+    //user: null,
+    userId: '',
   })
   
   const valid = ref(false)
@@ -168,9 +170,43 @@
   //   { name: 'Lodging', icon: 'mdi-hotel' },
   // ]
   
-  const submitExpense = () => {
+  const submitExpense = async () => {
+    if (!valid.value) return
+
     console.log('Submitted Data:', formData.value)
     // Add logic to submit the data via your API
+    formData.value.amount = parseFloat(formData.value.amount)
+    // console.log('Submitted Data:', formData.value)
+    
+    // Send data to API
+    try {
+      await $fetch('/api/dialogexpenses', {
+        method: 'POST',
+        body: formData.value,
+      })
+
+      // Reset the form and close dialog
+      resetForm()
+      // isDialogOpen.value = false
+    } catch (error) {
+      console.error('Error submitting form:', error)
+    }
   }
+
+    // Reset Form
+    const resetForm = () => {
+    formData.value = {
+        amount: null,
+        currency: '',
+        date: null,
+        location: '',
+        categoryId: null,
+        description: '',
+        //trip: null,
+        tripId: '',
+        //user: null,
+        userId: '',
+      }
+    }
   </script>
   

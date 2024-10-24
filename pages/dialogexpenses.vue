@@ -1,8 +1,132 @@
 <template>
     <v-container>
-      <v-form ref="expenseForm" v-model="valid" lazy-validation>
+      <h2>Manage Expenses</h2>
+
+      <v-divider color="black" thickness="1"></v-divider>
+
+      <v-select
+              density="compact"
+              v-model="selectedTrip"
+              :items="dialogtrips"
+              item-title="name"
+              item-value="id"
+              label="Select Trip"
+              return-object
+            ></v-select>
+
+      <!-- Add Trip Dialog -->
+      <v-dialog v-model="isDialogOpen" max-width="500">
+        <template #activator="{ props }">
+          <v-btn
+            v-bind="props"
+            color="surface-variant"
+            class="mt-2"
+            variant="flat"
+            :disabled="!selectedTrip"
+          >
+            Add Expense
+          </v-btn>
+        </template>
+
+        <v-card>
+          <v-card-title>Add Expense - {{ selectedTrip.name }}</v-card-title>
+          <v-card-text>
+ 
+          <v-form ref="expenseForm" v-model="isFormValid" lazy-validation>
+            <v-row>
+              <!-- Description Input -->
+              <v-col cols="12" md="8">
+                <v-text-field
+                  density="compact"
+                  v-model="formData.description"
+                  label="Title"
+                  placeholder="Provide a brief description of the expense"
+                  required
+                  :rules="[v => !!v || 'Description is required']"
+                ></v-text-field>
+              </v-col>
+              <!-- Category Dropdown -->
+              <v-col cols="12" md="4">
+                <v-select
+                  density="compact"
+                  v-model="formData.categoryId"
+                  :items="dialogcategories"
+                  item-title="name"
+                  item-value="id"
+                  label="♥"
+                  required
+                  :rules="[v => !!v || 'required']"
+                ></v-select>
+              </v-col>
+            </v-row>
+            <v-row>
+            <!-- Currency Dropdown -->
+            <v-col cols="12" md="3">
+                <v-select
+                  density="compact"
+                  v-model="formData.currency"
+                  :items="currencies"
+                  item-title="symbol"
+                  item-value="symbol"
+                  nolabel="Currency"
+                  required
+                  :rules="[v => !!v || 'required']"
+                ></v-select>
+              </v-col> 
+              <!-- Amount Input -->
+              <v-col cols="12" md="9">
+                <v-text-field
+                  density="compact"
+                  v-model="formData.amount"
+                  type="number"
+                  label="Amount"
+                  required
+                  :rules="[v => !!v || 'Amount is required']"
+                ></v-text-field>
+              </v-col>
+            </v-row>
+            <v-row>
+              <!-- User Dropdown -->
+              <v-col cols="12" md="6">
+                <v-select
+                  density="compact"
+                  v-model="formData.userId"
+                  :items="dialogusers"
+                  item-title="name"
+                  item-value="id"
+                  label="Select User"
+                  required
+                  :rules="[v => !!v || 'User is required']"
+                ></v-select>
+              </v-col>
+
+              <!-- Date Input -->
+              <v-col cols="12" md="6">
+                  <v-date-input
+                    density="compact"
+                    v-model="formData.date"
+                    label="Expense Date"
+                    required
+                    :rules="[v => !!v || 'Date is required']"
+                  ></v-date-input>
+              </v-col>
+            </v-row>
+          </v-form>
+            
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn text="Add" @click="submitExpense" :disabled="!isFormValid">Add</v-btn>
+            <v-btn text="Close" @click="closeDialog">Close</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
+      <v-divider color="black" thickness="1" class="mt-2 mb-2"></v-divider>
+
+      <!--v-form ref="expenseForm" v-model="isFormValid" lazy-validation>
         <v-row>
-          <!-- Trip Dropdown -->
+
           <v-col cols="12" md="4">
             <v-select
               density="compact"
@@ -16,7 +140,6 @@
             ></v-select>
           </v-col>
 
-          <!-- Location Input -->
           <v-col cols="12" md="4">
             <v-text-field
               density="compact"
@@ -26,7 +149,6 @@
             ></v-text-field>
           </v-col>
 
-          <!-- User Dropdown -->
           <v-col cols="12" md="4">
             <v-select
               density="compact"
@@ -42,7 +164,6 @@
         </v-row>
   
         <v-row>
-            <!-- Date Input -->
              <v-col cols="12" md="3">
               <v-date-input
                 density="compact"
@@ -52,7 +173,7 @@
                 :rules="[v => !!v || 'Date is required']"
               ></v-date-input>
           </v-col>
-          <!-- Category Dropdown -->
+
           <v-col cols="12" md="3">
             <v-select
               density="compact"
@@ -66,7 +187,6 @@
             ></v-select>
           </v-col>
 
-          <!-- Amount Input -->
           <v-col cols="12" md="3">
             <v-text-field
               density="compact"
@@ -78,7 +198,6 @@
             ></v-text-field>
           </v-col>
 
-          <!-- Currency Dropdown -->
           <v-col cols="12" md="3">
             <v-select
               density="compact"
@@ -93,7 +212,7 @@
           </v-col>
         </v-row>
         <v-row>
-          <!-- Description Input -->
+
           <v-col cols="12">
             <v-textarea
               density="compact"
@@ -106,15 +225,24 @@
           </v-col>
         </v-row>
   
-        <!-- Submit Button -->
-        <v-btn color="primary" @click="submitExpense" :disabled="!valid">
+        <v-btn color="primary" @click="submitExpense" :disabled="!isFormValid">
           Submit Expense
         </v-btn>
-      </v-form>
+      </v-form-->
+
+      <pre>{{ selectedTrip }}</pre>
+      <!--pre>{{ dialogtrips.value.filter(el => {return dialogtrips.value.id === selectedTrip.value}) }}</pre-->
+      <!--pre>{{ dialogtrips.value.filter(el => {return dialogtrips.value.id === '9bb38019-873f-4bf4-8a35-ac4dffb49bf7'}) }}</pre-->
     </v-container>
   </template>
   
   <script setup>
+
+// var result = jsObjects.filter(obj => {
+//   return obj.b === 6
+// })
+
+
   import { ref, onMounted } from 'vue'
   import { useFetch } from '#app'
 
@@ -131,10 +259,12 @@
     userId: '',
   })
   
-  const valid = ref(false)
+  const isFormValid = ref(false)
+  const isDialogOpen = ref(false)
   const dialogtrips = ref([])
   const dialogusers = ref([])
   const dialogcategories = ref([])
+  const selectedTrip = ref('')
 
   // Fetch Data
   onMounted(async () => {
@@ -171,11 +301,13 @@
   // ]
   
   const submitExpense = async () => {
-    if (!valid.value) return
+    if (!isFormValid.value) return
 
     console.log('Submitted Data:', formData.value)
     // Add logic to submit the data via your API
+    formData.value.tripId = selectedTrip.id
     formData.value.amount = parseFloat(formData.value.amount)
+
     // console.log('Submitted Data:', formData.value)
     
     // Send data to API
@@ -209,5 +341,12 @@
         userId: '',
       }
     }
+
+  // Close Dialog without Submission
+  const closeDialog = () => {
+    resetForm()
+    isDialogOpen.value = false
+  }
+
   </script>
   

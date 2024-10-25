@@ -1,30 +1,9 @@
-// server/api/dialogexpenses.ts
-// import prisma from '~/prisma/client.js'
-
-// export default defineEventHandler(async (event) => {
-//   if (event.node.req.method === 'GET') {
-//     return await prisma.expense.findMany({
-//       include: {
-//         trip: true,
-//         user: true,
-//         category: true,
-//       }
-//     })
-
-//   if (event.node.req.method === 'POST') {
-//     const body = await readBody(event) // Verwende readBody statt useBody
-//     return await prisma.category.create({
-//       data: body,
-//     })
-//   }
-
-// })
-
 import prisma from '~/prisma/client.js'
 
 export default defineEventHandler(async (event) => {
   if (event.node.req.method === 'GET') {
-    return await prisma.expense.findMany({
+    return await prisma.expense.findMany(
+      {
       include: {
         trip: true,
         user: true,
@@ -35,7 +14,7 @@ export default defineEventHandler(async (event) => {
 
   if (event.node.req.method === 'POST') {
     const body = await readBody(event) // Verwende readBody statt useBody
-    // console.log('body',body)
+    console.log('body',body)
     return await prisma.expense.create({
       data: body,
     })

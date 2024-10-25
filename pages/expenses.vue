@@ -5,6 +5,7 @@
                 <v-data-table 
                     :items="expenses"
                     :headers="expense_headers"
+                    v-model:sort-by="sortBy"
                     density="compact"
                     hide-default-footer
                 >
@@ -38,9 +39,11 @@ onMounted(async () => {
   expenses.value = await $fetch('/api/expenses')
 })
 
+
+const sortBy = [{ key: 'date', order: 'desc' }]
 const expense_headers = [
-  { title: 'Date', key: 'formateddate', value: item => new Date(item.date).toLocaleDateString()},
-  { title: 'Trip', key: 'trip.name' },
+  { title: 'Date', key: 'formateddate', value: item => new Date(item.date).toLocaleDateString(), sortable: "false"},
+  { title: 'Trip', key: 'trip.name', sortable: "false"},
   { title: 'Cat', key: 'category.icon', width: "5%", align: "left" },
   { title: 'Description', key: 'description', width: "30%", align: "left" },
   { title: 'Expense', 

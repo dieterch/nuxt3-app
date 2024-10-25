@@ -1,6 +1,5 @@
 <template>
     <v-container>
-      <h2>Manage Expenses</h2>
 
       <v-divider color="black" thickness="1"></v-divider>
 
@@ -134,6 +133,33 @@
 
       <pre v-if="debug">{{ selectedTrip }}</pre>
 
+      <v-row>
+            <v-col>
+                <v-data-table 
+                    :items="expenses"
+                    :headers="expense_headers"
+                    v-model:sort-by="sortBy"
+                    density="compact"
+                    hide-default-footer
+                >
+                  <template v-slot:item.category.icon="{ item }">
+                    <v-icon :icon=item.category.icon></v-icon>
+                  </template>
+                  <template v-slot:item.actions="{ item }">
+                  <v-btn
+                    class="ma-2"
+                    rounded="0"
+                    size="x-small"
+                    color="grey"
+                    elevation="2"
+                    @click="deleteExpense(item)"
+                    icon="mdi-delete"
+                  ></v-btn>
+                </template>            
+                </v-data-table>
+            </v-col>
+        </v-row>
+
     </v-container>
   </template>
   
@@ -144,15 +170,15 @@
 
   const formData = ref({
     amount: null,
-    currency: '',
-    date: null,
+    currency: '€',
+    date: new Date(),
     location: '',
     categoryId: null,
     description: '',
     //trip: null,
     tripId: '',
     //user: null,
-    userId: '',
+    userId: 'f396dc66-1674-407c-96ad-b6ca5e11b7b7',
   })
   
   const isFormValid = ref(false)
@@ -161,6 +187,7 @@
   //const dialogusers = ref([])
   const dialogcategories = ref([])
   const selectedTrip = ref('')
+  const expenses = ref([])
   const debug = ref(false)
 
   // Fetch Data
@@ -173,8 +200,24 @@
 
     const { data: categoriesData } = await useFetch('/api/dialogcategories')
     dialogcategories.value = categoriesData.value
+
+    expenses.value = await $fetch('/api/expenses')
   })
   
+  const sortBy = [{ key: 'date', order: 'desc' }]
+  const expense_headers = [
+    { title: 'Date', key: 'formateddate', value: item => new Date(item.date).toLocaleDateString(), sortable: "false"},
+    { title: 'Trip', key: 'trip.name', sortable: "false"},
+    { title: 'Cat', key: 'category.icon', width: "5%", align: "left" },
+    { title: 'Description', key: 'description', width: "30%", align: "left" },
+    { title: 'Expense', 
+      key: 'expense',
+      value: item => `${item.amount} ${item.currency}`},
+    { title: 'User', key: 'user.name' },
+    { title: 'Actions', key: 'actions', sortable: false },
+  ]
+
+
   const currencies = [
     { name: 'USD', symbol: '$' },
     { name: 'EUR', symbol: '€' },
@@ -207,25 +250,39 @@
   }
 
     // Reset Form
-    const resetForm = () => {
+    const resetForm = async () => {
     formData.value = {
         amount: null,
-        currency: '',
-        date: null,
+        currency: '€',
+        date: new Date(),
         location: '',
         categoryId: null,
         description: '',
         //trip: null,
         tripId: '',
         //user: null,
-        userId: '',
+        userId: 'f396dc66-1674-407c-96ad-b6ca5e11b7b7',
       }
+      const { data } = await useFetch('/api/expenses')
+      expenses.value = data.value
     }
 
   // Close Dialog without Submission
   const closeDialog = () => {
     resetForm()
     isDialogOpen.value = false
+  }
+
+  // Delete Expense
+  const deleteExpense = async (item) => {
+    await $fetch('/api/dialogexpenses', {
+      method: 'DELETE',
+      body: item,
+    })
+
+    // Refresh expenses
+    const { data } = await useFetch('/api/expenses')
+    expenses.value = data.value
   }
 
   </script>

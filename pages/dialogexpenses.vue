@@ -4,14 +4,15 @@
       <v-divider color="black" thickness="1"></v-divider>
 
       <v-select
-              density="compact"
-              v-model="selectedTrip"
-              :items="dialogtrips"
-              item-title="name"
-              item-value="id"
-              label="Select Trip"
-              return-object
-            ></v-select>
+        density="compact"
+        v-model="selectedTrip"
+        @update:modelValue="tripChanged"
+        :items="dialogtrips"
+        item-title="name"
+        item-value="id"
+        label="Select Trip"
+        return-object
+      ></v-select>
 
       <!-- Add Trip Dialog -->
       <v-dialog v-model="isDialogOpen" max-width="500">
@@ -26,11 +27,20 @@
             Add Expense
           </v-btn>
           <v-btn
-            text="Debug"
+            notext="Debug Trip"
             color="surface"
             class="ml-2 mt-2"
             variant="flat"
+            icon="mdi-debug-step-into"
             @click="debug = !debug"
+          ></v-btn>
+          <v-btn
+            notext="Test"
+            color="surface"
+            class="ml-2 mt-2"
+            variant="flat"
+            icon="mdi-refresh"
+            @click="tripChanged"
           ></v-btn>
         </template>
 
@@ -46,7 +56,7 @@
                   density="compact"
                   v-model="formData.description"
                   label="Title"
-                  placeholder="Provide a brief description of the expense"
+                  placeholder="brief description of the expense"
                   required
                   :rules="[v => !!v || 'Description is required']"
                 ></v-text-field>
@@ -131,12 +141,10 @@
 
       <v-divider color="black" thickness="1" class="mt-2 mb-2"></v-divider>
 
-      <pre v-if="debug">{{ selectedTrip }}</pre>
-
       <v-row>
             <v-col>
                 <v-data-table 
-                    :items="expenses"
+                    :items="filteredexpenses"
                     :headers="expense_headers"
                     v-model:sort-by="sortBy"
                     density="compact"
@@ -159,7 +167,13 @@
                 </v-data-table>
             </v-col>
         </v-row>
+      <div v-if="debug">
+        Selected Trip:
+        <pre>{{ selectedTrip }}</pre>
 
+        Filtered Expenses:
+        <pre>{{ filteredexpenses }}</pre>
+      </div>
     </v-container>
   </template>
   
@@ -187,7 +201,8 @@
   //const dialogusers = ref([])
   const dialogcategories = ref([])
   const selectedTrip = ref('')
-  const expenses = ref([])
+  // const expenses = ref([])
+  const filteredexpenses = ref([])
   const debug = ref(false)
 
   // Fetch Data
@@ -201,20 +216,21 @@
     const { data: categoriesData } = await useFetch('/api/dialogcategories')
     dialogcategories.value = categoriesData.value
 
-    expenses.value = await $fetch('/api/expenses')
+    //tripChanged()
   })
   
   const sortBy = [{ key: 'date', order: 'desc' }]
   const expense_headers = [
-    { title: 'Date', key: 'formateddate', value: item => new Date(item.date).toLocaleDateString(), sortable: "false"},
-    { title: 'Trip', key: 'trip.name', sortable: "false"},
+    { title: 'Date', key: 'formateddate', width: "5%", value: item => new Date(item.date).toLocaleDateString(), sortable: "false", align: "end"},
+    // { title: 'Trip', key: 'trip.name', sortable: "false"},
     { title: 'Cat', key: 'category.icon', width: "5%", align: "left" },
-    { title: 'Description', key: 'description', width: "30%", align: "left" },
+    { title: 'Description', key: 'description', align: "left" },
     { title: 'Expense', 
       key: 'expense',
+      width: "5%",
       value: item => `${item.amount} ${item.currency}`},
-    { title: 'User', key: 'user.name' },
-    { title: 'Actions', key: 'actions', sortable: false },
+    { title: 'User', key: 'user.name' , width: "5%"},
+    { title: 'Actions', key: 'actions', width: "5%", sortable: false },
   ]
 
 
@@ -242,6 +258,7 @@
 
       // Reset the form and close dialog
       resetForm()
+      tripChanged()
       isDialogOpen.value = false
     } catch (error) {
       console.error('Error submitting form:', error)
@@ -273,6 +290,20 @@
     isDialogOpen.value = false
   }
 
+  // fetch filtered Expenses
+  const tripChanged = async () => {
+    // Call filtered data from API
+    try {
+      filteredexpenses.value = await $fetch('/api/tripexpenses', {
+          method: 'POST',
+          body: { id: selectedTrip.value.id }
+      })
+      } catch (error) {
+        console.error('Error calling filtered expenses:', error)
+        alert(error)
+      }
+  }
+
   // Delete Expense
   const deleteExpense = async (item) => {
     await $fetch('/api/dialogexpenses', {
@@ -281,8 +312,7 @@
     })
 
     // Refresh expenses
-    const { data } = await useFetch('/api/expenses')
-    expenses.value = data.value
+    tripChanged()
   }
 
   </script>

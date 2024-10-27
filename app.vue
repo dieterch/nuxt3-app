@@ -10,12 +10,12 @@
       color="grey-darken-3"
       :elevation="5"
       >
-      <!--v-toolbar-title>Expenses</v-toolbar-title-->
+      <v-toolbar-title>Expenses</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn text to="/">Home</v-btn>
-      <v-list-item><v-btn text to="/dialogexpenses">Manage Expenses</v-btn></v-list-item>      
+      <!--v-list-item><v-btn text to="/dialogexpenses">Manage Expenses</v-btn></v-list-item-->      
       <v-btn>
-        :
+        <span class="mdi mdi-menu"></span>
         <v-menu activator="parent">
           <v-list>
             <v-list-item><v-btn text to="/dialogtrips">Trips</v-btn></v-list-item>

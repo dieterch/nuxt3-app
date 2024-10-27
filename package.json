@@ -16,6 +16,7 @@
     "nuxt": "^3.13.0",
     "vite-plugin-vuetify": "^2.0.4",
     "vue": "latest",
+    "vue-cookies": "^1.8.4",
     "vuetify": "^3.7.1"
   },
   "devDependencies": {

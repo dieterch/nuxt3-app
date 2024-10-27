@@ -139,8 +139,6 @@
         </v-card>
       </v-dialog>
 
-      <v-divider color="black" thickness="1" class="mt-2 mb-2"></v-divider>
-
       <v-row>
             <v-col>
                 <v-data-table 
@@ -149,6 +147,7 @@
                     v-model:sort-by="sortBy"
                     density="compact"
                     hide-default-footer
+                    v-if="selectedTrip"
                 >
                   <template v-slot:item.category.icon="{ item }">
                     <v-icon :icon=item.category.icon></v-icon>
@@ -178,10 +177,11 @@
   </template>
   
   <script setup>
-
   import { ref, onMounted } from 'vue'
   import { useFetch } from '#app'
+  import VueCookies from 'vue-cookies'
 
+  // Ref Variables
   const formData = ref({
     amount: null,
     currency: '€',
@@ -189,65 +189,94 @@
     location: '',
     categoryId: null,
     description: '',
-    //trip: null,
     tripId: '',
-    //user: null,
-    userId: 'f396dc66-1674-407c-96ad-b6ca5e11b7b7',
+    userId: '',
   })
   
+  // Reset the Form
+  const resetForm = async () => {
+    formData.value = {
+        amount: null,
+        currency: '€',
+        date: new Date(),
+        location: '',
+        categoryId: null,
+        description: '',
+        tripId: '',
+        userId: '',
+      }
+      
+      const { data } = await useFetch('/api/expenses')
+      expenses.value = data.value
+  }
+
   const isFormValid = ref(false)
   const isDialogOpen = ref(false)
   const dialogtrips = ref([])
-  //const dialogusers = ref([])
+  const dialogUsers = ref({})
   const dialogcategories = ref([])
-  const selectedTrip = ref('')
-  // const expenses = ref([])
+  const selectedTrip = ref(null)
   const filteredexpenses = ref([])
   const debug = ref(false)
 
-  // Fetch Data
+  // Fetch Data on Mount
   onMounted(async () => {
+
     const { data: tripsData } = await useFetch('/api/dialogtrips')
     dialogtrips.value = tripsData.value
-
-    //const { data: usersData } = await useFetch('/api/dialogusers')
-    //dialogusers.value = usersData.value
-
+    
     const { data: categoriesData } = await useFetch('/api/dialogcategories')
     dialogcategories.value = categoriesData.value
-
-    //tripChanged()
+    
+    // reaad selected Trip from cookiev...
+    selectedTrip.value = VueCookies.get('selectedTrip')
+    console.log("selectedTrip: ",selectedTrip.value)
+    
+    // refresh if dialogtrips.
+    if (selectedTrip) {
+      tripChanged()
+    }
   })
   
+  //define the expense v-data-table
+  //sort is reversed order of dates
   const sortBy = [{ key: 'date', order: 'desc' }]
+  //columns definition & optimization
   const expense_headers = [
+    //format the date 
     { title: 'Date', key: 'formateddate', width: "5%", value: item => new Date(item.date).toLocaleDateString(), sortable: "false", align: "end"},
+    // do not display the Trip Name:
     // { title: 'Trip', key: 'trip.name', sortable: "false"},
     { title: 'Cat', key: 'category.icon', width: "5%", align: "left" },
     { title: 'Description', key: 'description', align: "left" },
+    //combine amount & Currency into one column:
     { title: 'Expense', 
       key: 'expense',
       width: "5%",
       value: item => `${item.amount} ${item.currency}`},
     { title: 'User', key: 'user.name' , width: "5%"},
+    //add a column for action buttons
     { title: 'Actions', key: 'actions', width: "5%", sortable: false },
   ]
 
-
+  //currencies seed => would make sense to transfer this table to the database.
   const currencies = [
     { name: 'USD', symbol: '$' },
     { name: 'EUR', symbol: '€' },
   ]
     
+  //Submit the 'add expense' dialog content:
   const submitExpense = async () => {
     if (!isFormValid.value) return
 
-    console.log('Submitted Data before:', formData.value)
+    //DEBUG: console.log('Submitted Data before:', formData.value)
+
+
     // Add logic to submit the data via your API
     formData.value.tripId = selectedTrip.value.id
     formData.value.amount = parseFloat(formData.value.amount)
 
-    console.log('Submitted Data after:', formData.value)
+    //DEBUG: console.log('Submitted Data after:', formData.value)
     
     // Send data to API
     try {
@@ -256,9 +285,13 @@
         body: formData.value,
       })
 
-      // Reset the form and close dialog
+      // Reset the form
       resetForm()
+      // update the filtered Expenses List and set the cookie
+      // in order to display the added row.
       tripChanged()
+
+      // close the Dialog form
       isDialogOpen.value = false
     } catch (error) {
       console.error('Error submitting form:', error)
@@ -266,25 +299,7 @@
     }
   }
 
-    // Reset Form
-    const resetForm = async () => {
-    formData.value = {
-        amount: null,
-        currency: '€',
-        date: new Date(),
-        location: '',
-        categoryId: null,
-        description: '',
-        //trip: null,
-        tripId: '',
-        //user: null,
-        userId: 'f396dc66-1674-407c-96ad-b6ca5e11b7b7',
-      }
-      const { data } = await useFetch('/api/expenses')
-      expenses.value = data.value
-    }
-
-  // Close Dialog without Submission
+  // Close Dialog without Submission of data
   const closeDialog = () => {
     resetForm()
     isDialogOpen.value = false
@@ -298,10 +313,12 @@
           method: 'POST',
           body: { id: selectedTrip.value.id }
       })
-      } catch (error) {
+      // Store selected Trip in a cookie for 30 days.
+      VueCookies.set('selectedTrip', selectedTrip.value, "30d")
+    } catch (error) {
         console.error('Error calling filtered expenses:', error)
-        alert(error)
-      }
+        // alert(error)
+    }
   }
 
   // Delete Expense

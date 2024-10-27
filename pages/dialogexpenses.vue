@@ -30,12 +30,12 @@
             </v-btn>
           </v-col>
           <v-col>
-            <v-sheet 
-              class="mt-1"
-            >
-              total: {{ totalExpenses }}€ in {{ totalDays }} days ~ {{ expensePerDay }}€ per day.
+            <v-sheet>
+              {{ totalExpenses }}€ - {{ totalDays }} days<br>
+              {{ expensePerDay }}€ per day.<br>
             </v-sheet>
           </v-col>
+          <v-spacer></v-spacer>
           <v-col class="text-right">
             <v-btn
               notext="Debug Trip"

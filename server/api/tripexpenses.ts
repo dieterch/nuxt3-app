@@ -12,8 +12,7 @@ export default defineEventHandler(async (event) => {
         trip: true,
         user: true,
         category: true,
-      }
-      }
+      }}
     )
   }
 })

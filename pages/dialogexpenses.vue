@@ -17,31 +17,46 @@
       <!-- Add Trip Dialog -->
       <v-dialog v-model="isDialogOpen" max-width="500">
         <template #activator="{ props }">
-          <v-btn
-            v-bind="props"
-            color="surface-variant"
-            class="mt-2"
-            variant="flat"
-            :disabled="!selectedTrip"
-          >
-            Add Expense
-          </v-btn>
-          <v-btn
-            notext="Debug Trip"
-            color="surface"
-            class="ml-2 mt-2"
-            variant="flat"
-            icon="mdi-debug-step-into"
-            @click="debug = !debug"
-          ></v-btn>
-          <v-btn
-            notext="Test"
-            color="surface"
-            class="ml-2 mt-2"
-            variant="flat"
-            icon="mdi-refresh"
-            @click="tripChanged"
-          ></v-btn>
+        <v-row justify="start">
+          <v-col>
+            <v-btn
+              v-bind="props"
+              color="surface-variant"
+              rounded="0"
+              elevation="1"
+              :disabled="!selectedTrip"
+            >
+              Add Expense
+            </v-btn>
+          </v-col>
+          <v-col>
+            <v-sheet 
+              class="mt-1"
+            >
+              total: {{ totalExpenses }}€ in {{ totalDays }} days ~ {{ expensePerDay }}€ per day.
+            </v-sheet>
+          </v-col>
+          <v-col class="text-right">
+            <v-btn
+              notext="Debug Trip"
+              rounded="0"
+              elevation="1"
+              color="surface"
+              size="x-small"
+              icon="mdi-bug"
+              @click="debug = !debug"
+            ></v-btn>        
+            <v-btn
+              notext="Test"
+              rounded="0"
+              color="surface"
+              elevation="1"
+              size="x-small"
+              icon="mdi-refresh"
+              @click="tripChanged"
+            ></v-btn>
+          </v-col>
+        </v-row>
         </template>
 
         <v-card>
@@ -157,8 +172,8 @@
                     class="ma-2"
                     rounded="0"
                     size="x-small"
-                    color="grey"
-                    elevation="2"
+                    nocolor="grey"
+                    elevation="1"
                     @click="deleteExpense(item)"
                     icon="mdi-delete"
                   ></v-btn>
@@ -177,7 +192,7 @@
   </template>
   
   <script setup>
-  import { ref, onMounted } from 'vue'
+  import { ref, onMounted, computed } from 'vue'
   import { useFetch } from '#app'
   import VueCookies from 'vue-cookies'
 
@@ -195,19 +210,13 @@
   
   // Reset the Form
   const resetForm = async () => {
-    formData.value = {
-        amount: null,
-        currency: '€',
-        date: new Date(),
-        location: '',
-        categoryId: null,
-        description: '',
-        tripId: '',
-        userId: '',
-      }
-      
-      const { data } = await useFetch('/api/expenses')
-      expenses.value = data.value
+    formData.value.amount = null
+    formData.value.date = new Date()
+    formData.value.description = ''
+    formData.value.categoryId = null  
+    
+    const { data } = await useFetch('/api/expenses')
+    expenses.value = data.value
   }
 
   const isFormValid = ref(false)
@@ -218,6 +227,35 @@
   const selectedTrip = ref(null)
   const filteredexpenses = ref([])
   const debug = ref(false)
+
+  const totalExpenses = computed(() => {
+    return filteredexpenses.value.reduce( (sum, { amount }) => sum + amount, 0).toFixed(0)
+  })
+
+  const totalDays = computed(() => {
+    try {
+      let startdate = selectedTrip.value.startDate
+      let lastdate = filteredexpenses.value[0].date
+      // console.log("lastdate before", lastdate)
+      filteredexpenses.value.forEach((rec) => { lastdate = (lastdate > rec.date) ? lastdate : rec.date})
+      let diff = (new Date(lastdate) - new Date(startdate))/(1000*60*60*24)
+      // console.log("Startdate:", startdate, "Lastdate:", lastdate, "Diff:", diff)
+      return diff.toFixed(0)
+    } 
+    catch(error) {
+      console.log(error)
+      return 1
+    }
+  })
+
+  const expensePerDay = computed(() => {
+  try {
+    return ( totalExpenses.value / totalDays.value ).toFixed(0)
+  } catch(error) {
+    console.log(error)
+    return 1
+  }
+  })
 
   // Fetch Data on Mount
   onMounted(async () => {
@@ -250,10 +288,7 @@
     { title: 'Cat', key: 'category.icon', width: "5%", align: "left" },
     { title: 'Description', key: 'description', align: "left" },
     //combine amount & Currency into one column:
-    { title: 'Expense', 
-      key: 'expense',
-      width: "5%",
-      value: item => `${item.amount} ${item.currency}`},
+    { title: 'Expense', key: 'expense', width: "5%", value: item => `${item.amount} ${item.currency}`, align: "end"},
     { title: 'User', key: 'user.name' , width: "5%"},
     //add a column for action buttons
     { title: 'Actions', key: 'actions', width: "5%", sortable: false },

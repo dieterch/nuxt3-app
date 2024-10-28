@@ -14,6 +14,10 @@
         return-object
       ></v-select>
 
+      <!--mydialog
+        :formData="formData"
+      ></mydialog-->
+
       <!-- Add Expense Dialog -->
       <v-dialog v-model="isDialogOpen" max-width="410">
         <template #activator="{ props }">
@@ -272,7 +276,7 @@
     const { data: categoriesData } = await useFetch('/api/categories')
     dialogcategories.value = categoriesData.value
     
-    // reaad selected Trip from cookiev...
+    // read selected Trip from cookiev...
     selectedTrip.value = VueCookies.get('selectedTrip')
     console.log("selectedTrip: ",selectedTrip.value)
     

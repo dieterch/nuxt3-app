@@ -13,16 +13,14 @@
       <v-toolbar-title>Expenses</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn text to="/">Home</v-btn>
-      <!--v-list-item><v-btn text to="/dialogexpenses">Manage Expenses</v-btn></v-list-item-->      
       <v-btn>
         <span class="mdi mdi-menu"></span>
         <v-menu activator="parent">
           <v-list>
-            <v-list-item><v-btn text to="/dialogtrips">Trips</v-btn></v-list-item>
-            <v-list-item><v-btn text to="/dialogusers">Users</v-btn></v-list-item>
-            <v-list-item><v-btn text to="/dialogcategories">Categories</v-btn></v-list-item>
-            <v-list-item><v-btn text to="/expenses">Expenses</v-btn></v-list-item>
-            <!--v-list-item><v-btn text to="/dialogexpenses">Dialog Expenses</v-btn></v-list-item-->
+            <v-list-item><v-btn text to="/trips">Trips</v-btn></v-list-item>
+            <v-list-item><v-btn text to="/users">Users</v-btn></v-list-item>
+            <v-list-item><v-btn text to="/categories">Categories</v-btn></v-list-item>
+            <v-list-item><v-btn text to="/allexpenses">Expenses</v-btn></v-list-item>
           </v-list>
         </v-menu>
       </v-btn>

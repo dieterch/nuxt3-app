@@ -146,10 +146,10 @@ const usersHeaders = [
 
 // Fetch Data
 onMounted(async () => {
-  const { data: tripsData } = await useFetch('/api/dialogtrips')
+  const { data: tripsData } = await useFetch('/api/trips')
   dialogtrips.value = tripsData.value
 
-  const { data: usersData } = await useFetch('/api/dialogusers')
+  const { data: usersData } = await useFetch('/api/users')
   dialogusers.value = usersData.value
 })
 
@@ -176,7 +176,7 @@ const submitForm = async () => {
     })
 
     // Refresh trips
-    const { data } = await useFetch('/api/dialogtrips')
+    const { data } = await useFetch('/api/trips')
     dialogtrips.value = data.value
 
     // Reset the form and close dialog
@@ -202,13 +202,13 @@ const closeDialog = () => {
 
 // Delete Trip
 const deleteTrip = async (item) => {
-  await $fetch('/api/dialogtrips', {
+  await $fetch('/api/trips', {
     method: 'DELETE',
     body: item,
   })
 
   // Refresh trips
-  const { data } = await useFetch('/api/dialogtrips')
+  const { data } = await useFetch('/api/trips')
   dialogtrips.value = data.value
 }
 </script>

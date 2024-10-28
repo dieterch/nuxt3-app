@@ -13,7 +13,7 @@
   import { onMounted } from 'vue'
 
   onMounted( () => {
-    navigateTo("/dialogexpenses")
+    navigateTo("/expenses")
   })
 
 </script>

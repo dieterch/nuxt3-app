@@ -107,7 +107,7 @@
 
   // Fetch Data
   onMounted(async () => {
-    const { data: categoriesData } = await useFetch('/api/dialogcategories')
+    const { data: categoriesData } = await useFetch('/api/categories')
     dialogcategories.value = categoriesData.value
   })
   
@@ -121,13 +121,13 @@
 
     // Send data to API
     try {
-      await $fetch('/api/dialogcategories', {
+      await $fetch('/api/categories', {
         method: 'POST',
         body: dialogcategory.value
       })
 
       // Refresh Categories
-      const { data: categoriesData} = await useFetch('/api/dialogcategories')
+      const { data: categoriesData} = await useFetch('/api/categories')
       dialogcategories.value = categoriesData.value
 
       // Reset the form and close dialog
@@ -151,13 +151,13 @@
 
   // Delete Category
   const deleteCategory = async (item) => {
-    await $fetch('/api/dialogcategories', {
+    await $fetch('/api/categories', {
       method: 'DELETE',
       body: item
     })
 
     // Refresh Categories
-    const { data: categoriesData} = await useFetch('/api/dialogcategories')
+    const { data: categoriesData} = await useFetch('/api/categories')
     dialogcategories.value = categoriesData.value
   }
 

@@ -105,7 +105,7 @@
 
   // Fetch Data
   onMounted(async () => {
-    const { data: usersData } = await useFetch('/api/dialogusers')
+    const { data: usersData } = await useFetch('/api/users')
     dialogusers.value = usersData.value
   })
   
@@ -115,13 +115,13 @@
   
     // Send data to API
     try {
-      await $fetch('/api/dialogusers', {
+      await $fetch('/api/users', {
         method: 'POST',
         body: dialoguser.value
       })
 
       // Refrsh Users
-      const { data: usersData } = await useFetch('/api/dialogusers')
+      const { data: usersData } = await useFetch('/api/users')
       dialogusers.value = usersData.value
 
       // Reset the form and close dialog
@@ -151,7 +151,7 @@
     })
 
     // Refresh Users
-    const { data: usersData } = await useFetch('/api/dialogusers')
+    const { data: usersData } = await useFetch('/api/users')
     dialogusers.value = usersData.value
   }
   </script>

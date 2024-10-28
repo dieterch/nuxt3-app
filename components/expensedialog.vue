@@ -15,11 +15,6 @@
         v-bind="activatorProps"
         ></v-btn>
     </template>
-  
-        <!--v-card
-          prepend-icon="mdi-cash-register"
-          title="Expense"
-    -->
         <v-card>
         <v-card-title>
             <v-sheet>

@@ -9,25 +9,16 @@
             density="compact"
             hide-default-footer
           >
-          <template v-slot:item="row">
-                    <!-- the data table fields displayed in th elist are defined her -->
-                    <!-- alternatively you could define the fields in dialogusers.ts -->
-                    <!-- with select, then you would transfer less data ...          -->
-                    <tr>
-                      <td> {{ row.item.name }} </td>
-                      <td> {{ row.item.email }} </td>
-                      <td>
+          <template v-slot:item.actions="{ item }">
                         <v-btn
                           class="ma-2"
                           rounded="0"
                           size="x-small" 
-                          color="grey"
-                          elevation="8"
-                          @click="deleteUser(row.item)"
+                          nocolor="grey"
+                          elevation="1"
+                          @click="deleteUser(item)"
                           icon="mdi-delete">
                         </v-btn>
-                      </td>
-                    </tr>
                   </template>
           </v-data-table>
         </v-col>
@@ -69,6 +60,7 @@
             color="surface"
             class="ml-2 mt-2"
             variant="flat"
+            icon="mdi-bug"
             @click="debug = !debug"
           ></v-btn>
       <pre v-if="debug">{{ dialogusers }}</pre>
@@ -98,8 +90,8 @@
   ]
 
   const usersHeaders = [
-    { title: 'Name', key: 'name', align: 'start' },
-    { title: 'Email', key: 'email', align: 'start' },
+    { title: 'Email', key: 'email', width: "20%", align: 'start' },
+    { title: 'Name', key: 'name', width: "auto", align: 'start' },
     { title: 'Actions', key: 'actions', sortable: false },
   ]
 

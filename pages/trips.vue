@@ -9,12 +9,9 @@
           density="compact"
           hide-default-footer
         >
-          <template v-slot:item.startDate="{ item }">
-            {{ new Date(item.startDate).toLocaleDateString() }}
-          </template>
           <template v-slot:item.users="{ item }">
             <span v-for="(e, index) in item.users" :key="index">
-              {{ e.user.name }}<span v-if="index < item.users.length - 1">, </span>
+              {{ e.user.name }}<span v-if="index < item.users.length - 1">,</span>
             </span>
           </template>
           <template v-slot:item.actions="{ item }">
@@ -22,7 +19,7 @@
               class="ma-2"
               rounded="0"
               size="x-small"
-              color="grey"
+              nocolor="grey"
               elevation="2"
               @click="deleteTrip(item)"
               icon="mdi-delete"
@@ -100,13 +97,14 @@
     </v-dialog>
 
     <v-btn
-            text="Debug"
-            color="surface"
-            class="ml-2 mt-2"
-            variant="flat"
-            @click="debug = !debug"
-          ></v-btn>
-      <pre v-if="debug">{{ dialogtrips }}</pre>
+      notext="Debug"
+      color="surface"
+      class="ml-2 mt-2"
+      variant="flat"
+      icon="mdi-bug"
+      @click="debug = !debug"
+    ></v-btn>
+    <pre v-if="debug">{{ dialogtrips }}</pre>
   </v-container>
 </template>
 
@@ -134,8 +132,9 @@ const nameRules = [v => !!v || 'Name is required']
 
 // Data Table Headers
 const tripsHeaders = [
-  { title: 'Start Date', key: 'startDate' },
-  { title: 'Trip Name', key: 'name' },
+  // { title: 'Start Date', key: 'startDate' },
+  { title: 'Start Date', key: 'formateddate', width: "10%", value: item => new Date(item.startDate).toLocaleDateString("de-CA", {year:"numeric", month: "2-digit", day:"2-digit"}), sortable: "false", align: "end"},
+  { title: 'Trip Name', key: 'name', width: "30%" },
   { title: 'Participants', key: 'users' },
   { title: 'Actions', key: 'actions', align: 'center', sortable: false },
 ]

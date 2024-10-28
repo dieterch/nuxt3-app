@@ -15,36 +15,38 @@
       ></v-select>
 
       <v-row>
-
-      <v-col>
-        <expensedialog 
-          :key="selectedTrip" 
-          :selectedTrip="selectedTrip" 
-          :v-bind="selectedTrip"
-          @refresh="tripChanged"
-        ></expensedialog>
-      </v-col>
-
-      <v-col class="text-right">
-      <v-btn
-        notext="Debug Trip"
-        rounded="0"
-        elevation="1"
-        color="surface"
-        size="x-small"
-        icon="mdi-bug"
-        @click="debug = !debug"
-      ></v-btn>        
-      <v-btn
-        notext="Test"
-        rounded="0"
-        color="surface"
-        elevation="1"
-        size="x-small"
-        icon="mdi-refresh"
-        @click="tripChanged"
-      ></v-btn>
-      </v-col>
+        <v-col>
+          <expensedialog 
+            :key="selectedTrip" 
+            :selectedTrip="selectedTrip" 
+            :v-bind="selectedTrip" 
+            @refresh="tripChanged"/>
+        </v-col>
+        <v-col>
+          <statistics 
+            :key="totalDays" 
+            :totalDays="totalDays" 
+            :totalExpenses="totalExpenses" 
+            :expensePerDay="expensePerDay" />
+        </v-col>
+        <v-col class="text-right">
+        <v-btn
+          rounded="0"
+          elevation="1"
+          color="surface"
+          size="x-small"
+          icon="mdi-bug"
+          @click="debug = !debug"
+        ></v-btn>        
+        <v-btn
+          rounded="0"
+          color="surface"
+          elevation="1"
+          size="x-small"
+          icon="mdi-refresh"
+          @click="tripChanged"
+        ></v-btn>
+        </v-col>
     </v-row>
 
     <v-row>

@@ -10,7 +10,7 @@
         color="surface-variant"
         rounded="0"
         elevation="1"
-        text="Add Expense"
+        text="+"
         novariant="tonal"
         v-bind="activatorProps"
         ></v-btn>
@@ -148,8 +148,8 @@
 </template>
 
 <script setup>
-    import { ref, onMounted, defineEmits, defineProps } from 'vue'
-    import { useFetch } from '#app'
+    import { ref, onMounted } from 'vue'
+    // import { useFetch } from '#app'
     import VueCookies from 'vue-cookies'
 
     const props = defineProps(['selectedTrip']);

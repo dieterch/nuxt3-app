@@ -17,10 +17,10 @@
         <span class="mdi mdi-menu"></span>
         <v-menu activator="parent">
           <v-list>
-            <v-list-item><v-btn text to="/trips">Trips</v-btn></v-list-item>
-            <v-list-item><v-btn text to="/users">Users</v-btn></v-list-item>
-            <v-list-item><v-btn text to="/categories">Categories</v-btn></v-list-item>
-            <v-list-item><v-btn text to="/allexpenses">Expenses</v-btn></v-list-item>
+            <v-list-item><v-btn text variant="flat" to="/trips">Trips</v-btn></v-list-item>
+            <v-list-item><v-btn text variant="flat" to="/users">Users</v-btn></v-list-item>
+            <v-list-item><v-btn text variant="flat" to="/categories">Categories</v-btn></v-list-item>
+            <v-list-item><v-btn text variant="flat" to="/allexpenses">Expenses</v-btn></v-list-item>
           </v-list>
         </v-menu>
       </v-btn>

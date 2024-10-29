@@ -3,34 +3,18 @@
         <h2>Manage Categories</h2>
         <v-row>
           <v-col>
-            <v-data-table 
+            <d-table 
               :items="dialogcategories"
               :headers="categoriesHeaders"
-              density="compact"
-              hide-default-footer            
+              :show=true
               >
-              <template v-slot:item="row">
-                    <!-- the data table fields displayed in th elist are defined her -->
-                    <!-- alternatively you could define the fields in dialogusers.ts -->
-                    <!-- with select, then you would transfer less data ...          -->
-                    <tr>
-                      <td> {{ row.item.name }} </td>
-                      <td> {{ row.item.icon }}</td>
-                      <td><v-icon :icon=row.item.icon></v-icon></td>
-                      <td>
-                        <v-btn
-                          class="ma-2"
-                          rounded="0"
-                          size="x-small" 
-                          color="grey"
-                          elevation="8"
-                          @click="deleteCategory(row.item)"
-                          icon="mdi-delete">
-                        </v-btn>
-                      </td>
-                    </tr>
+                  <template v-slot:item.icon="{ item }">
+                      <v-icon :icon=item.icon></v-icon>
+                  </template>
+                  <template v-slot:item.actions="{ item }">
+                      <d-delbtn @click="deleteCategory(item)"/>
                   </template>            
-            </v-data-table>
+            </d-table>
           </v-col>
         </v-row>
         
@@ -64,21 +48,21 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
-
         <v-btn
-              text="Debug"
-              color="surface"
-              class="ml-2 mt-2"
-              variant="flat"
-              @click="debug = !debug"
-            ></v-btn>
+          notext="Debug"
+          color="surface"
+          class="ml-2 mt-2"
+          variant="flat"
+          icon="mdi-bug"
+          @click="debug = !debug"
+        ></v-btn>
         <pre v-if="debug">{{ dialogcategories }}</pre>
     </v-container>
   </template>
   
   <script setup>
   import { ref, onMounted } from 'vue'
-  import { useFetch } from '#app'
+  // import { useFetch } from '#app'
   
   const dialogcategory = ref({
     name: '',
@@ -100,9 +84,9 @@
 
   const categoriesHeaders = [
     { title: 'Name', key: 'name', align: 'start' },
-    { title: 'IconText', key: 'icon', align: 'start' },
-    { title: 'Icon', key: 'iconpic', align: 'start' },
-    { title: 'Actions', key: 'actions', align: 'start', sortable: false },
+    { title: 'IconText', key: 'icontxt', value: item => `${item.icon}`, align: 'start' },
+    { title: 'Icon', key: 'icon', align: 'start' },
+    { title: 'Actions', key: 'actions', align: 'start', width: '5%', sortable: false },
   ]
 
   // Fetch Data

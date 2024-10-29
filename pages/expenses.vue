@@ -16,79 +16,73 @@
 
       <v-row>
         <v-col>
-          <expensedialog 
+          <d-expensedialog 
             :key="selectedTrip" 
             :selectedTrip="selectedTrip" 
             :v-bind="selectedTrip" 
             @refresh="tripChanged"/>
         </v-col>
         <v-col>
-          <statistics 
+          <d-statistics 
             :key="totalDays" 
             :totalDays="totalDays" 
             :totalExpenses="totalExpenses" 
-            :expensePerDay="expensePerDay" />
+            :expensePerDay="expensePerDay"
+           />
         </v-col>
         <v-col class="text-right">
-        <v-btn
-          rounded="0"
-          elevation="1"
-          color="surface"
-          size="x-small"
-          icon="mdi-bug"
-          @click="debug = !debug"
-        ></v-btn>        
-        <v-btn
-          rounded="0"
-          color="surface"
-          elevation="1"
-          size="x-small"
-          icon="mdi-refresh"
-          @click="tripChanged"
-        ></v-btn>
+          <v-btn
+            rounded="0"
+            elevation="1"
+            color="surface"
+            size="x-small"
+            icon="mdi-bug"
+            @click="debug = !debug"
+          ></v-btn>        
+          <v-btn
+            rounded="0"
+            color="surface"
+            elevation="1"
+            size="x-small"
+            icon="mdi-refresh"
+            @click="tripChanged"
+          ></v-btn>
         </v-col>
     </v-row>
-
     <v-row>
-          <v-col>
-              <v-data-table 
-                  :items="filteredexpenses"
-                  :headers="expense_headers"
-                  v-model:sort-by="sortBy"
-                  density="compact"
-                  hide-default-footer
-                  v-if="selectedTrip"
-              >
-                <template v-slot:item.category.icon="{ item }">
-                  <v-icon :icon=item.category.icon></v-icon>
-                </template>
-                <template v-slot:item.actions="{ item }">
-                <v-btn
-                  class="ma-2"
-                  rounded="0"
-                  size="x-small"
-                  nocolor="grey"
-                  elevation="1"
-                  @click="deleteExpense(item)"
-                  icon="mdi-delete"
-                ></v-btn>
-              </template>            
-              </v-data-table>
-          </v-col>
-      </v-row>
-      <div v-if="debug">
-        Selected Trip:
-        <pre>{{ selectedTrip }}</pre>
+      <v-divider color="black" thickness="1"></v-divider>
+    </v-row>
+    <v-row>
+      <v-col>
+        <d-table
+          :key="filteredexpenses"
+          :items="filteredexpenses"
+          :headers="expense_headers"
+          :show="selectedTrip"
+          :sort-by="sortBy"
+        >
+          <template v-slot:item.category.icon="{ item }">
+              <v-icon :icon=item.category.icon></v-icon>
+          </template>
+          <template v-slot:item.actions="{ item }">
+              <d-delbtn @click="deleteExpense(item)"/>
+          </template>
+        </d-table>
+      </v-col>
+    </v-row>
+    <div v-if="debug">
+      Selected Trip:
+      <pre>{{ selectedTrip }}</pre>
 
-        Filtered Expenses:
-        <pre>{{ filteredexpenses }}</pre>
-      </div>
+      Filtered Expenses:
+      <pre>{{ filteredexpenses }}</pre>
+    </div>
     </v-container>
-  </template>
+</template>
   
-  <script setup>
+<script setup>
   import { ref, onMounted, computed } from 'vue'
-  import { useFetch } from '#app'
+  // import { useFetch } from '#app'
   import VueCookies from 'vue-cookies'
 
   const dialogtrips = ref([])
@@ -139,9 +133,6 @@
 
     const { data: tripsData } = await useFetch('/api/trips')
     dialogtrips.value = tripsData.value
-    
-    // const { data: categoriesData } = await useFetch('/api/categories')
-    // dialogcategories.value = categoriesData.value
     
     // read selected Trip from cookiev...
     selectedTrip.value = VueCookies.get('selectedTrip')

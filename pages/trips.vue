@@ -3,29 +3,20 @@
     <h2>Manage Trips</h2>
     <v-row>
       <v-col>
-        <v-data-table
+        <d-table
           :items="dialogtrips"
           :headers="tripsHeaders"
-          density="compact"
-          hide-default-footer
+          :show=true
         >
-          <template v-slot:item.users="{ item }">
-            <span v-for="(e, index) in item.users" :key="index">
-              {{ e.user.name }}<span v-if="index < item.users.length - 1">,</span>
-            </span>
-          </template>
-          <template v-slot:item.actions="{ item }">
-            <v-btn
-              class="ma-2"
-              rounded="0"
-              size="x-small"
-              nocolor="grey"
-              elevation="2"
-              @click="deleteTrip(item)"
-              icon="mdi-delete"
-            ></v-btn>
-          </template>
-        </v-data-table>
+            <template v-slot:item.users="{ item }">
+              <span v-for="(e, index) in item.users" :key="index">
+                {{ e.user.name }}<span v-if="index < item.users.length - 1">, </span>
+              </span>
+            </template>
+            <template v-slot:item.actions="{ item }">
+              <d-delbtn @click="deleteTrip(item)"/>
+            </template>
+        </d-table>
       </v-col>
     </v-row>
 
@@ -110,7 +101,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useFetch } from '#app'
+// import { useFetch } from '#app'
 
 // State
 const dialogtrip = ref({
@@ -133,10 +124,10 @@ const nameRules = [v => !!v || 'Name is required']
 // Data Table Headers
 const tripsHeaders = [
   // { title: 'Start Date', key: 'startDate' },
-  { title: 'Start Date', key: 'formateddate', width: "10%", value: item => new Date(item.startDate).toLocaleDateString("de-CA", {year:"numeric", month: "2-digit", day:"2-digit"}), sortable: "false", align: "end"},
+  { title: 'Start Date', key: 'formateddate', width: "15%", value: item => new Date(item.startDate).toLocaleDateString("de-CA", {year:"numeric", month: "2-digit", day:"2-digit"}), sortable: "false", align: "end"},
   { title: 'Trip Name', key: 'name', width: "30%" },
   { title: 'Participants', key: 'users' },
-  { title: 'Actions', key: 'actions', align: 'center', sortable: false },
+  { title: 'Actions', key: 'actions', align: 'center', width: "5%" , sortable: false },
 ]
 
 const usersHeaders = [
@@ -169,7 +160,7 @@ const submitForm = async () => {
 
   // Send data to API
   try {
-    await $fetch('/api/dialogtrips', {
+    await $fetch('/api/trips', {
       method: 'POST',
       body: dialogtrip.value,
     })

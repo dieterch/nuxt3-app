@@ -1,26 +1,17 @@
 <template>
     <v-container>
-        <h2>Manage Users</h2>
+      <h2>Manage Users</h2>
       <v-row>
         <v-col>
-          <v-data-table 
+          <d-table 
             :items="dialogusers"
             :headers="usersHeaders"
-            density="compact"
-            hide-default-footer
+            :show=true
           >
-          <template v-slot:item.actions="{ item }">
-                        <v-btn
-                          class="ma-2"
-                          rounded="0"
-                          size="x-small" 
-                          nocolor="grey"
-                          elevation="1"
-                          @click="deleteUser(item)"
-                          icon="mdi-delete">
-                        </v-btn>
-                  </template>
-          </v-data-table>
+            <template v-slot:item.actions="{ item }">
+               <d-delbtn @click="deleteUser(item)"/>
+            </template>
+          </d-table>
         </v-col>
       </v-row>
 
@@ -69,7 +60,7 @@
   
   <script setup>
   import { ref, onMounted } from 'vue'
-  import { useFetch } from '#app'
+  // import { useFetch } from '#app'
   
   const dialoguser = ref({
     name: '',
@@ -92,7 +83,7 @@
   const usersHeaders = [
     { title: 'Email', key: 'email', width: "20%", align: 'start' },
     { title: 'Name', key: 'name', width: "auto", align: 'start' },
-    { title: 'Actions', key: 'actions', sortable: false },
+    { title: 'Actions', key: 'actions', width: "5%", sortable: false },
   ]
 
   // Fetch Data
@@ -137,7 +128,7 @@
 
   // Delete User
   const deleteUser = async (item) => {
-    await $fetch('/api/dialogusers', {
+    await $fetch('/api/users', {
       method: 'DELETE',
       body: item
     })

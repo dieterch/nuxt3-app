@@ -2,28 +2,28 @@
     <v-container>
         <v-row>
             <v-col>
-                <v-data-table 
+                <d-table 
                     :items="expenses"
                     :headers="expense_headers"
-                    v-model:sort-by="sortBy"
-                    density="compact"
-                    hide-default-footer
+                    :show=true
+                    :sort-by="sortBy"
                 >
                   <template v-slot:item.category.icon="{ item }">
                     <v-icon :icon=item.category.icon></v-icon>
                   </template>
                   <template v-slot:item.actions="{ item }">
-                  <v-btn
-                    class="ma-2"
-                    rounded="0"
-                    size="x-small"
-                    nocolor="grey"
-                    elevation="2"
-                    @click="deleteExpense(item)"
-                    icon="mdi-delete"
-                  ></v-btn>
+                    <d-delbtn @click="deleteExpense(item)"/>
+                    <!--v-btn
+                      class="ma-2"
+                      rounded="0"
+                      size="x-small"
+                      nocolor="grey"
+                      elevation="2"
+                      @click="deleteExpense(item)"
+                      icon="mdi-delete"
+                    ></v-btn-->
                 </template>            
-                </v-data-table>
+                </d-table>
             </v-col>
         </v-row>
     </v-container>
@@ -50,7 +50,7 @@ const expense_headers = [
     key: 'expense',
     value: item => `${item.amount} ${item.currency}`},
   { title: 'User', key: 'user.name' },
-  { title: 'Actions', key: 'actions', sortable: false },
+  { title: 'Actions', key: 'actions', width: "5%", sortable: false },
 ]
 
 // Delete Expense
@@ -61,8 +61,7 @@ const deleteExpense = async (item) => {
   })
 
   // Refresh trips
-  const { data } = await $fetch('/api/expenses')
-  expenses.value = data.value
+  expenses.value = await $fetch('/api/expenses')
 }
 
 </script>

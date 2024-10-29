@@ -16,12 +16,12 @@
         ></v-btn>
     </template>
         <v-card>
-        <v-card-title>
-            <v-sheet>
-                <v-icon icon="mdi-cash-register"></v-icon>
-                Expense - {{ props.selectedTrip.name }}       
-            </v-sheet>
-        </v-card-title> 
+            <v-card-title>
+                <v-sheet>
+                    <v-icon icon="mdi-cash-register"></v-icon>
+                    Expense - {{ props.selectedTrip.name }}       
+                </v-sheet>
+            </v-card-title>
         <v-card-text>
             <v-form 
                 ref="expenseForm" 
@@ -69,16 +69,16 @@
                     md="3"
                     sm="4"
                 >
-                <v-select
-                  density="compact"
-                  v-model="lformData.currency"
-                  :items="currencies"
-                  item-title="symbol"
-                  item-value="symbol"
-                  nolabel="Currency"
-                  required
-                  :rules="[v => !!v || 'required']"
-                ></v-select>
+                    <v-select
+                        density="compact"
+                        v-model="lformData.currency"
+                        :items="currencies"
+                        item-title="symbol"
+                        item-value="symbol"
+                        nolabel="Currency"
+                        required
+                        :rules="[v => !!v || 'required']"
+                    ></v-select>
                 </v-col>
 
                 <!-- Amount Input -->
@@ -87,14 +87,14 @@
                     md="9"
                     sm="12"
                 >
-                <v-text-field
-                density="compact"
-                v-model="lformData.amount"
-                type="number"
-                label="Amount"
-                required
-                :rules="[v => !!v || 'Amount is required']"
-                ></v-text-field>
+                    <v-text-field
+                        density="compact"
+                        v-model="lformData.amount"
+                        type="number"
+                        label="Amount"
+                        required
+                        :rules="[v => !!v || 'Amount is required']"
+                    ></v-text-field>
                 </v-col>
 
                 <!-- User Dropdown -->  
@@ -103,16 +103,16 @@
                     md="6"
                     sm="12"
                 >
-                <v-select
-                  density="compact"
-                  v-model="lformData.userId"
-                  :items="props.selectedTrip.users"
-                  item-title="user.name"
-                  item-value="user.id"
-                  label="Select User"
-                  required
-                  :rules="[v => !!v || 'User is required']"
-                ></v-select>
+                    <v-select
+                        density="compact"
+                        v-model="lformData.userId"
+                        :items="props.selectedTrip.users"
+                        item-title="user.name"
+                        item-value="user.id"
+                        label="Select User"
+                        required
+                        :rules="[v => !!v || 'User is required']"
+                    ></v-select>
                 </v-col>
 
                 <!-- Date Input -->  
@@ -121,13 +121,13 @@
                     md="6"
                     sm="12"
                 >
-                <v-date-input
-                    density="compact"
-                    v-model="lformData.date"
-                    label="Expense Date"
-                    required
-                    :rules="[v => !!v || 'Date is required']"
-                  ></v-date-input>
+                    <v-date-input
+                        density="compact"
+                        v-model="lformData.date"
+                        label="Expense Date"
+                        required
+                        :rules="[v => !!v || 'Date is required']"
+                    ></v-date-input>
                 </v-col>  
             </v-row>
   
@@ -143,13 +143,11 @@
             <v-btn text="Close" @click="closeDialog">Close</v-btn>
           </v-card-actions>
         </v-card>
-      </v-dialog>
-      <!--pre>{{ props }}</pre-->
+    </v-dialog>
 </template>
 
 <script setup>
     import { ref, onMounted } from 'vue'
-    // import { useFetch } from '#app'
     import VueCookies from 'vue-cookies'
 
     const props = defineProps(['selectedTrip']);
@@ -187,14 +185,8 @@
 
     // Fetch Data on Mount
     onMounted(async () => {
-
-    const { data: categoriesData } = await useFetch('/api/categories')
-    dialogcategories.value = categoriesData.value
-
-    // read selected Trip from cookiev...
-    //lselectedTrip.value = VueCookies.get('selectedTrip')
-    //console.log("selectedTrip: ",lselectedTrip.value)
-
+        const { data: categoriesData } = await useFetch('/api/categories')
+        dialogcategories.value = categoriesData.value
     }) 
 
     //Submit the 'add expense' dialog content:

@@ -13,15 +13,6 @@
                   </template>
                   <template v-slot:item.actions="{ item }">
                     <d-delbtn @click="deleteExpense(item)"/>
-                    <!--v-btn
-                      class="ma-2"
-                      rounded="0"
-                      size="x-small"
-                      nocolor="grey"
-                      elevation="2"
-                      @click="deleteExpense(item)"
-                      icon="mdi-delete"
-                    ></v-btn-->
                 </template>            
                 </d-table>
             </v-col>

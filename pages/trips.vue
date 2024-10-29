@@ -130,9 +130,9 @@ const tripsHeaders = [
   { title: 'Actions', key: 'actions', align: 'center', width: "5%" , sortable: false },
 ]
 
-const usersHeaders = [
-  { title: 'Name', key: 'name' },
-]
+// const usersHeaders = [
+//   { title: 'Name', key: 'name' },
+// ]
 
 // Fetch Data
 onMounted(async () => {

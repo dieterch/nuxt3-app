@@ -61,7 +61,7 @@ const deleteExpense = async (item) => {
   })
 
   // Refresh trips
-  const { data } = await useFetch('/api/expenses')
+  const { data } = await $fetch('/api/expenses')
   expenses.value = data.value
 }
 

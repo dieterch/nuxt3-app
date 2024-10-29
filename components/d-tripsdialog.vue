@@ -5,14 +5,15 @@
     >
     <template v-slot:activator="{ props: activatorProps }">
         <v-btn
-        class="text-none font-weight-regular"
-        prepend-icon="mdi-cash-register"
-        color="surface-variant"
-        rounded="0"
-        elevation="1"
-        text="+"
-        novariant="tonal"
-        v-bind="activatorProps"
+            noclass="text-none font-weight-regular"
+            prepend-icon="mdi-train-car"
+            color="surface-variant"
+            rounded="0"
+            elevation="1"
+            size="small"
+            text="+"
+            novariant="tonal"
+            v-bind="activatorProps"
         ></v-btn>
     </template>
         <v-card>
@@ -81,9 +82,8 @@
 
 <script setup>
     import { ref, onMounted } from 'vue'
-    import VueCookies from 'vue-cookies'
 
-    const props = defineProps(['selectedTrip']);
+    // const props = defineProps(['selectedTrip']);
     const emit = defineEmits(['refresh']);
 
     const isFormValid = ref(false)
@@ -93,7 +93,9 @@
     const userError = ref(false) // Error for user selection
     const selected = ref([]) // Keep track of selected users
 
-    //const lselectedTrip = ref(null)
+    const usersHeaders = [
+        { title: 'Name', key: 'name' },
+    ]
 
     // State
     const dialogtrip = ref({
@@ -102,11 +104,12 @@
     users: {},
     })
 
+
     // Reset Form
     const resetForm = () => {
-    dialogtrip.value = { name: '', startDate: null, users: {} }
-    selected.value = []
-    userError.value = false
+        dialogtrip.value = { name: '', startDate: null, users: {} }
+        selected.value = []
+        userError.value = false
     }
 
     // Fetch Data on Mount
@@ -120,36 +123,33 @@
 
     // Form Submission
     const submitForm = async () => {
-    // Check if form is valid and if at least one user is selected
-    if (!isFormValid.value || selected.value.length === 0) {
-        userError.value = selected.value.length === 0
-        return
-    }
+        // Check if form is valid and if at least one user is selected
+        if (!isFormValid.value || selected.value.length === 0) {
+            userError.value = selected.value.length === 0
+            return
+        }
 
-    // Prepare users for submission
-    const userArray = selected.value.map(element => ({
-        userId: element.id,
-    }))
+        // Prepare users for submission
+        const userArray = selected.value.map(element => ({
+            userId: element.id,
+        }))
 
-    dialogtrip.value.users = { create: userArray }
+        dialogtrip.value.users = { create: userArray }
 
-    // Send data to API
-    try {
-        await $fetch('/api/trips', {
-        method: 'POST',
-        body: dialogtrip.value,
-        })
+        // Send data to API
+        try {
+            await $fetch('/api/trips', {
+            method: 'POST',
+            body: dialogtrip.value,
+            })
 
-        // Refresh trips
-        const { data } = await useFetch('/api/trips')
-        dialogtrips.value = data.value
-
-        // Reset the form and close dialog
-        resetForm()
-        isDialogOpen.value = false
-    } catch (error) {
-        console.error('Error submitting form:', error)
-    }
+            // Reset the form and close dialog
+            resetForm()
+            emit('refresh')
+            dialog.value = false
+        } catch (error) {
+            console.error('Error submitting form:', error)
+        }
     }
 
     // Close Dialog without Submission of data

@@ -1,6 +1,15 @@
 <template>
     <v-container>
       <h2>Manage Users</h2>
+
+      <v-row>
+        <v-col class="text-right">
+          <d-usersdialog @refresh="refreshUsers"/>
+          <d-btn icon="mdi-bug" @click="debug = !debug" />
+          <d-btn icon="mdi-refresh" @click="refreshUsers" />
+        </v-col>
+      </v-row>
+
       <v-row>
         <v-col>
           <d-table 
@@ -9,77 +18,24 @@
             :show=true
           >
             <template v-slot:item.actions="{ item }">
-               <d-delbtn @click="deleteUser(item)"/>
+              <d-btn icon="mdi-delete" @click="deleteUser(item)" />
             </template>
           </d-table>
         </v-col>
       </v-row>
 
       <v-divider color="black" thickness="1"></v-divider>
-
-      <!-- Add Trip Dialog -->
-      <v-dialog v-model="isUsersDialogOpen" max-width="500">
-        <template #activator="{ props }">
-          <v-btn
-            v-bind="props"
-            color="surface-variant"
-            class="mt-2"
-            variant="flat"
-          >
-            Add User
-          </v-btn>
-        </template>
-
-        <v-card>
-          <v-card-title>Add User</v-card-title>
-          <v-card-text>
-            <v-form ref="form" v-model="isFormValid" @submit.prevent="submitForm">
-              <v-text-field label="User Name" v-model="dialoguser.name" :rules="nameRules" required></v-text-field>
-              <v-text-field label="User Email" v-model="dialoguser.email" :rules="emailRules" required></v-text-field>  
-            </v-form>
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn text="Add" @click="submitForm">Add</v-btn>
-            <v-btn text="Close" @click="closeDialog">Close</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-
-      <v-btn
-            text="Debug"
-            color="surface"
-            class="ml-2 mt-2"
-            variant="flat"
-            icon="mdi-bug"
-            @click="debug = !debug"
-          ></v-btn>
       <pre v-if="debug">{{ dialogusers }}</pre>
     </v-container>
-  </template>
+</template>
   
-  <script setup>
+<script setup>
   import { ref, onMounted } from 'vue'
-  // import { useFetch } from '#app'
-  
-  const dialoguser = ref({
-    name: '',
-    email: ''
-  })
   
   const dialogusers = ref([])
   const isFormValid = ref(false)
-  const isUsersDialogOpen = ref(false)
   const debug = ref(false)
   
-  const nameRules = [
-    v => !!v || 'Name is required',
-  ]
- 
-  const EmailRules = [
-    v => !!v || 'Email is required',
-  ]
-
   const usersHeaders = [
     { title: 'Email', key: 'email', width: "20%", align: 'start' },
     { title: 'Name', key: 'name', width: "auto", align: 'start' },
@@ -92,50 +48,18 @@
     dialogusers.value = usersData.value
   })
   
-  // Form Submission
-  const submitForm = async () => {
-    if (!isFormValid.value) return
-  
-    // Send data to API
-    try {
-      await $fetch('/api/users', {
-        method: 'POST',
-        body: dialoguser.value
-      })
-
-      // Refrsh Users
-      const { data: usersData } = await useFetch('/api/users')
-      dialogusers.value = usersData.value
-
-      // Reset the form and close dialog
-      resetForm()
-      isUsersDialogOpen.value = false
-    } catch (error) {
-      console.error('Error submitting form:', error)
-    }
-  }
-
-  // Reset Form
-  const resetForm = () => {
-    dialoguser.value = { name: '', email: '' }
-  }
-
-  // Close Dialog without Submission
-  const closeDialog = () => {
-    resetForm()
-    isUsersDialogOpen.value = false
-  }
-
   // Delete User
   const deleteUser = async (item) => {
     await $fetch('/api/users', {
       method: 'DELETE',
       body: item
     })
-
-    // Refresh Users
-    const { data: usersData } = await useFetch('/api/users')
-    dialogusers.value = usersData.value
+  refreshUsers()
   }
-  </script>
+
+  const refreshUsers = async () => {
+    const { data } = await useFetch('/api/users')
+    dialogusers.value = data.value
+  }
+</script>
   

@@ -10,6 +10,7 @@
         color="surface-variant"
         rounded="0"
         elevation="1"
+        size="small"
         text="+"
         novariant="tonal"
         v-bind="activatorProps"

@@ -15,14 +15,7 @@
       ></v-select>
 
       <v-row>
-        <v-col>
-          <d-expensedialog 
-            :key="selectedTrip" 
-            :selectedTrip="selectedTrip" 
-            :v-bind="selectedTrip" 
-            @refresh="tripChanged"/>
-        </v-col>
-        <v-col>
+        <v-col md="4">
           <d-statistics 
             :key="totalDays" 
             :totalDays="totalDays" 
@@ -31,22 +24,13 @@
            />
         </v-col>
         <v-col class="text-right">
-          <v-btn
-            rounded="0"
-            elevation="1"
-            color="surface"
-            size="x-small"
-            icon="mdi-bug"
-            @click="debug = !debug"
-          ></v-btn>        
-          <v-btn
-            rounded="0"
-            color="surface"
-            elevation="1"
-            size="x-small"
-            icon="mdi-refresh"
-            @click="tripChanged"
-          ></v-btn>
+          <d-expensedialog 
+            :key="selectedTrip" 
+            :selectedTrip="selectedTrip" 
+            :v-bind="selectedTrip" 
+            @refresh="tripChanged"/>
+          <d-btn icon="mdi-bug" @click="debug = !debug" />
+          <d-btn icon="mdi-refresh" @click="tripChanged" />
         </v-col>
     </v-row>
     <v-row>
@@ -62,10 +46,10 @@
           :sort-by="sortBy"
         >
           <template v-slot:item.category.icon="{ item }">
-              <v-icon :icon=item.category.icon></v-icon>
+            <v-icon :icon=item.category.icon></v-icon>
           </template>
           <template v-slot:item.actions="{ item }">
-              <d-delbtn @click="deleteExpense(item)"/>
+            <d-btn icon="mdi-delete" @click="deleteExpense(item)" />
           </template>
         </d-table>
       </v-col>
@@ -136,7 +120,7 @@
     
     // read selected Trip from cookiev...
     selectedTrip.value = VueCookies.get('selectedTrip')
-    console.log("selectedTrip: ",selectedTrip.value)
+    //DEBUG: console.log("selectedTrip: ",selectedTrip.value)
     
     // refresh if dialogtrips.
     if (selectedTrip) {

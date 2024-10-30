@@ -18,9 +18,11 @@
     "vue": "latest",
     "vue-cookies": "^1.8.4",
     "vue-forward-slots": "^5.0.4",
-    "vuetify": "^3.7.1"
+    "vuetify": "^3.7.1",
+    "write-excel-file": "^2.0.10"
   },
   "devDependencies": {
+    "mocha": "^10.8.1",
     "prisma": "^5.20.0"
   }
 }

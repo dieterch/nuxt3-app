@@ -47,6 +47,11 @@
       value: rec => rec.amount 
     },
     {
+      column: 'Währung',
+      type: String,
+      value: rec => rec.currency
+    },
+    {
       column: 'Teilnehmer',
       type: String,
       value: rec => rec.user 
@@ -83,6 +88,7 @@
       category: rec.category.name,
       description: rec.description,
       amount: rec.amount,
+      currency: rec.currency,
       user: rec.user.name,
     }))
 

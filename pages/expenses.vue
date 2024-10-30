@@ -29,7 +29,7 @@
             :selectedTrip="selectedTrip" 
             :v-bind="selectedTrip" 
             @refresh="tripChanged"/>
-          <d-savefile />
+          <d-savefile :key="selectedTrip" :selectedTrip="selectedTrip" :v-bind="selectedTrip"/>
           <d-btn icon="mdi-bug" @click="debug = !debug" />
           <d-btn icon="mdi-refresh" @click="tripChanged" />
         </v-col>

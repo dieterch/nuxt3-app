@@ -5,7 +5,7 @@
             :headers="props.headers"
             v-model:sort-by="props.sortBy"
             density="compact"
-            hide-default-footer
+            nothide-default-footer
             v-if="lshow"            
         >
         </v-data-table>

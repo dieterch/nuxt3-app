@@ -114,11 +114,11 @@
 
     // Fetch Data on Mount
     onMounted(async () => {
-        const { data: tripsData } = await useFetch('/api/trips')
-        dialogtrips.value = tripsData.value
+        const tripsdata = await $fetch('/api/trips')
+        dialogtrips.value = tripsdata
 
-        const { data: usersData } = await useFetch('/api/users')
-        dialogusers.value = usersData.value
+        const usersdata = await $fetch('/api/users')
+        dialogusers.value = usersdata
     })
 
     // Form Submission

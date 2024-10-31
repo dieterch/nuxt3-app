@@ -42,10 +42,14 @@
     { title: 'Actions', key: 'actions', width: "5%", sortable: false },
   ]
 
+  const fetchUsers = async () => {
+    const data = await $fetch('/api/users')
+    dialogusers.value = data
+  }
+
   // Fetch Data
   onMounted(async () => {
-    const { data: usersData } = await useFetch('/api/users')
-    dialogusers.value = usersData.value
+    fetchUsers()
   })
   
   // Delete User
@@ -58,8 +62,7 @@
   }
 
   const refreshUsers = async () => {
-    const { data } = await useFetch('/api/users')
-    dialogusers.value = data.value
+    fetchUsers()
   }
 </script>
   

@@ -83,8 +83,8 @@
 
     // Fetch Data on Mount
     onMounted(async () => {
-        const { data: categoriesData } = await useFetch('/api/categories')
-        dialogcategories.value = categoriesData.value
+        data = await $fetch('/api/categories')
+        dialogcategories.value = data
     })
 
     // Form Submission

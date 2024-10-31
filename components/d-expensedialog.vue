@@ -186,8 +186,8 @@
 
     // Fetch Data on Mount
     onMounted(async () => {
-        const { data: categoriesData } = await useFetch('/api/categories')
-        dialogcategories.value = categoriesData.value
+        const data = await $fetch('/api/categories')
+        dialogcategories.value = data
     }) 
 
     //Submit the 'add expense' dialog content:

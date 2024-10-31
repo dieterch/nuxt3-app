@@ -26,10 +26,14 @@ import { ref, onMounted } from 'vue'
 
 const expenses = ref([])
 
-onMounted(async () => {
-  expenses.value = await $fetch('/api/expenses')
-})
+const fetchAllExpenses = async () => {
+    const data = await $fetch('/api/expenses')
+    expenses.value = data
+  }
 
+onMounted(async () => {
+  fetchAllExpenses()
+})
 
 const sortBy = [{ key: 'date', order: 'desc' }]
 const expense_headers = [
@@ -50,7 +54,7 @@ const deleteExpense = async (item) => {
   })
 
   // Refresh trips
-  expenses.value = await $fetch('/api/expenses')
+  fetchAllExpenses()
 }
 
 </script>

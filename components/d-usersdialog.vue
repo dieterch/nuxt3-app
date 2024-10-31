@@ -64,8 +64,8 @@
 
     // Fetch Data on Mount
     onMounted(async () => {
-        const { data: usersData } = await useFetch('/api/users')
-        dialogusers.value = usersData.value
+        const data = await $fetch('/api/users')
+        dialogusers.value = data
     })
 
     // Form Submission

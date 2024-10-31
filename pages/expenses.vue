@@ -67,7 +67,6 @@
   
 <script setup>
   import { ref, onMounted, computed } from 'vue'
-  // import { useFetch } from '#app'
   import VueCookies from 'vue-cookies'
 
   const dialogtrips = ref([])
@@ -116,8 +115,8 @@
   // Fetch Data on Mount
   onMounted(async () => {
 
-    const { data: tripsData } = await useFetch('/api/trips')
-    dialogtrips.value = tripsData.value
+    const data = await $fetch('/api/trips')
+    dialogtrips.value = data
     
     // read selected Trip from cookiev...
     selectedTrip.value = VueCookies.get('selectedTrip')

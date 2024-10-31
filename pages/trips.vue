@@ -51,10 +51,14 @@ const tripsHeaders = [
   { title: 'Actions', key: 'actions', align: 'center', width: "5%" , sortable: false },
 ]
 
+const fetchTrips = async () => {
+    const data = await $fetch('/api/trips')
+    dialogtrips.value = data
+  }
+
 // Fetch Data
 onMounted(async () => {
-  const { data: tripsData } = await useFetch('/api/trips')
-  dialogtrips.value = tripsData.value
+  fetchTrips()
 })
 
 // Delete Trip
@@ -67,8 +71,7 @@ const deleteTrip = async (item) => {
 }
 
 const refreshTrips = async () => {
-  const { data } = await useFetch('/api/trips')
-  dialogtrips.value = data.value
+  fetchTrips()
 }
 
 </script>

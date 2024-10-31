@@ -45,10 +45,14 @@
     { title: 'Actions', key: 'actions', align: 'start', width: '5%', sortable: false },
   ]
 
+  const fetchCategories = async () => {
+    const data = await $fetch('/api/categories')
+    dialogcategories.value = data
+  }
+
   // Fetch Data
   onMounted(async () => {
-    const { data: categoriesData } = await useFetch('/api/categories')
-    dialogcategories.value = categoriesData.value
+    fetchCategories()
   })
   
   // Delete Category
@@ -61,8 +65,7 @@
   }
 
   const refreshCategories = async () => {
-    const { data: categoriesData} = await useFetch('/api/categories')
-    dialogcategories.value = categoriesData.value
+    fetchCategories()
   }
 
   </script>

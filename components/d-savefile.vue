@@ -58,23 +58,6 @@
     }
   ]
 
-  const demo_objects = ref([
-    {
-        date: new Date("2024-10-14T22:00:00.000Z"),
-        category: 'Hotel',
-        description: 'Hotelrechnung',
-        amount: 1960.0,
-        user: 'Dieter'
-    },
-    {
-        date: new Date("2024-10-13T22:00:00.000Z"),
-        category: 'Einkauf',
-        description: 'Schokolade',
-        amount: 12.0,
-        user: 'Susanne'
-    },
-  ])
-
   const saveToExcel = async() => {
 
     const lfilteredexpenses = await $fetch('/api/tripexpenses', {

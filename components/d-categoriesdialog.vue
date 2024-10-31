@@ -83,7 +83,7 @@
 
     // Fetch Data on Mount
     onMounted(async () => {
-        data = await $fetch('/api/categories')
+        const data = await $fetch('/api/categories')
         dialogcategories.value = data
     })
 

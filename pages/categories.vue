@@ -57,11 +57,14 @@
   
   // Delete Category
   const deleteCategory = async (item) => {
-    await $fetch('/api/categories', {
-      method: 'DELETE',
-      body: item
-    })
-  refreshCategories()
+    let permit = (item.expenses.length > 0) ? confirm(`"${item.name}" is used in ${item.expenses.length} expenses. Continue?`):true
+    if ( permit ) {
+      await $fetch('/api/categories', {
+        method: 'DELETE',
+        body: item
+      })
+      refreshCategories()
+    }
   }
 
   const refreshCategories = async () => {

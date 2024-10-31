@@ -16,7 +16,8 @@ export default defineEventHandler(async (event) => {
               }
             }
           }
-        }
+        },
+        expenses: true
       }
     })
  }

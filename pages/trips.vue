@@ -63,11 +63,18 @@ onMounted(async () => {
 
 // Delete Trip
 const deleteTrip = async (item) => {
-  await $fetch('/api/trips', {
-    method: 'DELETE',
-    body: item,
-  })
-  refreshTrips()
+  let permit = true
+  if (item.expenses.length > 0) {
+    permit = confirm(`${item.name} has ${item.expenses.length} expenses. Continue ?`)
+  }
+  if (permit) {
+
+    await $fetch('/api/trips', {
+      method: 'DELETE',
+      body: item,
+    })
+    refreshTrips()
+  }
 }
 
 const refreshTrips = async () => {

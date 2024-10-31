@@ -1,6 +1,6 @@
 <template>
     <v-container>
-
+      <pre>{{ userexpenses }}</pre>
       <v-divider color="black" thickness="1"></v-divider>
 
       <v-select
@@ -25,7 +25,7 @@
         </v-col>
         <v-col class="text-right">
           <d-expensedialog 
-            :key="selectedTrip" 
+            :key="totalExpenses" 
             :selectedTrip="selectedTrip" 
             :v-bind="selectedTrip" 
             @refresh="tripChanged"/>
@@ -73,6 +73,22 @@
   const selectedTrip = ref(null)
   const filteredexpenses = ref([])
   const debug = ref(false)
+
+  const userexpenses = computed(() => {
+    if (selectedTrip.value) {
+      const total = filteredexpenses.value.reduce( (sum, { amount }) => sum + amount, 0)
+      const usershare = selectedTrip.value.users.map((rec) => {
+          const lsum = filteredexpenses.value.reduce( (sum, { amount, userId }) => ( userId === rec.user.id) ? sum + amount : sum, 0)
+          return {
+            name: rec.user.name,
+            balance: `${lsum.toFixed(0)} (${(filteredexpenses.value.length > 0) ? ((lsum / total) * 100).toFixed(1):"0.0"}%)`
+          }
+        })
+      return usershare
+    } else {
+      return 0
+    }
+  })
 
   const totalExpenses = computed(() => {
     try {

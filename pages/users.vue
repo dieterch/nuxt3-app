@@ -54,11 +54,18 @@
   
   // Delete User
   const deleteUser = async (item) => {
-    await $fetch('/api/users', {
-      method: 'DELETE',
-      body: item
-    })
-  refreshUsers()
+    let permit = true
+    if (item.trips.length > 0) {
+      permit = confirm(`${item.name} has ${item.trips.length} trips and ${item.expenses.length} expenses. Continue ?`)
+    }
+    if ( permit ) {
+
+      await $fetch('/api/users', {
+        method: 'DELETE',
+        body: item
+      })
+      refreshUsers()
+    }  
   }
 
   const refreshUsers = async () => {

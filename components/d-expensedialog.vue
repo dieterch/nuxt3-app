@@ -1,21 +1,8 @@
 <template>
     <v-dialog
-    v-model="dialog"
+    v-model="ldialog"
     max-width="410"
     >
-    <template v-slot:activator="{ props: activatorProps }">
-        <v-btn
-        class="text-none font-weight-regular"
-        prepend-icon="mdi-cash-register"
-        color="surface-variant"
-        rounded="0"
-        elevation="1"
-        size="small"
-        text="+"
-        novariant="tonal"
-        v-bind="activatorProps"
-        ></v-btn>
-    </template>
         <v-card>
             <v-card-title>
                 <v-sheet>
@@ -24,6 +11,7 @@
                 </v-sheet>
             </v-card-title>
         <v-card-text>
+            {{ props.mode }}
             <v-form 
                 ref="expenseForm" 
                 v-model="isFormValid" 
@@ -151,11 +139,11 @@
     import { ref, onMounted } from 'vue'
     import VueCookies from 'vue-cookies'
 
-    const props = defineProps(['selectedTrip']);
-    const emit = defineEmits(['refresh']);
+    const props = defineProps(['selectedTrip','dialog', 'mode']);
+    const emit = defineEmits(['refresh','dialog']);
 
     const isFormValid = ref(false)
-    const dialog = ref(false)
+    const ldialog = ref(props.dialog)
     const dialogcategories = ref([])
     //const lselectedTrip = ref(null)
 
@@ -213,7 +201,9 @@
         emit('refresh')
 
         // close the Dialog form
-        dialog.value = false
+        ldialog.value = false
+        emit('dialog', ldialog.value);
+
         } catch (error) {
             console.error('Error submitting form:', error)
             alert(error)
@@ -223,6 +213,7 @@
     // Close Dialog without Submission of data
     const closeDialog = () => {
         resetForm()
-        dialog.value = false
+        ldialog.value = false
+        emit('dialog', ldialog.value);
     }
 </script>

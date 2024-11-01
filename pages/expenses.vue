@@ -1,5 +1,6 @@
 <template>
     <v-container>
+
       <v-divider color="black" thickness="1"></v-divider>
 
       <v-select
@@ -23,12 +24,21 @@
           />
         </v-col>
         <v-col class="text-right">
-
-          <d-expensedialog 
-            :key="tripkey(0)"
+          <!--d-btn icon="mdi-plus" @click="tdialog = true" />
+          <d-testdialog 
+            :dialog="tdialog" 
+            :key="tdialog" 
+            @dialog="(e)=>{tdialog = e}"/-->
+          <d-btn icon="mdi-plus" @click="emode = 'add'; edialog = true"/>
+          <d-btn icon="mdi-square-edit-outline" @click="emode = 'edit'; edialog = true"/>
+          <d-expensedialog
+            :dialog="edialog"
+            :key="edialog"
+            :mode="emode"
             :selectedTrip="selectedTrip" 
-            :v-bind="selectedTrip" 
-            @refresh="tripChanged"/>
+            @refresh="tripChanged"
+            @dialog="(e)=>{edialog = e}"
+            />
 
           <d-savefile 
             :key="tripkey(1)" 
@@ -75,6 +85,9 @@
   import { ref, onMounted, computed } from 'vue'
   import VueCookies from 'vue-cookies'
 
+  const tdialog = ref(false)
+  const edialog = ref(false)
+  const emode = ref('')
   const dialogtrips = ref([])
   const selectedTrip = ref(null)
   const filteredexpenses = ref([])
@@ -146,5 +159,5 @@
     tripChanged()
   }
 
-  </script>
+</script>
   

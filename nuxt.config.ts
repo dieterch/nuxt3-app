@@ -18,12 +18,12 @@ export default defineNuxtConfig({
     build: {
       target: 'esnext'
     },
-    resolve: {
-      alias: {
-        'vite': 'vite/dist/node/esm.js', // Force ESM version of Vite
-      },
-      extensions: ['.js', '.ts', '.mjs'],
-    },
+    // resolve: {
+      // alias: {
+      //  'vite': 'vite/dist/node/esm.js', // Force ESM version of Vite
+      //},
+      // extensions: ['.js', '.ts', '.mjs'],
+    //},
     optimizeDeps: {
       esbuildOptions: {
         format: 'esm', // Force Vite to handle modules as ESM
@@ -36,5 +36,5 @@ export default defineNuxtConfig({
     //  'process.env.DEBUG': false,
     // },
   },
-  plugins: ['@/plugins/vuetify'],  
+  // plugins: ['@/plugins/vuetify'],  
 })

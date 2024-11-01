@@ -160,14 +160,14 @@
     //const lselectedTrip = ref(null)
 
     const lformData = ref({
-    amount: null,
-    currency: '€',
-    date: new Date(),
-    location: '',
-    categoryId: null,
-    description: '',
-    tripId: '',
-    userId: '',
+        amount: null,
+        currency: '€',
+        date: new Date(),
+        location: '',
+        categoryId: null,
+        description: '',
+        tripId: '',
+        userId: '',
   })
 
   // Reset the Form

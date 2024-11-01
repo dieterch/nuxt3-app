@@ -82,8 +82,9 @@ table {
 table, td, th {
     border: 1px solid grey;
     border-collapse: collapse;
+    min-width: 50px;
     padding: 5px;
-    text-align: left;
+    text-align: center;
         }
 th {
     background-color: gray;

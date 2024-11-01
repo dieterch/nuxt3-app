@@ -1,6 +1,5 @@
 <template>
     <v-container>
-      <pre>{{ userexpenses }}</pre>
       <v-divider color="black" thickness="1"></v-divider>
 
       <v-select
@@ -15,23 +14,30 @@
       ></v-select>
 
       <v-row>
-        <v-col md="4">
-          <d-statistics 
-            :key="totalDays" 
-            :totalDays="totalDays" 
-            :totalExpenses="totalExpenses" 
-            :expensePerDay="expensePerDay"
-           />
+        <v-col md="6">
+          <d-statistics
+            :key="filteredexpenses"
+            :filteredexpenses="filteredexpenses"
+            :selectedTrip="selectedTrip"
+            :v-bind="selectedTrip"
+          />
         </v-col>
         <v-col class="text-right">
+
           <d-expensedialog 
-            :key="totalExpenses" 
+            :key="tripkey(0)"
             :selectedTrip="selectedTrip" 
             :v-bind="selectedTrip" 
             @refresh="tripChanged"/>
-          <d-savefile :key="selectedTrip" :selectedTrip="selectedTrip" :v-bind="selectedTrip"/>
+
+          <d-savefile 
+            :key="tripkey(1)" 
+            :selectedTrip="selectedTrip" 
+            :v-bind="selectedTrip"/>
+
           <d-btn icon="mdi-bug" @click="debug = !debug" />
           <d-btn icon="mdi-refresh" @click="tripChanged" />
+
         </v-col>
     </v-row>
     <v-row>
@@ -74,60 +80,11 @@
   const filteredexpenses = ref([])
   const debug = ref(false)
 
-  const userexpenses = computed(() => {
-    if (selectedTrip.value) {
-      const total = filteredexpenses.value.reduce( (sum, { amount }) => sum + amount, 0)
-      const usershare = selectedTrip.value.users.map((rec) => {
-          const lsum = filteredexpenses.value.reduce( (sum, { amount, userId }) => ( userId === rec.user.id) ? sum + amount : sum, 0)
-          return {
-            name: rec.user.name,
-            balance: `${lsum.toFixed(0)} (${(filteredexpenses.value.length > 0) ? ((lsum / total) * 100).toFixed(1):"0.0"}%)`
-          }
-        })
-      return usershare
-    } else {
-      return 0
-    }
-  })
-
-  const totalExpenses = computed(() => {
-    try {
-      return filteredexpenses.value.reduce( (sum, { amount }) => sum + amount, 0).toFixed(0)
-    } catch(error) {
-      console.log(error)
-      return 1
-    }
-  })
-
-  const totalDays = computed(() => {
-    try {
-      if ((selectedTrip) && (filteredexpenses.value.length > 0)) {
-        let startdate = selectedTrip.value.startDate
-        let lastdate = filteredexpenses.value[0].date
-        // console.log("lastdate before", lastdate)
-        filteredexpenses.value.forEach((rec) => { lastdate = (lastdate > rec.date) ? lastdate : rec.date})
-        let diff = (new Date(lastdate) - new Date(startdate))/(1000*60*60*24)
-        // console.log("Startdate:", startdate, "Lastdate:", lastdate, "Diff:", diff)
-        return diff.toFixed(0)
-      } else {
-        return 1
-      }
-    } 
-    catch(error) {
-      console.log(error)
-      return 1
-    }
-  })
-
-  const expensePerDay = computed(() => {
-  try {
-    return ( totalExpenses.value / totalDays.value ).toFixed(0)
-  } catch(error) {
-    console.log(error)
-    return 1
+  const tripkey = (index) => {
+    return (selectedTrip.value) ? 
+      `${selectedTrip.value.id} + ${index}` : `${index}`
   }
-  })
-
+  
   // Fetch Data on Mount
   onMounted(async () => {
 
@@ -156,7 +113,7 @@
     { title: 'Cat', key: 'category.icon', width: "5%", align: "left" },
     { title: 'Description', key: 'description', align: "left" },
     //combine amount & Currency into one column:
-    { title: 'Expense', key: 'expense', width: "5%", value: item => `${item.amount} ${item.currency}`, align: "end"},
+    { title: 'Expense', key: 'expense', width: "5%", value: item => `${item.amount}${item.currency}`, align: "end"},
     { title: 'User', key: 'user.name' , width: "5%"},
     //add a column for action buttons
     { title: 'Actions', key: 'actions', width: "5%", sortable: false },

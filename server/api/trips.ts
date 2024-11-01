@@ -12,7 +12,8 @@ export default defineEventHandler(async (event) => {
             user: {
               select: {
                 id: true,
-                name: true
+                name: true,
+                email:true,
               }
             }
           }
@@ -25,6 +26,18 @@ export default defineEventHandler(async (event) => {
   if (event.node.req.method === 'POST') {
     const body = await readBody(event) // Verwende readBody statt useBody
     return await prisma.trip.create({
+      data: body,
+    })
+  }
+
+
+  if (event.node.req.method === 'PUT') {
+    const body = await readBody(event) // Verwende readBody statt useBody
+    console.log('body:\n',body)
+    return await prisma.trip.update({
+      where: {
+        name: body.name
+      },
       data: body,
     })
   }

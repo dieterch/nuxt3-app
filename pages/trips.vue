@@ -4,7 +4,15 @@
 
     <v-row>
       <v-col class="text-right">
-        <d-tripsdialog @refresh="refreshTrips"/>
+        <d-btn icon="mdi-plus" @click="tmode = 'add'; titem={}; tdialog = true"/>
+        <d-tripsdialog 
+          :dialog="tdialog"
+          :key="tdialog"
+          :mode="tmode"
+          :item="titem"
+          @refresh="refreshTrips"
+          @dialog="(e)=>{tdialog = e}"
+          />
         <d-btn icon="mdi-bug" @click="debug = !debug" />
         <d-btn icon="mdi-refresh" @click="refreshTrips" />
       </v-col>
@@ -23,7 +31,10 @@
               </span>
             </template>
             <template v-slot:item.actions="{ item }">
-              <d-btn icon="mdi-delete" @click="deleteTrip(item)" />
+              <div class="button-container">
+                <d-btn icon="mdi-delete" @click="deleteTrip(item)" />
+                <d-btn icon="mdi-square-edit-outline" @click="tmode = 'update'; titem=item; tdialog = true"/>
+              </div>
             </template>
         </d-table>
       </v-col>
@@ -41,6 +52,9 @@ const dialogtrips = ref([])
 const dialogusers = ref([])
 const selected = ref([]) // Keep track of selected users
 const debug = ref(false)
+const tdialog = ref(false)
+const tmode = ref('')
+const titem = ref({})
 
 // Data Table Headers
 const tripsHeaders = [
@@ -82,3 +96,9 @@ const refreshTrips = async () => {
 }
 
 </script>
+
+<style lang="css" scoped>
+.button-container {
+  display: flex;
+}
+</style>

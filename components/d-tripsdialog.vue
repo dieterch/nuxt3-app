@@ -1,9 +1,9 @@
 <template>
     <v-dialog
-    v-model="dialog"
-    max-width="410"
+    v-model="ldialog"
+    max-width="auto"
     >
-    <template v-slot:activator="{ props: activatorProps }">
+    <!--template v-slot:activator="{ props: activatorProps }">
         <v-btn
             noclass="text-none font-weight-regular"
             prepend-icon="mdi-train-car"
@@ -15,10 +15,13 @@
             novariant="tonal"
             v-bind="activatorProps"
         ></v-btn>
-    </template>
+    </template-->
         <v-card>
-        <v-card-title>Add Trip</v-card-title>
+        <v-card-title v-if="modeis('add')">Add Trip</v-card-title>
+        <v-card-title v-if="modeis('update')">Update Trip</v-card-title>
         <v-card-text>
+            <pre v-if="false">{{ selected }}</pre>
+            <pre v-if="false">{{ props.item.users }}</pre>
             <v-form 
                 ref="form" 
                 v-model="isFormValid" 
@@ -73,8 +76,9 @@
   
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn text="Add" @click="submitForm">Add</v-btn>
-            <v-btn text="Close" @click="closeDialog">Close</v-btn>
+            <v-btn v-if="modeis('add')" text="Add" @click="submitForm" :disabled="!isFormValid"/>
+            <v-btn v-if="modeis('update')" text="Update" @click="updateForm" :disabled="!isFormValid"/>
+            <v-btn text="Close" @click="closeDialog"/>
           </v-card-actions>
         </v-card>
     </v-dialog>
@@ -83,15 +87,16 @@
 <script setup>
     import { ref, onMounted } from 'vue'
 
-    // const props = defineProps(['selectedTrip']);
-    const emit = defineEmits(['refresh']);
+    const props = defineProps(['dialog','mode','item']);
+    const emit = defineEmits(['refresh','dialog']);
 
     const isFormValid = ref(false)
-    const dialog = ref(false)
+    const ldialog = ref(props.dialog)
     const dialogtrips = ref([])
     const dialogusers = ref([])
     const userError = ref(false) // Error for user selection
     const selected = ref([]) // Keep track of selected users
+    const content = ref([])
 
     const usersHeaders = [
         { title: 'Name', key: 'name' },
@@ -99,11 +104,10 @@
 
     // State
     const dialogtrip = ref({
-    name: '',
-    startDate: null,
-    users: {},
+        name: '',
+        startDate: null,
+        users: {},
     })
-
 
     // Reset Form
     const resetForm = () => {
@@ -119,6 +123,19 @@
 
         const usersdata = await $fetch('/api/users')
         dialogusers.value = usersdata
+
+        switch(props.mode) {
+            case 'add': 
+                resetForm()
+                break;
+            case 'update':
+                // dialogtrip.value.id= props.item.id
+                dialogtrip.value.name= props.item.name
+                dialogtrip.value.startDate= new Date(props.item.startDate)
+                selected.value = props.item.users.map((rec) => rec.user )
+                break;
+        }
+    
     })
 
     // Form Submission
@@ -146,7 +163,59 @@
             // Reset the form and close dialog
             resetForm()
             emit('refresh')
-            dialog.value = false
+
+            ldialog.value = false
+            emit('dialog', ldialog.value)
+        } catch (error) {
+            console.error('Error submitting form:', error)
+        }
+    }
+
+    // Form Submission
+    const updateForm = async () => {
+        // Check if form is valid and if at least one user is selected
+        if (!isFormValid.value || selected.value.length === 0) {
+            userError.value = selected.value.length === 0
+            return
+        }
+
+        // Prepare users for submission
+        const userArray = selected.value.map(el => (
+            {
+                where: {
+                    userId_tripId: {
+                        userId: el.id,
+                        tripId: props.item.id
+                    }
+                },
+                data: {
+                    user: {
+                        update: {
+                            id: el.id,
+                            name: el.name,
+                            email: el.email,
+                        }
+                    },
+                }
+            }))
+
+        dialogtrip.value.users = {
+            update: userArray 
+        }
+
+        // Send data to API
+        try {
+            await $fetch('/api/trips', {
+            method: 'PUT',
+            body: dialogtrip.value,
+            })
+
+            // Reset the form and close dialog
+            resetForm()
+            emit('refresh')
+
+            ldialog.value = false
+            emit('dialog', ldialog.value)
         } catch (error) {
             console.error('Error submitting form:', error)
         }
@@ -155,6 +224,13 @@
     // Close Dialog without Submission of data
     const closeDialog = () => {
         resetForm()
-        dialog.value = false
+        ldialog.value = false
+        emit('dialog', ldialog.value)
     }
+
+    const modeis = (e) => {
+        // console.log('modeis:', props.mode, e, (props.mode == e))
+        return (props.mode == e)
+    }
+
 </script>

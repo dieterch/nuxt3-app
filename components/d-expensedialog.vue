@@ -130,7 +130,7 @@
             <v-spacer></v-spacer>
             <v-btn v-if="modeis('add')" text="Add" @click="submitExpense" :disabled="!isFormValid" />
             <v-btn v-if="modeis('update')" text="Update" @click="updateExpense" :disabled="!isFormValid"/>
-            <v-btn text="Close" @click="closeDialog">Close</v-btn>
+            <v-btn text="Close" @click="closeDialog"/>
           </v-card-actions>
         </v-card>
     </v-dialog>

@@ -7,14 +7,14 @@
     >
         <thead>
             <tr>
-                <th v-for="item in overview" :key="index">
+                <th v-for="(item, index) in overview" :key="index">
                     {{ item.name }}
                 </th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td v-for="item in overview" :key="index">
+                <td v-for="(item, index) in overview" :key="index">
                         {{ item.value }} {{ item.share }}
                 </td>
             </tr>

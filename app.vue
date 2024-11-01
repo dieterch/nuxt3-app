@@ -13,6 +13,7 @@
       <v-toolbar-title>Expenses</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn text to="/">Home</v-btn>
+      <!--v-btn text to="/expenses">Expenses</v-btn-->
       <v-btn>
         <span class="mdi mdi-menu"></span>
         <v-menu activator="parent">

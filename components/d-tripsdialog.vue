@@ -129,7 +129,7 @@
                 resetForm()
                 break;
             case 'update':
-                // dialogtrip.value.id= props.item.id
+                dialogtrip.value.id= props.item.id
                 dialogtrip.value.name= props.item.name
                 dialogtrip.value.startDate= new Date(props.item.startDate)
                 selected.value = props.item.users.map((rec) => rec.user )

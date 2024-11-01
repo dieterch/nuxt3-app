@@ -36,7 +36,7 @@ export default defineEventHandler(async (event) => {
     console.log('body:\n',body)
     return await prisma.trip.update({
       where: {
-        name: body.name
+        id: body.id
       },
       data: body,
     })

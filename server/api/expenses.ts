@@ -20,6 +20,17 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  if (event.node.req.method === 'PUT') {
+    const body = await readBody(event) // Verwende readBody statt useBody
+    console.log('body:\n',body)
+    return await prisma.expense.update({
+      where: {
+        id: body.id
+      },
+      data: body,
+    })
+  }
+
   if (event.node.req.method === 'DELETE') {
     const body = await readBody(event) // Verwende readBody statt useBody
 

@@ -29,12 +29,13 @@
             :dialog="tdialog" 
             :key="tdialog" 
             @dialog="(e)=>{tdialog = e}"/-->
-          <d-btn icon="mdi-plus" @click="emode = 'add'; edialog = true"/>
-          <d-btn icon="mdi-square-edit-outline" @click="emode = 'edit'; edialog = true"/>
+          <d-btn icon="mdi-plus" @click="emode = 'add'; eitem={}; edialog = true"/>
+          <!--d-btn icon="mdi-square-edit-outline" @click="emode = 'update'; eitem={}; edialog = true"/-->
           <d-expensedialog
             :dialog="edialog"
             :key="edialog"
             :mode="emode"
+            :item="eitem"
             :selectedTrip="selectedTrip" 
             @refresh="tripChanged"
             @dialog="(e)=>{edialog = e}"
@@ -66,7 +67,10 @@
             <v-icon :icon=item.category.icon></v-icon>
           </template>
           <template v-slot:item.actions="{ item }">
-            <d-btn icon="mdi-delete" @click="deleteExpense(item)" />
+            <div class="button-container">
+              <d-btn icon="mdi-delete" @click="deleteExpense(item)" />
+              <d-btn icon="mdi-square-edit-outline" @click="emode = 'update'; eitem = item; edialog = true"/>
+            </div>
           </template>
         </d-table>
       </v-col>
@@ -88,6 +92,7 @@
   const tdialog = ref(false)
   const edialog = ref(false)
   const emode = ref('')
+  const eitem = ref({})
   const dialogtrips = ref([])
   const selectedTrip = ref(null)
   const filteredexpenses = ref([])
@@ -120,16 +125,16 @@
   //columns definition & optimization
   const expense_headers = [
     //format the date 
-    { title: 'Date', key: 'formateddate', width: "5%", value: item => new Date(item.date).toLocaleDateString("de-CA", {year:"numeric", month: "2-digit", day:"2-digit"}), sortable: "false", align: "end"},
+    { title: 'Date', key: 'formateddate', width: '5%', value: item => new Date(item.date).toLocaleDateString("de-CA", {year:"numeric", month: "2-digit", day:"2-digit"}), sortable: "false", align: "end"},
     // do not display the Trip Name:
     // { title: 'Trip', key: 'trip.name', sortable: "false"},
-    { title: 'Cat', key: 'category.icon', width: "5%", align: "left" },
+    { title: 'Cat', key: 'category.icon', width: "auto", align: "left" },
     { title: 'Description', key: 'description', align: "left" },
     //combine amount & Currency into one column:
     { title: 'Expense', key: 'expense', width: "5%", value: item => `${item.amount}${item.currency}`, align: "end"},
     { title: 'User', key: 'user.name' , width: "5%"},
     //add a column for action buttons
-    { title: 'Actions', key: 'actions', width: "5%", sortable: false },
+    { title: 'Actions', key: 'actions', sortable: false },
   ]
 
   // fetch filtered Expenses
@@ -160,4 +165,9 @@
   }
 
 </script>
-  
+
+<style lang="css" scoped>
+.button-container {
+  display: flex;
+}
+</style>

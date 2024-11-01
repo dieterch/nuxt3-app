@@ -1,7 +1,7 @@
 <template>
     <v-dialog
     v-model="ldialog"
-    max-width="410"
+    width="auto"
     >
         <v-card>
             <v-card-title>
@@ -11,7 +11,7 @@
                 </v-sheet>
             </v-card-title>
         <v-card-text>
-            {{ props.mode }}
+            <pre v-if="false">{{ props.item }}</pre>
             <v-form 
                 ref="expenseForm" 
                 v-model="isFormValid" 
@@ -128,7 +128,8 @@
   
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn text="Add" @click="submitExpense" :disabled="!isFormValid">Add</v-btn>
+            <v-btn v-if="modeis('add')" text="Add" @click="submitExpense" :disabled="!isFormValid" />
+            <v-btn v-if="modeis('update')" text="Update" @click="updateExpense" :disabled="!isFormValid"/>
             <v-btn text="Close" @click="closeDialog">Close</v-btn>
           </v-card-actions>
         </v-card>
@@ -139,7 +140,7 @@
     import { ref, onMounted } from 'vue'
     import VueCookies from 'vue-cookies'
 
-    const props = defineProps(['selectedTrip','dialog', 'mode']);
+    const props = defineProps(['selectedTrip','dialog', 'mode','item']);
     const emit = defineEmits(['refresh','dialog']);
 
     const isFormValid = ref(false)
@@ -156,14 +157,17 @@
         description: '',
         tripId: '',
         userId: '',
+        id:''
   })
 
   // Reset the Form
   const resetForm = async () => {
+
     lformData.value.amount = null
     lformData.value.date = new Date()
     lformData.value.description = ''
     lformData.value.categoryId = null  
+    lformData.value.id = null  
   }
 
   //currencies seed => would make sense to transfer this table to the database.
@@ -176,6 +180,24 @@
     onMounted(async () => {
         const data = await $fetch('/api/categories')
         dialogcategories.value = data
+
+        switch(props.mode) {
+            case 'add': 
+                resetForm()
+                break;
+            case 'update':
+                lformData.value.id= props.item.id
+                lformData.value.amount= props.item.amount
+                lformData.value.amount= props.item.amount
+                lformData.value.currency= props.item.currency
+                lformData.value.date= new Date(props.item.date)
+                lformData.value.location= props.item.location
+                lformData.value.categoryId= props.item.categoryId
+                lformData.value.description= props.item.description
+                lformData.value.tripId= props.item.tripId
+                lformData.value.userId= props.item.userId
+                break;
+        }
     }) 
 
     //Submit the 'add expense' dialog content:
@@ -191,18 +213,18 @@
         
         // Send data to API
         try {
-        await $fetch('/api/expenses', {
-            method: 'POST',
-            body: lformData.value,
-        })
+            await $fetch('/api/expenses', {
+                method: 'POST',
+                body: lformData.value,
+            })
 
-        // Reset the form
-        resetForm()
-        emit('refresh')
+            // Reset the form
+            resetForm()
+            emit('refresh')
 
-        // close the Dialog form
-        ldialog.value = false
-        emit('dialog', ldialog.value);
+            // close the Dialog form
+            ldialog.value = false
+            emit('dialog', ldialog.value);
 
         } catch (error) {
             console.error('Error submitting form:', error)
@@ -210,10 +232,47 @@
         }
     }
 
+    //Submit the 'add expense' dialog content:
+    const updateExpense = async () => {
+        if (!isFormValid.value) return
+
+        //DEBUG: console.log('Submitted Data before:', formData.value)
+        // Add logic to submit the data via your API
+        lformData.value.amount = parseFloat(lformData.value.amount)
+
+        //DEBUG: console.log('Submitted Data after:', formData.value)
+        
+        // Send data to API
+        try {
+            await $fetch('/api/expenses', {
+                method: 'PUT',
+                body: lformData.value,
+            })
+
+            // Reset the form
+            resetForm()
+            emit('refresh')
+
+            // close the Dialog form
+            ldialog.value = false
+            emit('dialog', ldialog.value);
+
+        } catch (error) {
+            console.error('Error submitting form:', error)
+            alert(error)
+        }
+    }    
+
     // Close Dialog without Submission of data
     const closeDialog = () => {
         resetForm()
         ldialog.value = false
         emit('dialog', ldialog.value);
     }
+
+    const modeis = (e) => {
+        // console.log('modeis:', props.mode, e, (props.mode == e))
+        return (props.mode == e)
+    }
+
 </script>

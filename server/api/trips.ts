@@ -30,55 +30,68 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  interface UserInput {
+    userId: string,
+    tripId: string
+  }
 
+  // interface TripUpdateBody {
+  //   id: string,
+  //   name: string,
+  //   startDate: string,
+  //   users: UserInput[]
+  // }
+
+
+  // my Code
   if (event.node.req.method === 'PUT') {
     const body = await readBody(event) // Verwende readBody statt useBody
     console.log('body:\n',body)
-    return await prisma.trip.update({
-      where: {
-        id: body.id
+    const updatedTrip = await prisma.trip.update({
+      where: { id: body.id},
+      data: {
+        name: body.name,
+        startDate: body.startDate
       },
-      data: body,
     })
+
+    // lösche alle tripUser des Trips
+    await prisma.tripUser.deleteMany({
+      where: {
+        tripId: body.id
+      }
+    })
+
+    // und füge die selektierten user wieder ein.
+    await Promise.all(
+      body.users.map( async ( user: UserInput ) => {
+        await prisma.tripUser.upsert({
+          where: {
+            userId_tripId : {
+              userId: user.userId,
+              tripId: user.tripId,
+            },
+          },
+          update: {},
+          create: {
+            userId: user.userId,
+            tripId: user.tripId
+          }
+        })
+      })
+    )
+
+    return updatedTrip
   }
 
   if (event.node.req.method === 'DELETE') {
-    const body = await readBody(event) // Verwende readBody statt useBody
-
-    // // delete all Tripusers first. 
-    // const updateTripusers = await prisma.tripUser.deleteMany({
-    //   where: {
-    //     tripId: body.id
-    //   }
-    // })
-    
-    // // and the relevant tripshares. 
-    // const updateShares = await prisma.tripShare.deleteMany({
-    //   where: {
-    //     tripId: body.id
-    //   }
-    // })
-
-    // // delete all trip expenses. 
-    // const updateExpenses = await prisma.expense.deleteMany({
-    //   where: {
-    //     tripId: body.id
-    //   }
-    // })
-
-    
+    const body = await readBody(event) // Verwende readBody statt useBody    
     // finally delete the trip
     const trip = await prisma.trip.delete({
       where: {
         id: body.id
       }
     })
-    console.log(
-      // "\nTripUsers", updateTripusers, 
-      // "\nShares", updateShares, 
-      // "\nExpenses", updateExpenses, 
-      "\nTrip", trip,
-    '\ndeleted.')
   }
 })
 

@@ -153,11 +153,11 @@
         currency: '€',
         date: new Date(),
         location: '',
-        categoryId: null,
+        // categoryId: null,
         description: '',
-        tripId: '',
-        userId: '',
-        id:''
+        // tripId: '',
+        // userId: '',
+        // id:''
   })
 
   // Reset the Form
@@ -166,8 +166,8 @@
     lformData.value.amount = null
     lformData.value.date = new Date()
     lformData.value.description = ''
-    lformData.value.categoryId = null  
-    lformData.value.id = null  
+    //lformData.value.categoryId = null  
+    //lformData.value.id = null  
   }
 
   //currencies seed => would make sense to transfer this table to the database.
@@ -186,16 +186,18 @@
                 resetForm()
                 break;
             case 'update':
-                lformData.value.id= props.item.id
-                lformData.value.amount= props.item.amount
-                lformData.value.amount= props.item.amount
-                lformData.value.currency= props.item.currency
-                lformData.value.date= new Date(props.item.date)
-                lformData.value.location= props.item.location
-                lformData.value.categoryId= props.item.categoryId
-                lformData.value.description= props.item.description
-                lformData.value.tripId= props.item.tripId
-                lformData.value.userId= props.item.userId
+                lformData.value = {
+                    ...lformData.value,
+                    id: props.item.id,
+                    amount: props.item.amount,
+                    currency: props.item.currency,
+                    date: new Date(props.item.date),
+                    location: props.item.location,
+                    categoryId: props.item.categoryId,
+                    description: props.item.description,
+                    tripId: props.item.tripId,
+                    userId: props.item.userId
+                }
                 break;
         }
     }) 
@@ -204,18 +206,22 @@
     const submitExpense = async () => {
         if (!isFormValid.value) return
 
-        //DEBUG: console.log('Submitted Data before:', formData.value)
-        // Add logic to submit the data via your API
-        lformData.value.tripId = props.selectedTrip.id
-        lformData.value.amount = parseFloat(lformData.value.amount)
-
-        //DEBUG: console.log('Submitted Data after:', formData.value)
+        const rec = {
+            amount: parseFloat(lformData.value.amount),
+            date: new Date(lformData.value.date),
+            location: '',
+            currency: lformData.value.currency,
+            description: lformData.value.description,
+            trip: { connect: { id: props.selectedTrip.id }},
+            user: { connect: { id: lformData.value.userId }},
+            category: { connect: { id: lformData.value.categoryId }}
+        }
         
         // Send data to API
         try {
             await $fetch('/api/expenses', {
                 method: 'POST',
-                body: lformData.value,
+                body: rec,
             })
 
             // Reset the form

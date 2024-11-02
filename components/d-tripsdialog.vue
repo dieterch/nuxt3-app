@@ -1,24 +1,10 @@
 <template>
     <v-dialog
     v-model="ldialog"
-    max-width="auto"
+    max-width="500"
     >
-    <!--template v-slot:activator="{ props: activatorProps }">
-        <v-btn
-            noclass="text-none font-weight-regular"
-            prepend-icon="mdi-train-car"
-            color="surface-variant"
-            rounded="0"
-            elevation="1"
-            size="small"
-            text="+"
-            novariant="tonal"
-            v-bind="activatorProps"
-        ></v-btn>
-    </template-->
         <v-card>
-        <v-card-title v-if="modeis('add')">Add Trip</v-card-title>
-        <v-card-title v-if="modeis('update')">Update Trip</v-card-title>
+        <v-card-title>{{ modeis('add') ? 'Add Trip' : 'Update Trip' }}</v-card-title>
         <v-card-text>
             <pre v-if="false">{{ selected }}</pre>
             <pre v-if="false">{{ props.item.users }}</pre>
@@ -36,6 +22,7 @@
                         density="compact"
                     ></v-text-field>
                 </v-row>
+
                 <v-row dense>
                     <v-col>
                         <v-data-table
@@ -129,9 +116,12 @@
                 resetForm()
                 break;
             case 'update':
-                dialogtrip.value.id= props.item.id
-                dialogtrip.value.name= props.item.name
-                dialogtrip.value.startDate= new Date(props.item.startDate)
+                dialogtrip.value = {
+                    ...dialogtrip.value,
+                    id: props.item.id,
+                    name: props.item.name,
+                    startDate: new Date(props.item.startDate)
+                }
                 selected.value = props.item.users.map((rec) => rec.user )
                 break;
         }
@@ -178,36 +168,27 @@
             userError.value = selected.value.length === 0
             return
         }
-
+    
         // Prepare users for submission
-        const userArray = selected.value.map(el => (
-            {
-                where: {
-                    userId_tripId: {
-                        userId: el.id,
-                        tripId: props.item.id
-                    }
-                },
-                data: {
-                    user: {
-                        update: {
-                            id: el.id,
-                            name: el.name,
-                            email: el.email,
-                        }
-                    },
-                }
-            }))
+        const userArray = selected.value.map(element => (
+            { 
+                userId: element.id,
+                tripId: props.item.id
+            }
+        ))
 
-        dialogtrip.value.users = {
-            update: userArray 
+        const rec = {
+            id: props.item.id,
+            name: dialogtrip.value.name,
+            startDate: new Date(dialogtrip.value.startDate),
+            users: userArray
         }
-
+            
         // Send data to API
         try {
             await $fetch('/api/trips', {
             method: 'PUT',
-            body: dialogtrip.value,
+            body: rec,
             })
 
             // Reset the form and close dialog
@@ -220,6 +201,7 @@
             console.error('Error submitting form:', error)
         }
     }
+
 
     // Close Dialog without Submission of data
     const closeDialog = () => {

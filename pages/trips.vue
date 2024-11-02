@@ -4,14 +4,14 @@
 
     <v-row>
       <v-col class="text-right">
-        <d-btn icon="mdi-plus" @click="tmode = 'add'; titem={}; tdialog = true"/>
+        <d-btn icon="mdi-plus" @click="tmode = 'add'; titem={}; isTripsDialogOpen = true"/>
         <d-tripsdialog 
-          :dialog="tdialog"
-          :key="tdialog"
+          :dialog="isTripsDialogOpen"
+          :key="isTripsDialogOpen"
           :mode="tmode"
           :item="titem"
           @refresh="refreshTrips"
-          @dialog="(e)=>{tdialog = e}"
+          @dialog="(e)=>{isTripsDialogOpen = e}"
           />
         <d-btn icon="mdi-bug" @click="debug = !debug" />
         <d-btn icon="mdi-refresh" @click="refreshTrips" />
@@ -21,7 +21,7 @@
     <v-row>
       <v-col>
         <d-table
-          :items="dialogtrips"
+          :items="trips"
           :headers="tripsHeaders"
           :show=true
         >
@@ -33,7 +33,7 @@
             <template v-slot:item.actions="{ item }">
               <div class="button-container">
                 <d-btn icon="mdi-delete" @click="deleteTrip(item)" />
-                <d-btn icon="mdi-square-edit-outline" @click="tmode = 'update'; titem=item; tdialog = true"/>
+                <d-btn icon="mdi-square-edit-outline" @click="tmode = 'update'; titem=item; isTripsDialogOpen = true"/>
               </div>
             </template>
         </d-table>
@@ -41,18 +41,18 @@
     </v-row>
 
     <v-divider color="black" thickness="1"></v-divider>
-    <pre v-if="debug">{{ dialogtrips }}</pre>
+    <pre v-if="debug">{{ trips }}</pre>
   </v-container>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 
-const dialogtrips = ref([])
-const dialogusers = ref([])
+const trips = ref([])
+const users = ref([])
 const selected = ref([]) // Keep track of selected users
 const debug = ref(false)
-const tdialog = ref(false)
+const isTripsDialogOpen = ref(false)
 const tmode = ref('')
 const titem = ref({})
 
@@ -62,12 +62,13 @@ const tripsHeaders = [
   { title: 'Start Date', key: 'formateddate', width: "15%", value: item => new Date(item.startDate).toLocaleDateString("de-CA", {year:"numeric", month: "2-digit", day:"2-digit"}), sortable: "false", align: "end"},
   { title: 'Trip Name', key: 'name', width: "30%" },
   { title: 'Participants', key: 'users' },
+  { title: 'Expenses', key:'countexpenses', value: item => item.expenses.length},
   { title: 'Actions', key: 'actions', align: 'center', width: "5%" , sortable: false },
 ]
 
 const fetchTrips = async () => {
     const data = await $fetch('/api/trips')
-    dialogtrips.value = data
+    trips.value = data
   }
 
 // Fetch Data

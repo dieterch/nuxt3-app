@@ -136,6 +136,11 @@
             return
         }
 
+        if ( !valid ) {
+            alert('users with active expenses may not be deleted!')
+            return 
+        }
+
         // Prepare users for submission
         const userArray = selected.value.map(element => ({
             userId: element.id,
@@ -168,7 +173,20 @@
             userError.value = selected.value.length === 0
             return
         }
-    
+
+        let valid = true
+        props.item.expenses.forEach((rec) => {
+            valid = (valid) ? Boolean(selected.value.find((srec) => { return (srec.id === rec.userId) } )): valid
+        })
+
+        if (!valid) {
+            alert('TripUsers with expenses cannot not be deleted!')
+            ldialog.value = false
+            emit('dialog', ldialog.value)
+            return
+        }
+
+        // console.log('valid:', valid)
         // Prepare users for submission
         const userArray = selected.value.map(element => (
             { 

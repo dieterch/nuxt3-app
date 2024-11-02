@@ -33,13 +33,13 @@ const lfilteredexpenses = ref(props.filteredexpenses)
 const overview = computed(() => {
     if (lselectedTrip.value) {
         const total = lfilteredexpenses.value.reduce( (sum, { amount }) => sum + amount, 0)
-        const tdays = totalDays()
-        const avgexpens = total / tdays
+        const tdays = Math.ceil(totalDays())
+        const avgexpense = total / tdays
 
         const summary = [
-            { name:"Total", value: total.toFixed(0) + "€" },
-            { name: "Days", value: tdays.toFixed(0) },
-            { name:"Avg", value: avgexpens.toFixed(0) + "€" }
+            { name:"Total", value: total + "€" },
+            { name: "Days", value: tdays },
+            { name:"Avg", value: avgexpense + "€" }
         ]
         const userbalance = (lselectedTrip.value.users.map((rec) => {
           const lsum = lfilteredexpenses.value.reduce( (sum, { amount, userId }) => ( userId === rec.user.id) ? sum + amount : sum, 0)

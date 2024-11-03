@@ -39,7 +39,7 @@ const overview = computed(() => {
         const summary = [
             { name:"Total", value: total + "€" },
             { name: "Days", value: tdays },
-            { name:"Avg", value: avgexpense + "€" }
+            { name:"Avg", value: avgexpense.toFixed(0) + "€" }
         ]
         const userbalance = (lselectedTrip.value.users.map((rec) => {
           const lsum = lfilteredexpenses.value.reduce( (sum, { amount, userId }) => ( userId === rec.user.id) ? sum + amount : sum, 0)

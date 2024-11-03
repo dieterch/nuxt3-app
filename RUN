@@ -1,1 +1,3 @@
-DATABASE_URL=file:${PWD}/prisma/dev.db node .output/server/index.mjs
+clear
+echo "Nuxt Expense  (c)Dieter Chvatal 11/2024"
+DATABASE_URL=file:${PWD}/prisma/dev.db node .output/server/index.mjs 2>&1 | tee app.log

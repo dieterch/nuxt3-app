@@ -1,46 +1,47 @@
 import prisma from '~/prisma/client.js'
 
 export default defineEventHandler(async (event) => {
-  if (event.node.req.method === 'GET') {
-    return await prisma.expense.findMany(
-      {
-      include: {
-        trip: true,
-        user: true,
-        category: true,
-      }
-    })
- }
-
-  if (event.node.req.method === 'POST') {
-    const body = await readBody(event) // Verwende readBody statt useBody
-    console.log('body',body)
-    return await prisma.expense.create({
-      data: body,
-    })
-  }
-
-  if (event.node.req.method === 'PUT') {
+  try {
+    if (event.node.req.method === 'GET') {
+      return await prisma.expense.findMany(
+        {
+        include: {
+          trip: true,
+          user: true,
+          category: true,
+        }
+      })
+    }
+    
     const body = await readBody(event) // Verwende readBody statt useBody
     console.log('body:\n',body)
-    return await prisma.expense.update({
-      where: {
-        id: body.id
-      },
-      data: body,
-    })
+
+    if (event.node.req.method === 'POST') {
+      return await prisma.expense.create({
+        data: body,
+      })
+    }
+    
+    if (event.node.req.method === 'PUT') {
+      return await prisma.expense.update({
+        where: {
+          id: body.id
+        },
+        data: body,
+      })
+    }
+    
+    if (event.node.req.method === 'DELETE') {
+      const expense = await prisma.expense.delete({
+        where: {
+          id: body.id
+        }
+      })
+    }
+ 
+  } catch (error) {
+    console.error("Database operation error:", error)
+    return { error: "An error occurred during the request." }
   }
-
-  if (event.node.req.method === 'DELETE') {
-    const body = await readBody(event) // Verwende readBody statt useBody
-
-    // finally delete the category
-    const expense = await prisma.expense.delete({
-      where: {
-        id: body.id
-      }
-    })
-  }
-
 })
 

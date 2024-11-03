@@ -1,34 +1,35 @@
 import prisma from '~/prisma/client.js'
 
 export default defineEventHandler(async (event) => {
-  if (event.node.req.method === 'GET') {
-    return await prisma.category.findMany({
-      include: {
-        expenses: true,
-      }
-    })
- }
+try {
+    if (event.node.req.method === 'GET') {
+      return await prisma.category.findMany({
+        include: {
+          expenses: true,
+        }
+      })
+    }
 
-  if (event.node.req.method === 'POST') {
     const body = await readBody(event) // Verwende readBody statt useBody
-    return await prisma.category.create({
-      data: body,
-    })
-  }
+    console.log('categories body:\n',body)
 
-  if (event.node.req.method === 'DELETE') {
-    const body = await readBody(event) // Verwende readBody statt useBody
+    if (event.node.req.method === 'POST') {
+      return await prisma.category.create({
+        data: body,
+      })
+    }
 
-    // finally delete the category
-    const category = await prisma.category.delete({
-      where: {
-        id: body.id
-      }
-    })
-    console.log(
-      "\nCategory", category,
-    '\ndeleted.')
-  }
+    if (event.node.req.method === 'DELETE') {
+      const category = await prisma.category.delete({
+        where: {
+          id: body.id
+        }
+      })
+    }
+
+  }  catch (error) {
+    console.error("Database operation error:", error)
+    return { error: "An error occurred during the request." }
+  } 
 
 })
-

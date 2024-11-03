@@ -1,5 +1,5 @@
 <template>
-    <v-dialog v-model="ldialog" max-width="500">
+    <v-dialog v-model="ldialog" max-width="500px">
         <v-card>
             <v-card-title>{{ modeis('add') ? 'Add Trip' : 'Update Trip' }}</v-card-title>
             <v-card-text>
@@ -9,7 +9,7 @@
                     <v-row dense>
                         <v-text-field
                             label="Trip Name"
-                            v-model="dialogtrip.name"
+                            v-model="ltrip.name"
                             :rules="[v => !!v || 'Name is required']"
                             required
                             density="compact"
@@ -34,7 +34,7 @@
                         <v-col>
                             <v-date-input
                                 label="Start Date"
-                                v-model="dialogtrip.startDate"
+                                v-model="ltrip.startDate"
                                 density="compact"
                                 required
                             ></v-date-input>
@@ -46,8 +46,6 @@
             <v-divider></v-divider>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <!--v-btn v-if="modeis('add')" text="Add" @click="submitForm" :disabled="!isFormValid"/>
-                <v-btn v-if="modeis('update')" text="Update" @click="updateForm" :disabled="!isFormValid"/-->
                 <v-btn v-if="modeis('add')" text="Add" @click="handleForm('POST')" :disabled="!isFormValid"/>
                 <v-btn v-if="modeis('update')" text="Update" @click="handleForm('PUT')" :disabled="!isFormValid"/>
                 <v-btn text="Close" @click="closeDialog"/>
@@ -71,7 +69,7 @@
     const usersHeaders = [{ title: 'Name', key: 'name' }]
 
     // State for the trip data
-    const dialogtrip = ref({
+    const ltrip = ref({
         name: '',
         startDate: null,
         users: {},
@@ -87,7 +85,7 @@
 
     // Reset Form
     const resetForm = () => {
-        dialogtrip.value = { name: '', startDate: null, users: {} }
+        ltrip.value = { name: '', startDate: null, users: {} }
         selected.value = []
         userError.value = false
     }
@@ -102,8 +100,8 @@
                 resetForm()
                 break;
             case 'update':
-                dialogtrip.value = {
-                    ...dialogtrip.value,
+                ltrip.value = {
+                    ...ltrip.value,
                     id: props.item.id,
                     name: props.item.name,
                     startDate: new Date(props.item.startDate)
@@ -124,7 +122,7 @@
 
         // if in update, check if all trip related expenses 
         // have a valid owner
-        if (modeis('update')) {
+        if (method === 'PUT') {
             let valid = true
             props.item.expenses.forEach((rec) => {
                 valid = (valid) ? Boolean(selected.value.find((srec) => { return (srec.id === rec.userId) } )): valid
@@ -139,10 +137,10 @@
         // Prepare users for submission
         const userArray = selected.value.map(element => ({ userId: element.id }))
         const rec = {
-            ...dialogtrip.value,
+            ...ltrip.value,
             users: (method === 'POST') ? { create: userArray } : userArray
         }
-        if(modeis('update')) { rec.id = props.item.id }
+        if (method === 'PUT') { rec.id = props.item.id }
 
         // Send data to API
         try {

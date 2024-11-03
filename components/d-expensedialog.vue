@@ -1,193 +1,181 @@
 <template>
-    <v-dialog
-    v-model="ldialog"
-    width="auto"
-    >
+    <v-dialog v-model="ldialog" width="500px">
         <v-card>
-            <v-card-title>
-                <v-sheet>
-                    <v-icon icon="mdi-cash-register"></v-icon>
-                    Expense - {{ props.selectedTrip.name }}       
-                </v-sheet>
-            </v-card-title>
-        <v-card-text>
-            <pre v-if="false">{{ props.item }}</pre>
-            <v-form 
-                ref="expenseForm" 
-                v-model="isFormValid" 
-                lazy-validation
-            >
-            <v-row dense>
-                <!-- Description Input -->
-                <v-col
-                    cols="12"
-                    md="8"
-                    sm="12"
-                >
-                    <v-text-field
-                        density="compact"
-                        v-model="lformData.description"
-                        label="Title*"
-                        placeholder="brief description of the expense"
-                        required
-                        :rules="[v => !!v || 'Description is required']"
-                    ></v-text-field>
-                </v-col>
-  
-                <!-- Category Dropdown -->
-                <v-col
-                    cols="12"
-                    md="4"
-                    sm="6"
-                >
-                    <v-select
-                        density="compact"
-                        v-model="lformData.categoryId"
-                        :items="dialogcategories"
-                        item-title="name"
-                        item-value="id"
-                        label="♥"
-                        required
-                        :rules="[v => !!v || 'required']"
-                    ></v-select>
-                </v-col>
+            <v-card-title>{{ modeis('add') ? 'Add Expense' : 'Update Expense' }}</v-card-title>
+            <v-card-text>
+                <pre v-if="false">{{ props.item }}</pre>
+                <v-form ref="expenseForm" v-model="isFormValid" lazy-validation>
+                <v-row dense>
+                    <!-- Description Input -->
+                    <v-col
+                        cols="12"
+                        md="8"
+                        sm="12"
+                    >
+                        <v-text-field
+                            density="compact"
+                            v-model="lexpense.description"
+                            label="Title*"
+                            placeholder="brief description of the expense"
+                            required
+                            :rules="[v => !!v || 'Description is required']"
+                        ></v-text-field>
+                    </v-col>
+    
+                    <!-- Category Dropdown -->
+                    <v-col
+                        cols="12"
+                        md="4"
+                        sm="6"
+                    >
+                        <v-select
+                            density="compact"
+                            v-model="lexpense.categoryId"
+                            :items="dialogcategories"
+                            item-title="name"
+                            item-value="id"
+                            label="♥"
+                            required
+                            :rules="[v => !!v || 'required']"
+                        ></v-select>
+                    </v-col>
 
-                <!-- Currency Dropdown -->
-                <v-col
-                    cols="12"
-                    md="3"
-                    sm="4"
-                >
-                    <v-select
-                        density="compact"
-                        v-model="lformData.currency"
-                        :items="currencies"
-                        item-title="symbol"
-                        item-value="symbol"
-                        nolabel="Currency"
-                        required
-                        :rules="[v => !!v || 'required']"
-                    ></v-select>
-                </v-col>
+                    <!-- Currency Dropdown -->
+                    <v-col
+                        cols="12"
+                        md="3"
+                        sm="4"
+                    >
+                        <v-select
+                            density="compact"
+                            v-model="lexpense.currency"
+                            :items="currencies"
+                            item-title="symbol"
+                            item-value="symbol"
+                            nolabel="Currency"
+                            required
+                            :rules="[v => !!v || 'required']"
+                        ></v-select>
+                    </v-col>
 
-                <!-- Amount Input -->
-                <v-col
-                    cols="12"
-                    md="9"
-                    sm="12"
-                >
-                    <v-text-field
-                        density="compact"
-                        v-model="lformData.amount"
-                        type="number"
-                        label="Amount"
-                        required
-                        :rules="[v => !!v || 'Amount is required']"
-                    ></v-text-field>
-                </v-col>
+                    <!-- Amount Input -->
+                    <v-col
+                        cols="12"
+                        md="9"
+                        sm="12"
+                    >
+                        <v-text-field
+                            density="compact"
+                            v-model="lexpense.amount"
+                            type="number"
+                            label="Amount"
+                            required
+                            :rules="[v => !!v || 'Amount is required']"
+                        ></v-text-field>
+                    </v-col>
 
-                <!-- User Dropdown -->  
-                <v-col
-                    cols="12"
-                    md="6"
-                    sm="12"
-                >
-                    <v-select
-                        density="compact"
-                        v-model="lformData.userId"
-                        :items="props.selectedTrip.users"
-                        item-title="user.name"
-                        item-value="user.id"
-                        label="Select User"
-                        required
-                        :rules="[v => !!v || 'User is required']"
-                    ></v-select>
-                </v-col>
+                    <!-- User Dropdown -->  
+                    <v-col
+                        cols="12"
+                        md="6"
+                        sm="12"
+                    >
+                        <v-select
+                            density="compact"
+                            v-model="lexpense.userId"
+                            :items="props.selectedTrip.users"
+                            item-title="user.name"
+                            item-value="user.id"
+                            label="Select User"
+                            required
+                            :rules="[v => !!v || 'User is required']"
+                        ></v-select>
+                    </v-col>
 
-                <!-- Date Input -->  
-                <v-col
-                    cols="12"
-                    md="6"
-                    sm="12"
-                >
-                    <v-date-input
-                        density="compact"
-                        v-model="lformData.date"
-                        label="Expense Date"
-                        required
-                        :rules="[v => !!v || 'Date is required']"
-                    ></v-date-input>
-                </v-col>  
-            </v-row>
-  
-            <small class="text-caption text-medium-emphasis">*indicates required field</small>
-            </v-form>
-          </v-card-text>
-  
-          <v-divider></v-divider>
-  
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn v-if="modeis('add')" text="Add" @click="submitExpense" :disabled="!isFormValid" />
-            <v-btn v-if="modeis('update')" text="Update" @click="updateExpense" :disabled="!isFormValid"/>
-            <v-btn text="Close" @click="closeDialog"/>
-          </v-card-actions>
+                    <!-- Date Input -->  
+                    <v-col
+                        cols="12"
+                        md="6"
+                        sm="12"
+                    >
+                        <v-date-input
+                            density="compact"
+                            v-model="lexpense.date"
+                            label="Expense Date"
+                            required
+                            :rules="[v => !!v || 'Date is required']"
+                        ></v-date-input>
+                    </v-col>  
+                </v-row>
+    
+                <small class="text-caption text-medium-emphasis">*indicates required field</small>
+                </v-form>
+            </v-card-text>
+            <v-divider></v-divider>
+            <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn v-if="modeis('add')" text="Add" @click="handleForm('POST')" :disabled="!isFormValid" />
+                <v-btn v-if="modeis('update')" text="Update" @click="handleForm('PUT')" :disabled="!isFormValid"/>
+                <v-btn text="Close" @click="closeDialog"/>
+            </v-card-actions>
         </v-card>
     </v-dialog>
 </template>
 
 <script setup>
-    import { ref, onMounted } from 'vue'
+    import { ref, computed, onMounted } from 'vue'
     import VueCookies from 'vue-cookies'
 
     const props = defineProps(['selectedTrip','dialog', 'mode','item']);
     const emit = defineEmits(['refresh','dialog']);
 
     const isFormValid = ref(false)
-    const ldialog = ref(props.dialog)
     const dialogcategories = ref([])
-    //const lselectedTrip = ref(null)
 
-    const lformData = ref({
+    const lexpense = ref({
         amount: null,
         currency: '€',
         date: new Date(),
         location: '',
-        // categoryId: null,
-        description: '',
-        // tripId: '',
-        // userId: '',
-        // id:''
-  })
+        description: ''
+    })
 
-  // Reset the Form
-  const resetForm = async () => {
+    // Helper for determining dialog visibility and mode
+    const ldialog = computed({
+        get: () => props.dialog,
+        set: (value) => emit('dialog', value),
+    })
 
-    lformData.value.amount = null
-    lformData.value.date = new Date()
-    lformData.value.description = ''
-    //lformData.value.categoryId = null  
-    //lformData.value.id = null  
-  }
+    const modeis = (e) => props.mode === e
 
-  //currencies seed => would make sense to transfer this table to the database.
-  const currencies = [
-    { name: 'USD', symbol: '$' },
-    { name: 'EUR', symbol: '€' },
-  ]
+    // Reset Form
+    const resetForm = async () => {
+        lexpense.value = {
+            ...lexpense.value,
+            amount: null,
+            date: new Date(),
+            description: ''
+        }
+    }
+
+    // currencies seed => 
+    // it would make sense to transfer this table to the database.
+    const currencies = [
+        { name: 'USD', symbol: '$', factor: 0.92 },
+        { name: 'EUR', symbol: '€', factor: 1.0 }, // Bezugswährung
+    ]
 
     // Fetch Data on Mount
     onMounted(async () => {
-        const data = await $fetch('/api/categories')
-        dialogcategories.value = data
+        dialogcategories.value = await $fetch('/api/categories')
 
         switch(props.mode) {
             case 'add': 
                 resetForm()
                 break;
             case 'update':
-                lformData.value = {
-                    ...lformData.value,
+                lexpense.value = {
+                    ...lexpense.value,
                     id: props.item.id,
                     amount: props.item.amount,
                     currency: props.item.currency,
@@ -202,83 +190,51 @@
         }
     }) 
 
-    //Submit the 'add expense' dialog content:
-    const submitExpense = async () => {
+    const handleForm = async (method) => {
         if (!isFormValid.value) return
 
-        const rec = {
-            amount: parseFloat(lformData.value.amount),
-            date: new Date(lformData.value.date),
-            location: '',
-            currency: lformData.value.currency,
-            description: lformData.value.description,
-            trip: { connect: { id: props.selectedTrip.id }},
-            user: { connect: { id: lformData.value.userId }},
-            category: { connect: { id: lformData.value.categoryId }}
+        let rec = {}
+        if (method === 'POST')  { 
+            rec = {
+                amount: parseFloat(lexpense.value.amount),
+                date: new Date(lexpense.value.date),
+                location: '',
+                currency: lexpense.value.currency,
+                description: lexpense.value.description,
+                trip: { connect: { id: props.selectedTrip.id }},
+                user: { connect: { id: lexpense.value.userId }},
+                category: { connect: { id: lexpense.value.categoryId }}
+            }
         }
-        
+
+        if (method === 'PUT')  { 
+            rec = {
+                ...lexpense.value,
+                amount: parseFloat(lexpense.value.amount)
+            }        
+        }
+
         // Send data to API
         try {
             await $fetch('/api/expenses', {
-                method: 'POST',
+                method,
                 body: rec,
             })
 
             // Reset the form
             resetForm()
             emit('refresh')
-
-            // close the Dialog form
-            ldialog.value = false
-            emit('dialog', ldialog.value);
-
+            closeDialog()
         } catch (error) {
             console.error('Error submitting form:', error)
             alert(error)
         }
+
     }
-
-    //Submit the 'add expense' dialog content:
-    const updateExpense = async () => {
-        if (!isFormValid.value) return
-
-        //DEBUG: console.log('Submitted Data before:', formData.value)
-        // Add logic to submit the data via your API
-        lformData.value.amount = parseFloat(lformData.value.amount)
-
-        //DEBUG: console.log('Submitted Data after:', formData.value)
-        
-        // Send data to API
-        try {
-            await $fetch('/api/expenses', {
-                method: 'PUT',
-                body: lformData.value,
-            })
-
-            // Reset the form
-            resetForm()
-            emit('refresh')
-
-            // close the Dialog form
-            ldialog.value = false
-            emit('dialog', ldialog.value);
-
-        } catch (error) {
-            console.error('Error submitting form:', error)
-            alert(error)
-        }
-    }    
 
     // Close Dialog without Submission of data
     const closeDialog = () => {
         resetForm()
-        ldialog.value = false
-        emit('dialog', ldialog.value);
+        emit('dialog', false);
     }
-
-    const modeis = (e) => {
-        // console.log('modeis:', props.mode, e, (props.mode == e))
-        return (props.mode == e)
-    }
-
 </script>

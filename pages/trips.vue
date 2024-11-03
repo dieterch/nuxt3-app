@@ -50,8 +50,8 @@ import { ref, onMounted } from 'vue'
 import VueCookies from 'vue-cookies'
 
 const trips = ref([])
-const users = ref([])
-const selected = ref([]) // Keep track of selected users
+// const users = ref([])
+// const selected = ref([]) // Keep track of selected users
 const debug = ref(false)
 const isTripsDialogOpen = ref(false)
 const tmode = ref('')
@@ -67,10 +67,7 @@ const tripsHeaders = [
   { title: 'Actions', key: 'actions', align: 'center', width: "5%" , sortable: false },
 ]
 
-const fetchTrips = async () => {
-    const data = await $fetch('/api/trips')
-    trips.value = data
-  }
+const fetchTrips = async () => { trips.value = await $fetch('/api/trips') }
 
 // Fetch Data
 onMounted(async () => {

@@ -24,13 +24,7 @@
           />
         </v-col>
         <v-col class="text-right">
-          <!--d-btn icon="mdi-plus" @click="tdialog = true" />
-          <d-testdialog 
-            :dialog="tdialog" 
-            :key="tdialog" 
-            @dialog="(e)=>{tdialog = e}"/-->
           <d-btn icon="mdi-plus" @click="emode = 'add'; eitem={}; edialog = true"/>
-          <!--d-btn icon="mdi-square-edit-outline" @click="emode = 'update'; eitem={}; edialog = true"/-->
           <d-expensedialog
             :dialog="edialog"
             :key="edialog"
@@ -40,7 +34,6 @@
             @refresh="tripChanged"
             @dialog="(e)=>{edialog = e}"
             />
-
           <d-savefile 
             :key="tripkey(1)" 
             :selectedTrip="selectedTrip" 

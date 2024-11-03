@@ -9,7 +9,7 @@
                     <v-row dense>
                         <v-text-field
                             label="Trip Name"
-                            v-model="ltrip.name"
+                            v-model="formTrip.name"
                             :rules="[v => !!v || 'Name is required']"
                             required
                             density="compact"
@@ -18,7 +18,7 @@
                     <v-row dense>
                         <v-col>
                             <v-data-table
-                                :items="dialogusers"
+                                :items="users"
                                 :headers="usersHeaders"
                                 v-model="selected"
                                 density="compact"
@@ -34,7 +34,7 @@
                         <v-col>
                             <v-date-input
                                 label="Start Date"
-                                v-model="ltrip.startDate"
+                                v-model="formTrip.startDate"
                                 density="compact"
                                 required
                             ></v-date-input>
@@ -61,15 +61,15 @@
     const emit = defineEmits(['refresh','dialog']);
 
     const isFormValid = ref(false)
-    const dialogtrips = ref([])
-    const dialogusers = ref([])
+    const trips = ref([])
+    const users = ref([])
     const userError = ref(false) // Error for user selection
     const selected = ref([]) // Keep track of selected users
 
     const usersHeaders = [{ title: 'Name', key: 'name' }]
 
     // State for the trip data
-    const ltrip = ref({
+    const formTrip = ref({
         name: '',
         startDate: null,
         users: {},
@@ -85,23 +85,23 @@
 
     // Reset Form
     const resetForm = () => {
-        ltrip.value = { name: '', startDate: null, users: {} }
+        formTrip.value = { name: '', startDate: null, users: {} }
         selected.value = []
         userError.value = false
     }
 
     // Fetch Data on Mount
     onMounted(async () => {
-        dialogtrips.value = await $fetch('/api/trips')
-        dialogusers.value = await $fetch('/api/users')
+        trips.value = await $fetch('/api/trips')
+        users.value = await $fetch('/api/users')
         
         switch(props.mode) {
             case 'add': 
                 resetForm()
                 break;
             case 'update':
-                ltrip.value = {
-                    ...ltrip.value,
+                formTrip.value = {
+                    ...formTrip.value,
                     id: props.item.id,
                     name: props.item.name,
                     startDate: new Date(props.item.startDate)
@@ -111,7 +111,6 @@
         }
     
     })
-
 
     const handleForm = async (method) => {
         // Check if form is valid and if at least one user is selected
@@ -137,7 +136,7 @@
         // Prepare users for submission
         const userArray = selected.value.map(element => ({ userId: element.id }))
         const rec = {
-            ...ltrip.value,
+            ...formTrip.value,
             users: (method === 'POST') ? { create: userArray } : userArray
         }
         if (method === 'PUT') { rec.id = props.item.id }

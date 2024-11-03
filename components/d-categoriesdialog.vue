@@ -75,7 +75,7 @@
 
     const isFormValid = ref(false)
     const dialog = ref(false)
-    const dialogcategories = ref([])
+    const categories = ref([])
 
     // State
     const dialogcategory = ref({name: '',icon: ''})
@@ -84,7 +84,7 @@
     // Fetch Data on Mount
     onMounted(async () => {
         const data = await $fetch('/api/categories')
-        dialogcategories.value = data
+        categories.value = data
     })
 
     // Form Submission

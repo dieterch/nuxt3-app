@@ -8,8 +8,8 @@ try {
           id: true,
           name: true,
           email: true,
-          //trips:true,
-          //expenses:true,
+          trips:true,
+          expenses:true,
           //shares:true
         }
       })
@@ -20,6 +20,15 @@ try {
 
     if (event.node.req.method === 'POST') {
       return await prisma.user.create({
+        data: body,
+      })
+    }
+
+    if (event.node.req.method === 'PUT') {
+      return await prisma.user.update({
+        where: {
+          id: body.id
+        },
         data: body,
       })
     }

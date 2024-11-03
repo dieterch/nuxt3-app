@@ -4,7 +4,7 @@
 
       <v-row>
         <v-col class="text-right">
-          <d-btn icon="mdi-plus" @click="umode = 'add'; item={}; isUserDialogOpen = true"/>
+          <d-btn icon="mdi-plus" @click="umode = 'add'; uitem={}; isUserDialogOpen = true"/>
           <d-usersdialog 
             :dialog="isUserDialogOpen"
             :key="isUserDialogOpen"

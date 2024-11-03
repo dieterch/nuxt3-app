@@ -4,7 +4,7 @@
             <v-card-title>{{ modeis('add') ? 'Add Trip' : 'Update Trip' }}</v-card-title>
             <v-card-text>
                 <pre v-if="false">{{ selected }}</pre>
-                <pre v-if="false">{{ props.item.users }}</pre>
+                <pre v-if="false">{{ props }}</pre>
                 <v-form ref="form" v-model="isFormValid" lazy-validation>
                     <v-row dense>
                         <v-text-field
@@ -56,6 +56,7 @@
 
 <script setup>
     import { ref, computed, onMounted } from 'vue'
+    import VueCookies from 'vue-cookies'
 
     const props = defineProps(['dialog','mode','item']);
     const emit = defineEmits(['refresh','dialog']);
@@ -93,7 +94,7 @@
     // Fetch Data on Mount
     onMounted(async () => {
         trips.value = await $fetch('/api/trips')
-        users.value = await $fetch('/api/users')
+        users.value = await $fetch('/api/tripusers')
         
         switch(props.mode) {
             case 'add': 
@@ -150,6 +151,8 @@
 
             // Reset the form and close dialog
             resetForm()
+            // Store changed Trip in a cookie for 30 days.
+            VueCookies.remove('selectedTrip')
             emit('refresh')
             closeDialog()
         } catch (error) {

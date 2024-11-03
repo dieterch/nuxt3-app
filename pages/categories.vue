@@ -4,7 +4,15 @@
 
         <v-row>
           <v-col class="text-right">
-            <d-categoriesdialog @refresh="refreshCategories"/>
+            <d-btn icon="mdi-plus" @click="cmode = 'add'; citem={}; isCategoryDialogOpen = true"/>
+            <d-categoriesdialog 
+              :dialog="isCategoryDialogOpen"
+              :key="isCategoryDialogOpen"
+              :mode="cmode"
+              :item="citem"              
+              @refresh="refreshCategories"
+              @dialog="(e)=>{isCategoryDialogOpen = e}"
+              />
             <d-btn icon="mdi-bug" @click="debug = !debug" />
             <d-btn icon="mdi-refresh" @click="refreshCategories" />
           </v-col>
@@ -13,7 +21,7 @@
         <v-row>
           <v-col>
             <d-table 
-              :items="dialogcategories"
+              :items="categories"
               :headers="categoriesHeaders"
               :show=true
               >
@@ -21,34 +29,38 @@
                       <v-icon :icon=item.icon></v-icon>
                   </template>
                   <template v-slot:item.actions="{ item }">
-                    <d-btn icon="mdi-delete" @click="deleteCategory(item)" />
+                    <div class="button-container">
+                      <d-btn icon="mdi-delete" @click="deleteCategory(item)" />
+                      <d-btn icon="mdi-square-edit-outline" @click="cmode = 'update'; citem=item; isCategoryDialogOpen = true"/>
+                    </div>
                   </template>            
             </d-table>
           </v-col>
         </v-row>
         
         <v-divider color="black" thickness="1"></v-divider>
-        <pre v-if="debug">{{ dialogcategories }}</pre>
+        <pre v-if="debug">{{ categories }}</pre>
     </v-container>
   </template>
   
   <script setup>
   import { ref, onMounted } from 'vue'
   
-  const dialogcategories = ref([])
+  const categories = ref([])
   const debug = ref(false)
-  
+  const isCategoryDialogOpen = ref(false)
+  const cmode = ref('')
+  const citem = ref({})
+
   const categoriesHeaders = [
     { title: 'Name', key: 'name', align: 'start' },
     { title: 'IconText', key: 'icontxt', value: item => `${item.icon}`, align: 'start' },
     { title: 'Icon', key: 'icon', align: 'start' },
+    { title: 'Expenses', key:'countexpenses', value: item => item.expenses.length},
     { title: 'Actions', key: 'actions', align: 'start', width: '5%', sortable: false },
   ]
 
-  const fetchCategories = async () => {
-    const data = await $fetch('/api/categories')
-    dialogcategories.value = data
-  }
+  const fetchCategories = async () => { categories.value = await $fetch('/api/categories') }
 
   // Fetch Data
   onMounted(async () => {
@@ -73,3 +85,8 @@
 
   </script>
   
+  <style lang="css" scoped>
+.button-container {
+  display: flex;
+}
+</style>

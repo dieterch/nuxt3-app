@@ -19,6 +19,15 @@ try {
       })
     }
 
+    if (event.node.req.method === 'PUT') {
+      return await prisma.category.update({
+        where: {
+          id: body.id
+        },
+        data: body,
+      })
+    }
+
     if (event.node.req.method === 'DELETE') {
       const category = await prisma.category.delete({
         where: {

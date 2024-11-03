@@ -7,7 +7,7 @@
         density="compact"
         v-model="selectedTrip"
         @update:modelValue="tripChanged"
-        :items="dialogtrips"
+        :items="trips"
         item-title="name"
         item-value="id"
         label="Select Trip"
@@ -24,15 +24,15 @@
           />
         </v-col>
         <v-col class="text-right">
-          <d-btn icon="mdi-plus" @click="emode = 'add'; eitem={}; edialog = true"/>
+          <d-btn icon="mdi-plus" @click="emode = 'add'; eitem={}; isExpenseDialogOpen = true"/>
           <d-expensedialog
-            :dialog="edialog"
-            :key="edialog"
+            :dialog="isExpenseDialogOpen"
+            :key="isExpenseDialogOpen"
             :mode="emode"
             :item="eitem"
             :selectedTrip="selectedTrip" 
             @refresh="tripChanged"
-            @dialog="(e)=>{edialog = e}"
+            @dialog="(e)=>{isExpenseDialogOpen = e}"
             />
           <d-savefile 
             :key="tripkey(1)" 
@@ -62,7 +62,7 @@
           <template v-slot:item.actions="{ item }">
             <div class="button-container">
               <d-btn icon="mdi-delete" @click="deleteExpense(item)" />
-              <d-btn icon="mdi-square-edit-outline" @click="emode = 'update'; eitem = item; edialog = true"/>
+              <d-btn icon="mdi-square-edit-outline" @click="emode = 'update'; eitem = item; isExpenseDialogOpen = true"/>
             </div>
           </template>
         </d-table>
@@ -82,11 +82,10 @@
   import { ref, onMounted, computed } from 'vue'
   import VueCookies from 'vue-cookies'
 
-  const tdialog = ref(false)
-  const edialog = ref(false)
+  const isExpenseDialogOpen = ref(false)
   const emode = ref('')
   const eitem = ref({})
-  const dialogtrips = ref([])
+  const trips = ref([])
   const selectedTrip = ref(null)
   const filteredexpenses = ref([])
   const debug = ref(false)
@@ -98,17 +97,18 @@
   
   // Fetch Data on Mount
   onMounted(async () => {
+    trips.value = await $fetch('/api/trips')
 
-    const data = await $fetch('/api/trips')
-    dialogtrips.value = data
-    
-    // read selected Trip from cookiev...
-    selectedTrip.value = VueCookies.get('selectedTrip')
-    //DEBUG: console.log("selectedTrip: ",selectedTrip.value)
-    
-    // refresh if dialogtrips.
-    if (selectedTrip) {
-      tripChanged()
+    try {    // read selected Trip from cookiev...
+      selectedTrip.value = VueCookies.get('selectedTrip')
+      //DEBUG: console.log("selectedTrip: ",selectedTrip.value)
+      
+      // refresh if trips.
+      if (selectedTrip) {
+        tripChanged()
+      }
+    } catch (error) {
+      console.error('Error loading Cookie SelectedTrip:', error)
     }
   })
   
@@ -142,7 +142,6 @@
       VueCookies.set('selectedTrip', selectedTrip.value, "30d")
     } catch (error) {
         console.error('Error calling filtered expenses:', error)
-        // alert(error)
     }
   }
 

@@ -71,13 +71,13 @@ export default defineEventHandler(async (event) => {
             where: {
               userId_tripId : {
                 userId: user.userId,
-                tripId: user.tripId,
+                tripId: body.id
               },
             },
             update: {},
             create: {
               userId: user.userId,
-              tripId: user.tripId
+              tripId: body.id
             }
           })
         })

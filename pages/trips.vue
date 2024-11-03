@@ -47,6 +47,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import VueCookies from 'vue-cookies'
 
 const trips = ref([])
 const users = ref([])
@@ -83,11 +84,11 @@ const deleteTrip = async (item) => {
     permit = confirm(`${item.name} has ${item.expenses.length} expenses. Continue ?`)
   }
   if (permit) {
-
     await $fetch('/api/trips', {
       method: 'DELETE',
       body: item,
     })
+    VueCookies.remove('selectedTrip')
     refreshTrips()
   }
 }

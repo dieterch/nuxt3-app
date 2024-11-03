@@ -32,12 +32,18 @@
                             density="compact"
                             v-model="lexpense.categoryId"
                             :items="dialogcategories"
+                            label="Category"
                             item-title="name"
                             item-value="id"
-                            label="♥"
                             required
                             :rules="[v => !!v || 'required']"
-                        ></v-select>
+                        >
+                        <template v-slot:item="{ props, item }">
+                            <v-list-item v-bind="props">
+                                <v-avatar :icon=item.raw.icon></v-avatar>
+                            </v-list-item>
+                        </template>
+                        </v-select>
                     </v-col>
 
                     <!-- Currency Dropdown -->

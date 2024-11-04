@@ -23,6 +23,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { confirmDialog } from 'vuetify3-dialog'
 
 const expenses = ref([])
 
@@ -48,13 +49,25 @@ const expense_headers = [
 
 // Delete Expense
 const deleteExpense = async (item) => {
-  await $fetch('/api/expenses', {
-    method: 'DELETE',
-    body: item,
-  })
 
-  // Refresh trips
-  fetchAllExpenses()
+  let permit = await confirmDialog({ 
+            title: "Please Confirm", 
+            text: `Delete "${item.description}". Continue?`,
+            level: 'warning',
+            // icon: 'mdi-emoticon-happy-outline',
+            cancelText: 'Cancel',
+            confirmationText: 'Ok',
+        })
+
+  if ( permit ) {
+
+    await $fetch('/api/expenses', {
+      method: 'DELETE',
+      body: item,
+    })
+    // Refresh expenses
+    fetchAllExpenses()
+  }
 }
 
 </script>

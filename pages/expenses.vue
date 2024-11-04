@@ -80,6 +80,7 @@
   
 <script setup>
   import { ref, onMounted, computed } from 'vue'
+  import { confirmDialog } from 'vuetify3-dialog'
   import VueCookies from 'vue-cookies'
 
   const isExpenseDialogOpen = ref(false)
@@ -147,13 +148,24 @@
 
   // Delete Expense
   const deleteExpense = async (item) => {
-    await $fetch('/api/expenses', {
-      method: 'DELETE',
-      body: item,
-    })
 
-    // Refresh expenses
-    tripChanged()
+    let permit = await confirmDialog({ 
+            title: "Please Confirm", 
+            text: `Delete "${item.description}". Continue?`,
+            level: 'warning',
+            // icon: 'mdi-emoticon-happy-outline',
+            cancelText: 'Cancel',
+            confirmationText: 'Ok',
+        })
+
+    if ( permit ) {
+      await $fetch('/api/expenses', {
+        method: 'DELETE',
+        body: item,
+      })
+      // Refresh expenses
+      tripChanged()
+    }
   }
 
 </script>

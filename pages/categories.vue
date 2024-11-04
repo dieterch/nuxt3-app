@@ -45,7 +45,9 @@
   
   <script setup>
   import { ref, onMounted } from 'vue'
-  
+  import { confirmDialog } from 'vuetify3-dialog'
+
+
   const categories = ref([])
   const debug = ref(false)
   const isCategoryDialogOpen = ref(false)
@@ -69,7 +71,18 @@
   
   // Delete Category
   const deleteCategory = async (item) => {
-    let permit = (item.expenses.length > 0) ? confirm(`"${item.name}" is used in ${item.expenses.length} expenses. Continue?`):true
+    // let permit = (item.expenses.length > 0) ? confirm(`"${item.name}" is used in ${item.expenses.length} expenses. Continue?`):true
+    
+    let permit =  (item.expenses.length > 0) ? 
+        await confirmDialog({ 
+            title: "Please Confirm", 
+            text: `"${item.name}" is used in ${item.expenses.length} expenses. All connected expenses will be deleted. Continue?`,
+            level: 'warning',
+            // icon: 'mdi-emoticon-happy-outline',
+            cancelText: 'Cancel',
+            confirmationText: 'Ok',
+        }) : true
+
     if ( permit ) {
       await $fetch('/api/categories', {
         method: 'DELETE',

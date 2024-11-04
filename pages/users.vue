@@ -42,6 +42,8 @@
   
 <script setup>
   import { ref, onMounted } from 'vue'
+  import { confirmDialog } from 'vuetify3-dialog'
+
   
   const users = ref([])
   // const isFormValid = ref(false)
@@ -67,10 +69,17 @@
   
   // Delete User
   const deleteUser = async (item) => {
-    let permit = true
-    if (item.trips.length > 0) {
-      permit = confirm(`${item.name} has ${item.trips.length} trips and ${item.expenses.length} expenses. Continue ?`)
-    }
+
+    let permit =  (item.expenses.length > 0) ? 
+        await confirmDialog({ 
+            title: "Please Confirm", 
+            text: `"${item.name}"" has ${item.trips.length} trips and ${item.expenses.length} expenses. All connected expenses in all relevant trips will be deleted.   Continue ?`,
+            level: 'warning',
+            // icon: 'mdi-emoticon-happy-outline',
+            cancelText: 'Cancel',
+            confirmationText: 'Ok',
+        }) : true
+
     if ( permit ) {
 
       await $fetch('/api/users', {

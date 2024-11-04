@@ -47,6 +47,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+ import { confirmDialog } from 'vuetify3-dialog'
 import VueCookies from 'vue-cookies'
 
 const trips = ref([])
@@ -76,10 +77,21 @@ onMounted(async () => {
 
 // Delete Trip
 const deleteTrip = async (item) => {
-  let permit = true
-  if (item.expenses.length > 0) {
-    permit = confirm(`${item.name} has ${item.expenses.length} expenses. Continue ?`)
-  }
+  // let permit = true
+  // if (item.expenses.length > 0) {
+  //   permit = confirm(`${item.name} has ${item.expenses.length} expenses. Continue ?`)
+  // }
+
+  let permit =  (item.expenses.length > 0) ? 
+        await confirmDialog({ 
+            title: "Please Confirm", 
+            text: `"${item.name}" has ${item.expenses.length} expenses. This expenses will be deleted. Continue ?`,
+            level: 'warning',
+            // icon: 'mdi-emoticon-happy-outline',
+            cancelText: 'Cancel',
+            confirmationText: 'Ok',
+        }) : true
+
   if (permit) {
     await $fetch('/api/trips', {
       method: 'DELETE',

@@ -114,24 +114,39 @@
     })
 
     const handleForm = async (method) => {
-        // Check if form is valid and if at least one user is selected
+        // // Check if form is valid and if at least one user is selected
+        // if (!isFormValid.value || selected.value.length === 0) {
+        //     userError.value = selected.value.length === 0
+        //     return
+        // }
+
+        // // if in update, check if all trip related expenses 
+        // // have a valid owner
+        // if (method === 'PUT') {
+        //     let valid = true
+        //     props.item.expenses.forEach((rec) => {
+        //         valid = (valid) ? Boolean(selected.value.find((srec) => { return (srec.id === rec.userId) } )): valid
+        //     })
+        //     if (!valid) {
+        //         alert('TripUsers with expenses cannot not be deleted!')
+        //         closeDialog()
+        //         return
+        //     }
+        // }
+
+        // Ensure the form is valid and at least one user is selected
         if (!isFormValid.value || selected.value.length === 0) {
-            userError.value = selected.value.length === 0
-            return
+            userError.value = selected.value.length === 0;
+            return;
         }
 
-        // if in update, check if all trip related expenses 
-        // have a valid owner
-        if (method === 'PUT') {
-            let valid = true
-            props.item.expenses.forEach((rec) => {
-                valid = (valid) ? Boolean(selected.value.find((srec) => { return (srec.id === rec.userId) } )): valid
-            })
-            if (!valid) {
-                alert('TripUsers with expenses cannot not be deleted!')
-                closeDialog()
-                return
-            }
+        // If in update mode, ensure all trip-related expenses have a valid owner
+        if (method === 'PUT' && props.item.expenses.some(expense => 
+            !selected.value.some(user => user.id === expense.userId)
+        )) {
+            alert('TripUsers with expenses cannot be deleted!');
+            closeDialog();
+            return;
         }
 
         // Prepare users for submission

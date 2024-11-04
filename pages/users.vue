@@ -73,7 +73,7 @@
     let permit =  (item.expenses.length > 0) ? 
         await confirmDialog({ 
             title: "Please Confirm", 
-            text: `"${item.name}"" has ${item.trips.length} trips and ${item.expenses.length} expenses. All connected expenses in all relevant trips will be deleted.   Continue ?`,
+            text: `"${item.name}" takes part in ${item.trips.length} trips and owns ${item.expenses.length} expenses. All connected expenses in all relevant trips will be deleted.   Continue ?`,
             level: 'warning',
             // icon: 'mdi-emoticon-happy-outline',
             cancelText: 'Cancel',

@@ -43,7 +43,7 @@
             <v-divider></v-divider>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn v-if="modeis('add')" text="Add" @click="submitForm" :disabled="!isFormValid"/>
+                <v-btn v-if="modeis('add')" text="Add" @click="handleForm('POST')" :disabled="!isFormValid"/>
                 <v-btn v-if="modeis('update')" text="Update" @click="handleForm('PUT')" :disabled="!isFormValid"/>
                 <v-btn text="Close" @click="closeDialog">Close</v-btn>
             </v-card-actions>
@@ -74,9 +74,7 @@
 
     const modeis = (e) => props.mode === e
         
-    const resetForm = () => { 
-        formCategory.value = {name: '',icon: '' }
-    }
+    const resetForm = () => { formCategory.value = {name: '',icon: '' }}
 
     // Fetch Data on Mount
     onMounted(async () => {
@@ -100,18 +98,7 @@
     const handleForm = async (method) => {
         if (!isFormValid.value) return
         
-        let rec = {}
-        if (method === 'POST')  { 
-            rec = {
-                ...formCategory.value
-            }
-        }
-
-        if (method === 'PUT')  { 
-            rec = {
-                ...formCategory.value
-            }    
-        }
+        rec = { ...formCategory.value } 
 
         // Send data to API
         try {
@@ -131,26 +118,26 @@
         
     }
 
-    // Form Submission
-    const submitForm = async () => {
-        // Check if form is valid and if at least one user is selected
-        if (!isFormValid.value) return
+    // // Form Submission
+    // const submitForm = async () => {
+    //     // Check if form is valid and if at least one user is selected
+    //     if (!isFormValid.value) return
 
-        // Send data to API
-        try {
-            await $fetch('/api/categories', {
-            method: 'POST',
-            body: formCategory.value
-        })
+    //     // Send data to API
+    //     try {
+    //         await $fetch('/api/categories', {
+    //         method: 'POST',
+    //         body: formCategory.value
+    //     })
 
-            // Reset the form and close dialog
-            resetForm()
-            emit('refresh')
-            closeDialog()
-        } catch (error) {
-            console.error('Error submitting form:', error)
-        }
-    }
+    //         // Reset the form and close dialog
+    //         resetForm()
+    //         emit('refresh')
+    //         closeDialog()
+    //     } catch (error) {
+    //         console.error('Error submitting form:', error)
+    //     }
+    // }
 
     // Close Dialog without Submission of data
     const closeDialog = () => {

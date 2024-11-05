@@ -48,7 +48,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
  import { confirmDialog } from 'vuetify3-dialog'
-import VueCookies from 'vue-cookies'
+//import VueCookies from 'vue-cookies'
 
 const trips = ref([])
 // const users = ref([])
@@ -77,10 +77,6 @@ onMounted(async () => {
 
 // Delete Trip
 const deleteTrip = async (item) => {
-  // let permit = true
-  // if (item.expenses.length > 0) {
-  //   permit = confirm(`${item.name} has ${item.expenses.length} expenses. Continue ?`)
-  // }
 
   let permit =  (item.expenses.length > 0) ? 
         await confirmDialog({ 
@@ -97,7 +93,7 @@ const deleteTrip = async (item) => {
       method: 'DELETE',
       body: item,
     })
-    VueCookies.remove('selectedTrip')
+    // VueCookies.remove('selectedTrip')
     refreshTrips()
   }
 }

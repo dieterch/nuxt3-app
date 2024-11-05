@@ -1,11 +1,17 @@
 <template>
 <v-container>
-    <v-btn @click="cdtest1">
-        Create Dialog 1
-    </v-btn>
-    <v-btn @click="cdtest2">
-        Create Dialog 2
-    </v-btn>
+    <v-row>
+        <v-btn 
+            @click="cdtest1">
+            Create Dialog 1
+        </v-btn>
+        <v-btn @click="cdtest2">
+            Create Dialog 2
+        </v-btn>
+        <v-btn @click="cdtest3">
+            Create Dialog 3
+        </v-btn>
+    </v-row>
 </v-container>
 </template>
 
@@ -47,5 +53,17 @@ import { createDialog, warnDialog, confirmDialog } from 'vuetify3-dialog'
         console.log(answer)
     }
 
+    const cdtest3 = async () => {
+
+        const answer = await confirmDialog({ 
+            title: "Please Confirm", 
+            text: `XX has 5 trips and 6 expenses. Continue to delete ?`,
+            level: 'warning',
+            icon: 'mdi-emoticon-happy-outline',
+            cancelText: 'Cancel',
+            confirmationText: 'Ok',
+        })
+        console.log(answer)
+        }
 
 </script>

@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",
-    "@prisma/client": "^5.20.0",
+    "@prisma/client": "^5.22.0",
     "nuxt": "^3.13.0",
     "vite-plugin-vuetify": "^2.0.4",
     "vue": "latest",
@@ -24,6 +24,6 @@
   },
   "devDependencies": {
     "mocha": "^10.8.1",
-    "prisma": "^5.20.0"
+    "prisma": "^5.22.0"
   }
 }

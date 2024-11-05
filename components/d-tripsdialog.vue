@@ -27,9 +27,6 @@
                                 return-object
                                 show-select
                             ></v-data-table>
-                            <v-alert v-if="userError" type="error" dense text >
-                                At least one user must be selected.
-                            </v-alert>
                         </v-col>
                         <v-col>
                             <v-date-input
@@ -56,6 +53,8 @@
 
 <script setup>
     import { ref, computed, onMounted } from 'vue'
+    import { createDialog } from 'vuetify3-dialog'
+
     import VueCookies from 'vue-cookies'
 
     const props = defineProps(['dialog','mode','item']);
@@ -64,7 +63,6 @@
     const isFormValid = ref(false)
     const trips = ref([])
     const users = ref([])
-    const userError = ref(false) // Error for user selection
     const selected = ref([]) // Keep track of selected users
 
     const usersHeaders = [{ title: 'Name', key: 'name' }]
@@ -88,7 +86,6 @@
     const resetForm = () => {
         formTrip.value = { name: '', startDate: null, users: {} }
         selected.value = []
-        userError.value = false
     }
 
     // Fetch Data on Mount
@@ -114,29 +111,22 @@
     })
 
     const handleForm = async (method) => {
-        // // Check if form is valid and if at least one user is selected
-        // if (!isFormValid.value || selected.value.length === 0) {
-        //     userError.value = selected.value.length === 0
-        //     return
-        // }
-
-        // // if in update, check if all trip related expenses 
-        // // have a valid owner
-        // if (method === 'PUT') {
-        //     let valid = true
-        //     props.item.expenses.forEach((rec) => {
-        //         valid = (valid) ? Boolean(selected.value.find((srec) => { return (srec.id === rec.userId) } )): valid
-        //     })
-        //     if (!valid) {
-        //         alert('TripUsers with expenses cannot not be deleted!')
-        //         closeDialog()
-        //         return
-        //     }
-        // }
 
         // Ensure the form is valid and at least one user is selected
         if (!isFormValid.value || selected.value.length === 0) {
-            userError.value = selected.value.length === 0;
+
+            await createDialog({ 
+                title: 'Select Trip Users', 
+                text: 'At least one user must be selected.',
+                level: 'error',
+                // icon: 'mdi-emoticon-happy-outline',
+                buttons: [
+                    { title: 'Ok', key: 'ok', /* any v-btn api option */ },
+                ]
+            })
+
+            // close
+
             return;
         }
 
@@ -144,8 +134,17 @@
         if (method === 'PUT' && props.item.expenses.some(expense => 
             !selected.value.some(user => user.id === expense.userId)
         )) {
-            alert('TripUsers with expenses cannot be deleted!');
-            closeDialog();
+            // alert('TripUsers with expenses cannot be deleted!');
+            await createDialog({ 
+                title: 'Disconnect Trip Users', 
+                text: 'users with expenses cannot be disconnected!',
+                level: 'error',
+                // icon: 'mdi-emoticon-happy-outline',
+                buttons: [
+                    { title: 'Ok', key: 'ok', /* any v-btn api option */ },
+                ]
+            })
+            // closeDialog();
             return;
         }
 

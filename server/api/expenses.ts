@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
     }
     
     const body = await readBody(event) // Verwende readBody statt useBody
-    console.log('body:\n',body)
+    console.log('expenses body:\n',body)
 
     if (event.node.req.method === 'POST') {
       return await prisma.expense.create({

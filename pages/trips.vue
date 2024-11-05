@@ -93,7 +93,7 @@ const deleteTrip = async (item) => {
       method: 'DELETE',
       body: item,
     })
-    // VueCookies.remove('selectedTrip')
+    VueCookies.remove('selectedTripId')
     refreshTrips()
   }
 }

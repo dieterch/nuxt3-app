@@ -165,8 +165,7 @@
 
             // Reset the form and close dialog
             resetForm()
-            // Store changed Trip in a cookie for 30 days.
-            VueCookies.remove('selectedTrip')
+            VueCookies.remove('selectedTripId')
             emit('refresh')
             closeDialog()
         } catch (error) {

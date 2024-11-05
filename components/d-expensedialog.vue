@@ -130,7 +130,6 @@
 
 <script setup>
     import { ref, computed, onMounted } from 'vue'
-    import VueCookies from 'vue-cookies'
 
     const props = defineProps(['selectedTrip','dialog', 'mode','item']);
     const emit = defineEmits(['refresh','dialog']);

@@ -2,7 +2,6 @@
     <v-container>
 
       <v-divider color="black" thickness="1"></v-divider>
-
       <v-select
         density="compact"
         v-model="selectedTrip"
@@ -88,6 +87,7 @@
   const eitem = ref({})
   const trips = ref([])
   const selectedTrip = ref(null)
+  const selectedTripId = ref('')
   const filteredexpenses = ref([])
   const debug = ref(false)
 
@@ -98,18 +98,14 @@
   
   // Fetch Data on Mount
   onMounted(async () => {
+    // fetch available trips
     trips.value = await $fetch('/api/trips')
-
-    try {    // read selected Trip from cookiev...
-      selectedTrip.value = VueCookies.get('selectedTrip')
-      //DEBUG: console.log("selectedTrip: ",selectedTrip.value)
-      
-      // refresh if trips.
-      if (selectedTrip) {
-        tripChanged()
-      }
-    } catch (error) {
-      console.error('Error loading Cookie SelectedTrip:', error)
+    // if a Cookie is set, load selectedTrip (selectedTrip was too large in the end )
+    if ( VueCookies.isKey('selectedTripId') ) {
+      selectedTripId.value = VueCookies.get('selectedTripId')
+      selectedTrip.value = trips.value.find(( item ) => item.id === selectedTripId.value)
+      fetchFilteredExpenses()
+      console.log("selectedTrip", selectedTrip.value, "selectedTripId: ",selectedTripId.value)
     }
   })
   
@@ -131,18 +127,22 @@
     { title: 'Actions', key: 'actions', sortable: false },
   ]
 
+  const fetchFilteredExpenses = async () => {
+    try {    filteredexpenses.value = await $fetch('/api/tripexpenses', {
+          method: 'POST',
+          body: { id: selectedTripId.value }
+      })} catch (error) {
+        console.error('Error fetching filtered Expenses', error);
+      }
+  }
+  
   // fetch filtered Expenses
   const tripChanged = async () => {
-    // Call filtered data from API
-    try {
-      filteredexpenses.value = await $fetch('/api/tripexpenses', {
-          method: 'POST',
-          body: { id: selectedTrip.value.id }
-      })
+    if (selectedTrip.value) {
+      selectedTripId.value=selectedTrip.value.id
+      fetchFilteredExpenses()
       // Store selected Trip in a cookie for 30 days.
-      VueCookies.set('selectedTrip', selectedTrip.value, "30d")
-    } catch (error) {
-        console.error('Error calling filtered expenses:', error)
+      VueCookies.set('selectedTripId', selectedTrip.value.id, "30d")
     }
   }
 

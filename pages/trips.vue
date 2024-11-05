@@ -85,7 +85,7 @@ const deleteTrip = async (item) => {
   let permit =  (item.expenses.length > 0) ? 
         await confirmDialog({ 
             title: "Please Confirm", 
-            text: `"${item.name}" has ${item.expenses.length} expenses. This expenses will be deleted. Continue ?`,
+            text: `<${item.name}> has ${item.expenses.length} expenses. This expenses will be deleted. Continue ?`,
             level: 'warning',
             // icon: 'mdi-emoticon-happy-outline',
             cancelText: 'Cancel',

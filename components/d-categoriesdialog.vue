@@ -1,7 +1,10 @@
 <template>
     <v-dialog v-model="ldialog" max-width="500px">
         <v-card>
-            <v-card-title>{{ modeis('add') ? 'Add Category' : 'Update Category' }}</v-card-title>
+            <v-card-title>
+                <v-icon :icon="formCategory.icon" size="x-large" v-if="formCategory.icon"></v-icon>
+                <v-icon icon="mdi-emoticon-happy" size="x-large" v-else></v-icon>
+                &nbsp;<b>{{ modeis('add') ? 'Add Category' : 'Update Category' }}</b></v-card-title>
             <v-card-text>
                 <v-form 
                     ref="form" v-model="isFormValid" lazy-validation>
@@ -95,10 +98,11 @@
         }        
     })
 
+    // submit or update data
     const handleForm = async (method) => {
         if (!isFormValid.value) return
         
-        rec = { ...formCategory.value } 
+        const rec = { ...formCategory.value } 
 
         // Send data to API
         try {
@@ -117,27 +121,6 @@
         }
         
     }
-
-    // // Form Submission
-    // const submitForm = async () => {
-    //     // Check if form is valid and if at least one user is selected
-    //     if (!isFormValid.value) return
-
-    //     // Send data to API
-    //     try {
-    //         await $fetch('/api/categories', {
-    //         method: 'POST',
-    //         body: formCategory.value
-    //     })
-
-    //         // Reset the form and close dialog
-    //         resetForm()
-    //         emit('refresh')
-    //         closeDialog()
-    //     } catch (error) {
-    //         console.error('Error submitting form:', error)
-    //     }
-    // }
 
     // Close Dialog without Submission of data
     const closeDialog = () => {

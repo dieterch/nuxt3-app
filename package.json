@@ -23,6 +23,9 @@
     "write-excel-file": "^2.0.10"
   },
   "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.7",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
     "mocha": "^10.8.1",
     "prisma": "^5.22.0"
   }

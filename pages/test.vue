@@ -1,21 +1,28 @@
 <template>
-<v-container>
-    <v-row>
-        <v-col>
-            <v-btn 
-                @click="cdtest1">
-                Dialog 1
-            </v-btn>
+<v-container
+    class="ma-6"
+    fluid
+    style="flex-grow: 0;"
+>
+    <v-row
+        align="start"
+        justify="start"
+    >
+        <v-col cols="auto">
+                <v-btn 
+                    @click="cdtest1">
+                    Dialog 1
+                </v-btn>
         </v-col>
-        <v-col>
-            <v-btn @click="cdtest2">
-                Dialog 2
-            </v-btn>
+        <v-col cols="auto">
+                <v-btn @click="cdtest2">
+                    Dialog 2
+                </v-btn>
         </v-col>
-        <v-col>
-            <v-btn @click="cdtest3">
-                Dialog 3
-            </v-btn>
+        <v-col cols="auto">
+                <v-btn @click="cdtest3">
+                    Dialog 3
+                </v-btn>
         </v-col>
     </v-row>
 </v-container>

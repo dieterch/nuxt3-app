@@ -46,8 +46,13 @@
 </template>
 
 <script setup>
+
+definePageMeta({
+  middleware: 'auth'
+})
+
 import { ref, onMounted } from 'vue'
- import { confirmDialog } from 'vuetify3-dialog'
+import { confirmDialog } from 'vuetify3-dialog'
 //import VueCookies from 'vue-cookies'
 
 const trips = ref([])

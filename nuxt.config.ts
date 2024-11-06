@@ -10,6 +10,9 @@ export default defineNuxtConfig({
     host: "0.0.0.0",
     port: 3003
   },
+  // runtimeConfig: {
+  //   JWT_SECRET: process.env.JWT_SECRET, // server-side only
+  // },
   build: {
     transpile: ['vuetify'],
   },

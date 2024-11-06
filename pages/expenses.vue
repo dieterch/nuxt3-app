@@ -78,6 +78,11 @@
 </template>
   
 <script setup>
+
+  definePageMeta({
+    middleware: 'auth'
+  })
+
   import { ref, onMounted, computed } from 'vue'
   import { confirmDialog } from 'vuetify3-dialog'
   import VueCookies from 'vue-cookies'

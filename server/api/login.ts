@@ -1,6 +1,7 @@
 // server/api/login.ts
 import { createToken } from '~/utils/jwt'
-import { PrismaClient } from '@prisma/client'
+import prisma from '~/prisma/client.js'
+// import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcrypt'
 
 // const prisma = new PrismaClient()
@@ -22,7 +23,7 @@ export default defineEventHandler(async (event) => {
   // const { email, password } = await readBody(event)
   const { email, password } = await readBody<{ email: string; password: string }>(event)
 
-    const user = await getUserByEmail(email)
+  const user = await getUserByEmail(email)
     //   // Find user in the database
     //   const user = await prisma.user.findUnique({ where: { email } })
 
@@ -32,9 +33,24 @@ export default defineEventHandler(async (event) => {
 
   // Generate JWT with user info
   const token = await createToken({ userId: user.id, email: user.email })
+  
+  setCookie(event,'user_auth_token',token, 
+    { 
+      httpOnly: false,
+      secure: true,
+      path: '/', 
+      maxAge: 60*60*24*30 // 30d expiration
+    })
 
-  // Set the token as a secure, HTTP-only cookie
-  setCookie(event, 'auth_token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production', path: '/', maxAge: 60 * 60 }) // 1-hour expiration
+  // // Set the token as a secure, HTTP-only cookie
+  // setCookie(event, 'auth_token', token, 
+  //   { 
+  //     //httpOnly: true, 
+  //     //secure: process.env.NODE_ENV === 'production',
+  //     path: '/', 
+  //     maxAge: 60 * 60
+  //   }) // 1-hour expiration
+
 
   return { message: 'Login successful' }
 })

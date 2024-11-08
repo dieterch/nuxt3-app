@@ -41,6 +41,11 @@
 </template>
   
 <script setup>
+
+  definePageMeta({
+    middleware: 'auth'
+  })
+
   import { ref, onMounted } from 'vue'
   import { confirmDialog } from 'vuetify3-dialog'
 

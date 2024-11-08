@@ -55,7 +55,7 @@
     import { ref, computed, onMounted } from 'vue'
     import { createDialog } from 'vuetify3-dialog'
 
-    import VueCookies from 'vue-cookies'
+    // import VueCookies from 'vue-cookies'
 
     const props = defineProps(['dialog','mode','item']);
     const emit = defineEmits(['refresh','dialog']);
@@ -165,7 +165,8 @@
 
             // Reset the form and close dialog
             resetForm()
-            VueCookies.remove('selectedTripId')
+            // VueCookies.remove('selectedTripId')
+            useCookie('selectedTripId').value = null
             emit('refresh')
             closeDialog()
         } catch (error) {

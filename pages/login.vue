@@ -22,8 +22,8 @@
 </template>
   
   <script setup lang="ts">
-  import { ref } from 'vue'
-  import { useCookie, navigateTo } from '#app'
+  // import { ref } from 'vue'
+  // import { navigateTo } from '#app'
   
   const email = ref<string>('')
   const password = ref<string>('')
@@ -34,7 +34,7 @@
         method: 'POST',
         body: { email: email.value, password: password.value },
       })
-      useCookie('auth_token').value = token
+      // useCookie('auth_token').value = token
       navigateTo('/')
     } catch (error) {
       console.error('Login failed:', error)

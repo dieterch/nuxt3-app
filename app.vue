@@ -23,6 +23,7 @@
             <v-list-item><v-btn text variant="flat" to="/categories">Categories</v-btn></v-list-item>
             <v-list-item><v-btn text variant="flat" to="/allexpenses">Expenses</v-btn></v-list-item>
             <v-list-item><v-btn text variant="flat" to="/test">Test</v-btn></v-list-item>
+            <v-list-item><v-btn text variant="flat" to="/logout">Logout</v-btn></v-list-item>
           </v-list>
         </v-menu>
       </v-btn>

@@ -11,9 +11,9 @@
 
 <script setup>
 
-  definePageMeta({
-      middleware: 'auth'
-    })
+  // definePageMeta({
+  //     middleware: 'auth'
+  //   })
 
   import { onMounted } from 'vue'
   onMounted( () => {

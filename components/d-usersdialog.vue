@@ -11,16 +11,6 @@
                         required>
                     </v-text-field>
 
-                    <v-text-field
-                        label="Password*" 
-                        v-model="formUser.password"
-                        :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                        :rules="[v => !!v || 'Password is required',v => v.length >= 8 || 'Min 8 characters']" 
-                        :type="showPassword ? 'text' : 'password'"
-                        hint="At least 8 characters"
-                        @click:append="showPassword = !showPassword"
-                    ></v-text-field>
-
                     <v-text-field 
                         label="User Email*" 
                         v-model="formUser.email" 
@@ -28,6 +18,16 @@
                         required>
                     </v-text-field>
 
+                    <!--v-text-field
+                        label="Password*" 
+                        v-model="formUser.password"
+                        :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                        :rules="[v => !!v || 'Password is required',v => v.length >= 8 || 'Min 8 characters']" 
+                        :type="showPassword ? 'text' : 'password'"
+                        hint="At least 8 characters"
+                        @click:append="showPassword = !showPassword"
+                    ></v-text-field-->
+                    
                     <v-select
                         label="Role*"
                         density="compact"
@@ -72,7 +72,7 @@
     const formUser = ref({ 
         name: '', 
         email: '',
-        password: '',
+        password: 'yourPassword',
         role: 'user'
     })
 
@@ -80,7 +80,7 @@
     const ldialog = computed({
         get: () => props.dialog,
         set: (value) => emit('dialog', value),
-    }) 
+    })
 
     const modeis = (e) => props.mode === e
     

@@ -1,35 +1,37 @@
 // server/api/login.ts
 import { createToken } from '~/utils/jwt'
 import prisma from '~/prisma/client.js'
-// import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcrypt'
 
-// const prisma = new PrismaClient()
+// interface User {
+//     id: number
+//     email: string
+//     password: string // stored hashed password
+//   }
 
 
-interface User {
-    id: number
-    email: string
-    password: string // stored hashed password
-  }
-// Replace with actual data retrieval
-const getUserByEmail = async (email: string): Promise<User | null> => {
-    // Sample user, replace with database query
-    const sampleUser = { id: 1, email: 'test@example.com', password: bcrypt.hashSync('yourPassword', 10) }
-    return email === sampleUser.email ? sampleUser : null
+// const getUserByEmail = async (email: string): Promise<User | null> => {
+const getUserByEmail = async (email: string) => {
+  // Find user in the database
+  const user = await prisma.user.findUnique({ where: { email } })
+  // Mock User: const user = { id: 1, email: 'test@example.com', password: bcrypt.hashSync('yourPassword', 10) }
+  return (user) ? ((email === user.email) ? user : null) : null
   }
 
 export default defineEventHandler(async (event) => {
-  // const { email, password } = await readBody(event)
   const { email, password } = await readBody<{ email: string; password: string }>(event)
 
   const user = await getUserByEmail(email)
-    //   // Find user in the database
-    //   const user = await prisma.user.findUnique({ where: { email } })
 
   if (!user || !bcrypt.compareSync(password, user.password)) {
     throw createError({ statusCode: 401, message: 'Invalid credentials' })
   }
+
+  // Currently Password is plain in the database => will be replaced
+  // by a hash when email registration is implemented.
+  // if (!user || !(password === user.password)) {
+  //   throw createError({ statusCode: 401, message: 'Invalid credentials' })
+  // }
 
   // Generate JWT with user info
   const token = await createToken({ userId: user.id, email: user.email })

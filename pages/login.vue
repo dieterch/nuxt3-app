@@ -12,7 +12,7 @@
             <v-text-field
                 label="Password"
                 v-model="password" 
-                type="password" 
+                type="text" 
                 placeholder="Password"
                 required
                 :rules="[v => !!v || 'Password is required']" />

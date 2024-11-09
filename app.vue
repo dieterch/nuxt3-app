@@ -1,7 +1,6 @@
 <template>
   <v-app>
-
-    <v-app-bar 
+    <!--v-app-bar 
       app 
       _color="primary" 
       dark
@@ -13,7 +12,6 @@
       <v-toolbar-title>Expenses</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn text to="/">Main</v-btn>
-      <!--v-btn text to="/expenses">Expenses</v-btn-->
       <v-btn>
         <span class="mdi mdi-menu"></span>
         <v-menu activator="parent">
@@ -27,7 +25,7 @@
           </v-list>
         </v-menu>
       </v-btn>
-    </v-app-bar>
+    </v-app-bar-->
       
       <v-main>
         <nuxt-page />

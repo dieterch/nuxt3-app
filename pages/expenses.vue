@@ -1,6 +1,6 @@
 <template>
     <v-container>
-
+      <d-appbar />
       <v-divider color="black" thickness="1"></v-divider>
       <v-select
         density="compact"

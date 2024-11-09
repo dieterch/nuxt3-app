@@ -1,5 +1,6 @@
 <template>
     <v-container>
+        <d-appbar />
         <v-row>
             <v-col>
                 <d-table 

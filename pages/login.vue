@@ -1,5 +1,6 @@
 <template>
     <v-container>
+        <d-appbar />
         <v-form 
             ref = "form"
             @submit.prevent="login">

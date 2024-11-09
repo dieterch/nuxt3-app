@@ -4,6 +4,7 @@
     fluid
     style="flex-grow: 0;"
 >
+    <d-appbar />
     <v-row
         align="start"
         justify="start"

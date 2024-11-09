@@ -1,7 +1,6 @@
 <template>
   <v-container>
-    <h2>Manage Trips</h2>
-
+    <d-appbar />
     <v-row>
       <v-col class="text-right">
         <d-btn icon="mdi-plus" @click="tmode = 'add'; titem={}; isTripsDialogOpen = true"/>

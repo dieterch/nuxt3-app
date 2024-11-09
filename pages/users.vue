@@ -1,7 +1,6 @@
 <template>
     <v-container>
-      <h2>Manage Users</h2>
-
+      <d-appbar />
       <v-row>
         <v-col class="text-right">
           <d-btn icon="mdi-plus" @click="umode = 'add'; uitem={}; isUserDialogOpen = true"/>

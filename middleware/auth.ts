@@ -1,27 +1,21 @@
-import { jwtVerify } from 'jose'
-import { useCookie } from '#app'
+// import { jwtVerify } from 'jose'
+// import { useCookie } from '#app'
+import { verifyToken } from "~/utils/jwt"
+import { useAuthToken } from "~/composables/useAuthToken";
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
-
-  // console.log('middleware/auth')
-  // console.log('to', to)
-  // console.log('from', from)
 
   if (import.meta.server) {
     console.log('auth.ts running on backend, skipping')
     return
   }
 
-  // or only skip middleware on initial client load
-  // const nuxtApp = useNuxtApp()
-  // if (import.meta.client && nuxtApp.isHydrating && nuxtApp.payload.serverRendered) {
-  //   console.log(' only skip middleware on initial client load')
-  //   return
-  // }
+  const { getToken } = useAuthToken()
+  const token = getToken()
 
-  const config = useRuntimeConfig()
-  const secret = new TextEncoder().encode(config.public.JWT_SECRET)
-  const token = useCookie('user_auth_token').value
+  // const config = useRuntimeConfig()
+  // const secret = new TextEncoder().encode(config.public.JWT_SECRET)
+  // const token = useCookie('user_auth_token').value
   // console.log('in middleware auth.ts,token:',token, 'secret:', secret)
 
   if (!token) {
@@ -30,8 +24,8 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   }
 
   try {
-    const { payload } = await jwtVerify(token, secret)
-    console.log('payload from jwtVerify', payload)
+    const payload = await verifyToken(token)
+    console.log('payload from verifyToken', payload)
     // You could store `payload` in a global state if needed
   } catch (err) {
     console.log('auth.ts jwtVerify Error:', err)

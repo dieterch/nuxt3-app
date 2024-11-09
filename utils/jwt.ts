@@ -14,10 +14,12 @@ export async function createToken(payload: JWTPayload, expiresIn = '1h'): Promis
 }
 
 // Function to verify and decode a JWT
-export async function verifyToken(token: string): Promise<JWTPayload | null> {
+export async function verifyToken(token: string | null): Promise<JWTPayload | null> {
   try {
-    const { payload } = await jwtVerify(token, JWT_SECRET)
-    return payload
+    if (token) {
+      const { payload } = await jwtVerify(token, JWT_SECRET)
+      return payload
+    } else return null
   } catch (error) {
     console.error('Invalid token:', error)
     return null

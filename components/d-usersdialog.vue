@@ -10,12 +10,33 @@
                         :rules="[v => !!v || 'Name is required']" 
                         required>
                     </v-text-field>
+
+                    <v-text-field
+                        label="Password*" 
+                        v-model="formUser.password"
+                        :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                        :rules="[v => !!v || 'Password is required',v => v.length >= 8 || 'Min 8 characters']" 
+                        :type="showPassword ? 'text' : 'password'"
+                        hint="At least 8 characters"
+                        @click:append="showPassword = !showPassword"
+                    ></v-text-field>
+
                     <v-text-field 
                         label="User Email*" 
                         v-model="formUser.email" 
                         :rules="[v => !!v || 'Name is required']"  
                         required>
-                    </v-text-field>  
+                    </v-text-field>
+
+                    <v-select
+                        label="Role*"
+                        density="compact"
+                        v-model="formUser.role"
+                        :items="roles"
+                        required
+                        :rules="[v => !!v || 'required']"
+                    ></v-select>
+
                     <small class="text-caption text-medium-emphasis">*indicates required field</small>
                 </v-form>
             </v-card-text>
@@ -37,12 +58,22 @@
     const emit = defineEmits(['refresh','dialog']);
 
     const isFormValid = ref(false)
+    const showPassword = ref(false)
     const users = ref([])
+
+    // roles seed => 
+    // it would make sense to transfer this table to the database.
+    const roles = [
+        'user',
+        'admin',
+    ]
 
     // State
     const formUser = ref({ 
         name: '', 
-        email: ''
+        email: '',
+        password: '',
+        role: 'user'
     })
 
     // Helper for determining dialog visibility and mode
@@ -72,6 +103,8 @@
                     id: props.item.id,
                     name: props.item.name,
                     email: props.item.email,
+                    password: props.item.password,
+                    role: props.item.role
                 }
                 break;
         }

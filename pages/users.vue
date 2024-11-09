@@ -60,6 +60,7 @@
   const usersHeaders = [
     { title: 'Email', key: 'email', width: "20%", align: 'start' },
     { title: 'Name', key: 'name', width: "auto", align: 'start' },
+    { title: 'Role', key: 'role', width: "auto", align: 'start' },
     { title: 'Expenses', key:'countexpenses', value: item => item.expenses.length},
     { title: 'Trips', key:'counttrips', value: item => item.trips.length},
     { title: 'Actions', key: 'actions', width: "5%", sortable: false },

@@ -8,6 +8,8 @@ try {
           id: true,
           name: true,
           email: true,
+          password: true,
+          role: true,
           trips:true,
           expenses:true,
           //shares:true

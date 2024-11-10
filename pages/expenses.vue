@@ -112,7 +112,7 @@
       selectedTripId.value = useCookie('selectedTripId').value
       selectedTrip.value = trips.value.find(( item ) => item.id === selectedTripId.value)
       fetchFilteredExpenses()
-      console.log("selectedTrip", selectedTrip.value, "selectedTripId: ",selectedTripId.value)
+      // console.log("selectedTrip", selectedTrip.value, "selectedTripId: ",selectedTripId.value)
     }
   })
   

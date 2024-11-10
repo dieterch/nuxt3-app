@@ -12,10 +12,10 @@ export const useUserInfo = () => {
     const fetchUserInfo = async () => {
         try {
             const token = getToken()
-            console.log('in useUserInfo token:', token)
+            // console.log('in useUserInfo token:', token)
             if (token) {
                 const payload = await $jwtHelper.verifyToken(token)
-                console.log('in useUserInfo payload:', payload)
+                //console.log('in useUserInfo payload:', payload)
                 userInfo.value = payload
             } else {
                 console.warn("No token found")

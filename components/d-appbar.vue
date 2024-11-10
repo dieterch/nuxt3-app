@@ -51,7 +51,7 @@
 
     onMounted(async () => {
       await fetchUserInfo()
-      console.log(userInfo?.value)
+      // console.log(userInfo?.value)
       if (userInfo?.value) {
         userInfo.value = userInfo.value
         loggedIn.value = true

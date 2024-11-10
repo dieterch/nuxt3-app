@@ -27,8 +27,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   try {
     const { $jwtHelper } = useNuxtApp()
     const payload = await $jwtHelper.verifyToken(token)
-    // const payload = await verifyToken(token)
-    console.log('payload from verifyToken', payload)
+    // console.log('payload from verifyToken', payload)
     // You could store `payload` in a global state if needed
   } catch (err) {
     console.log('auth.ts jwtVerify Error:', err)

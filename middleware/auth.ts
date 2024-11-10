@@ -1,6 +1,7 @@
 // import { jwtVerify } from 'jose'
 // import { useCookie } from '#app'
-import { verifyToken } from "~/utils/jwt"
+// import { verifyToken } from "~/utils/jwt"
+import { useNuxtApp } from '#app'
 import { useAuthToken } from "~/composables/useAuthToken";
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
@@ -24,7 +25,9 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   }
 
   try {
-    const payload = await verifyToken(token)
+    const { $jwtHelper } = useNuxtApp()
+    const payload = await $jwtHelper.verifyToken(token)
+    // const payload = await verifyToken(token)
     console.log('payload from verifyToken', payload)
     // You could store `payload` in a global state if needed
   } catch (err) {

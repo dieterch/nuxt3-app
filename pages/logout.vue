@@ -5,13 +5,13 @@
 
 <script setup>
 
-  definePageMeta({
-      middleware: 'auth'
-    })
+  // definePageMeta({
+  //     middleware: 'auth'
+  //   })
 
   import { onMounted } from 'vue'
   onMounted( () => {
     useAuth().logout()
-    navigateTo("/login")
+    navigateTo("/")
   })
 </script>

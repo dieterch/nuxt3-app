@@ -2,28 +2,38 @@
 import { useCookie } from '#app'
 
 export const useAuthToken = () => {
-  const authCookie = useCookie<string | null>('user_auth_token')
-//   , { 
-//     httpOnly: true, 
-//     secure: true, 
-//     sameSite: 'strict',
-//     path: '/', 
-//     maxAge: 60*60*24*30 // 30d expiration
-//   })
+  const authCookieName = 'user_auth_token'
 
   // Set token
   const setToken = (token: string) => {
-    authCookie.value = token
+    if (import.meta.client) {
+      document.cookie = `${authCookieName}=${token}; path=/; max-age=3600;`
+    } else {
+      const authCookie = useCookie(authCookieName)
+      authCookie.value = token
+    }
   }
 
   // Get token
   const getToken = (): string | null => {
-    return authCookie.value
+    if (import.meta.client) {
+      const match = document.cookie.match(new RegExp('(^| )' + authCookieName + '=([^;]+)'))
+      return match ? match[2] : null
+    } else {
+      const authCookie = useCookie(authCookieName)
+      if (typeof(authCookie) === undefined) return null
+      return <string | null>authCookie.value
+    }
   }
 
   // Clear token
   const clearToken = () => {
-    authCookie.value = null
+    if (import.meta.client) {
+      document.cookie = `${authCookieName}=; path=/; max-age=0;`
+    } else {
+      const authCookie = useCookie(authCookieName)
+      authCookie.value = null
+    }
   }
 
   return {
@@ -32,3 +42,32 @@ export const useAuthToken = () => {
     clearToken,
   }
 }
+
+
+// // composables/useAuthToken.ts
+// import { useCookie } from '#app'
+
+// export const useAuthToken = () => {
+//   const authCookie = useCookie<string | null>('user_auth_token')
+
+//   // Set token
+//   const setToken = (token: string) => {
+//     authCookie.value = token
+//   }
+
+//   // Get token
+//   const getToken = (): string | null => {
+//     return authCookie.value
+//   }
+
+//   // Clear token
+//   const clearToken = () => {
+//     authCookie.value = null
+//   }
+
+//   return {
+//     setToken,
+//     getToken,
+//     clearToken,
+//   }
+// }

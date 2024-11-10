@@ -1,36 +1,36 @@
 <template>
-<v-container
-    class="ma-6"
-    fluid
-    style="flex-grow: 0;"
->
     <d-appbar />
-    <v-row
-        align="start"
-        justify="start"
+    <v-container
+        class="ma-6"
+        fluid
+        style="flex-grow: 0;"
     >
-        <v-col cols="auto">
-                <v-btn 
-                    @click="cdtest1">
-                    Dialog 1
-                </v-btn>
-        </v-col>
-        <v-col cols="auto">
-                <v-btn @click="cdtest2">
-                    Dialog 2
-                </v-btn>
-        </v-col>
-        <v-col cols="auto">
-                <v-btn @click="cdtest3">
-                    Dialog 3
-                </v-btn>
-        </v-col>
-    </v-row>
-</v-container>
+        <v-row
+            align="start"
+            justify="start"
+        >
+            <v-col cols="auto">
+                    <v-btn 
+                        @click="cdtest1">
+                        Dialog 1
+                    </v-btn>
+            </v-col>
+            <v-col cols="auto">
+                    <v-btn @click="cdtest2">
+                        Dialog 2
+                    </v-btn>
+            </v-col>
+            <v-col cols="auto">
+                    <v-btn @click="cdtest3">
+                        Dialog 3
+                    </v-btn>
+            </v-col>
+        </v-row>
+    </v-container>
 </template>
 
 <script setup>
-import { createDialog, warnDialog, confirmDialog } from 'vuetify3-dialog'
+    import { createDialog, warnDialog, confirmDialog } from 'vuetify3-dialog'
     import { createNotification, notifySuccess } from 'vuetify3-dialog'
     import { createBottomSheet } from 'vuetify3-dialog'
 

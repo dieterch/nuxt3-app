@@ -10,27 +10,30 @@
         <Display User Role -->
         <v-btn variant="plain" :ripple="false" to="/">Expenses</v-btn>
         <v-spacer></v-spacer>
-        <span>{{ userInfo.name }}&NonBreakingSpace;|&NonBreakingSpace;{{ userInfo.role }}</span>
+        <span v-if="loggedIn">{{ userInfo.name }}&NonBreakingSpace;|&NonBreakingSpace;{{ userInfo.role }}</span>
         <v-btn>
           <span class="mdi mdi-menu"></span>
           <v-menu activator="parent">
             <v-list>
-              <v-list-item>
+              <v-list-item v-if="loggedIn">
                 <v-btn variant="plain" :ripple="false" to="/trips">Trips</v-btn>
               </v-list-item>
-              <v-list-item>
+              <v-list-item v-if="loggedIn">
                 <v-btn variant="plain" :ripple="false" to="/users">Users</v-btn>
               </v-list-item>
-              <v-list-item>
+              <v-list-item v-if="loggedIn">
                 <v-btn variant="plain" :ripple="false" to="/categories">Categories</v-btn>
               </v-list-item>
-              <v-list-item>
+              <v-list-item v-if="loggedIn">
                 <v-btn variant="plain" :ripple="false" to="/allexpenses">Expenses</v-btn>
               </v-list-item>
               <v-list-item>
-                <v-btn variant="plain" :ripple="false" to="/test">Test</v-btn>
+                <v-btn variant="plain" :ripple="false" to="/test">Test (unprotected)</v-btn>
               </v-list-item>
-              <v-list-item>
+              <v-list-item v-if="!loggedIn">
+                <v-btn variant="plain" :ripple="false" to="/login">Login</v-btn>
+              </v-list-item>
+              <v-list-item v-if="loggedIn">
                 <v-btn variant="plain" :ripple="false" to="/logout">Logout</v-btn>
               </v-list-item>
             </v-list>
@@ -40,13 +43,19 @@
   </template>
   
   <script setup>
-    import { ref, computed, onMounted } from 'vue'
-    import { useUserInfo} from '~/composables/useUserInfo'
-    const userInfo = ref({})
+    import { ref, onMounted } from 'vue'
+    import { useUserInfo } from '~/composables/useUserInfo'
+    
+    const { userInfo, fetchUserInfo } = useUserInfo()
+    const loggedIn = ref(false)
 
     onMounted(async () => {
-      const info = await useUserInfo()
-      if (info) { userInfo.value = info }
+      await fetchUserInfo()
+      console.log(userInfo?.value)
+      if (userInfo?.value) {
+        userInfo.value = userInfo.value
+        loggedIn.value = true
+      } 
     })
 
   </script>

@@ -1,5 +1,6 @@
 // server/api/login.ts
 import { createToken } from '~/utils/jwt'
+import { useRuntimeConfig } from '#imports'
 import prisma from '~/prisma/client.js'
 import bcrypt from 'bcrypt'
 
@@ -11,9 +12,11 @@ const getUserByEmail = async (email: string) => {
   }
 
 export default defineEventHandler(async (event) => {
+  const config = useRuntimeConfig()
+  const JWT_SECRET = new TextEncoder().encode(config.public.JWT_SECRET)
+
   const { email, password } = await readBody<{ email: string; password: string }>(event)
   const user = await getUserByEmail(email) // from Database
-
 
   if (!user || !bcrypt.compareSync(password, user.password)) {
     throw createError({ statusCode: 401, message: 'Invalid credentials' })
@@ -25,7 +28,7 @@ export default defineEventHandler(async (event) => {
     name: user.name,
     email: user.email,
     role: user.role
-  })
+  }, JWT_SECRET)
   
   setCookie(event,'user_auth_token',token, 
     { 
@@ -35,17 +38,6 @@ export default defineEventHandler(async (event) => {
       path: '/', 
       maxAge: 60*60*24*30 // 30d expiration
     })
-
-
-  // // Set the token as a secure, HTTP-only cookie
-  // setCookie(event, 'auth_token', token, 
-  //   { 
-  //     //httpOnly: true, 
-  //     //secure: process.env.NODE_ENV === 'production',
-  //     path: '/', 
-  //     maxAge: 60 * 60
-  //   }) // 1-hour expiration
-
 
   return { message: 'Login successful' }
 })

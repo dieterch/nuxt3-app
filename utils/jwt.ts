@@ -1,28 +1,31 @@
 // utils/jwt.ts
 import { SignJWT, jwtVerify, type JWTPayload } from 'jose'
 
-const config = useRuntimeConfig()
-const JWT_SECRET = new TextEncoder().encode(config.public.JWT_SECRET)
-// const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET || 'your-default-secret-key')
-
 // Function to create a signed JWT
-export async function createToken(payload: JWTPayload, expiresIn = '24h'): Promise<string> {
+export const createToken = async (
+  payload: JWTPayload,
+  secret: Uint8Array,
+  expiresIn = '24h'
+): Promise<string> => {
   return new SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })
     .setExpirationTime(expiresIn)
-    .sign(JWT_SECRET)
+    .sign(secret)
 }
 
 // Function to verify and decode a JWT
-export async function verifyToken(token: string | null): Promise<JWTPayload | null> {
+export const verifyToken = async (
+  token: string | null,
+  secret: Uint8Array
+): Promise<JWTPayload | null> => {
   try {
     if (token) {
-      const { payload } = await jwtVerify(token, JWT_SECRET)
+      const { payload } = await jwtVerify(token, secret)
       return payload
-    } else return null
+    }
+    return null
   } catch (error) {
     console.error('Invalid token:', error)
     return null
   }
 }
-

@@ -12,7 +12,7 @@
           @refresh="refreshTrips"
           @dialog="(e)=>{isTripsDialogOpen = e}"
           />
-        <d-btn icon="mdi-bug" @click="debug = !debug" />
+        <d-btn icon="mdi-bug" @click="debug = !debug" v-if="uRole(['admin'])"/>
         <d-btn icon="mdi-refresh" @click="refreshTrips" />
       </v-col>
     </v-row>
@@ -31,7 +31,7 @@
             </template>
             <template v-slot:item.actions="{ item }">
               <div class="button-container">
-                <d-btn icon="mdi-delete" @click="deleteTrip(item)" />
+                <d-btn icon="mdi-delete" @click="deleteTrip(item)" v-if="uRole(['admin'])"/>
                 <d-btn icon="mdi-square-edit-outline" @click="tmode = 'update'; titem=item; isTripsDialogOpen = true"/>
               </div>
             </template>
@@ -49,6 +49,9 @@
 definePageMeta({
   middleware: 'auth'
 })
+
+import { useUserInfo } from '~/composables/useUserInfo'
+const { userInfo, loggedIn, uRole, fetchUserInfo } = useUserInfo()
 
 import { ref, onMounted } from 'vue'
 import { confirmDialog } from 'vuetify3-dialog'
@@ -76,6 +79,7 @@ const fetchTrips = async () => { trips.value = await $fetch('/api/trips') }
 
 // Fetch Data
 onMounted(async () => {
+  await fetchUserInfo()
   fetchTrips()
 })
 

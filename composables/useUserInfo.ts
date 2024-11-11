@@ -25,8 +25,23 @@ export const useUserInfo = () => {
         }
     }
 
+    const loggedIn = () => {
+        return (userInfo?.value)
+    }
+
+    const uRole = ( roles:[] ) => {
+        if (userInfo?.value) {
+        // @ts-ignore
+        //console.log('luserInfo.role:', userInfo.value.role, 'role:', roles, ' == ', (roles.find(( e ) => ( e == userInfo.value.role )) == userInfo.value.role) )
+          // @ts-ignore
+          return (roles.find(( e ) => ( e == userInfo.value.role )) == userInfo.value.role)
+        } else return false
+      }
+
     return {
       userInfo,
+      loggedIn,
+      uRole,
       fetchUserInfo // Ensure this is returned here
     }
 }

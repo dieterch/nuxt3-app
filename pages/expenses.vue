@@ -38,7 +38,7 @@
             :selectedTrip="selectedTrip" 
             :v-bind="selectedTrip"/>
 
-          <d-btn icon="mdi-bug" @click="debug = !debug" />
+          <d-btn icon="mdi-bug" @click="debug = !debug" v-if="uRole(['admin'])"/>
           <d-btn icon="mdi-refresh" @click="tripChanged" />
 
         </v-col>
@@ -79,9 +79,12 @@
   
 <script setup>
 
-  // definePageMeta({
-  //   middleware: 'auth'
-  // })
+  definePageMeta({
+    middleware: 'auth'
+  })
+
+  import { useUserInfo } from '~/composables/useUserInfo'
+  const { userInfo, loggedIn, uRole, fetchUserInfo } = useUserInfo()
 
   import { ref, onMounted, computed } from 'vue'
   import { confirmDialog } from 'vuetify3-dialog'
@@ -103,6 +106,7 @@
   
   // Fetch Data on Mount
   onMounted(async () => {
+    await fetchUserInfo()
     // fetch available trips
     trips.value = await $fetch('/api/trips')
     // if a Cookie is set, load selectedTrip (selectedTrip was too large in the end )

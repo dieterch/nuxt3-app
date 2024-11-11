@@ -107,10 +107,9 @@
   // Fetch Data on Mount
   onMounted(async () => {
     await fetchUserInfo()
+
     // fetch available trips
     trips.value = await $fetch('/api/trips')
-    // if a Cookie is set, load selectedTrip (selectedTrip was too large in the end )
-    // if ( VueCookies.isKey('selectedTripId') ) {
     if ( useCookie('selectedTripId').value ) {
       // selectedTripId.value = VueCookies.get('selectedTripId')
       selectedTripId.value = useCookie('selectedTripId').value

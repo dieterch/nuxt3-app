@@ -18,15 +18,16 @@
                         required>
                     </v-text-field>
 
-                    <!--v-text-field
+                    <v-text-field
                         label="Password*" 
                         v-model="formUser.password"
                         :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                        :rules="[v => !!v || 'Password is required',v => v.length >= 8 || 'Min 8 characters']" 
+                        :norules="[v => !!v || 'Password is required',v => v.length >= 8 || 'Min 8 characters']" 
                         :type="showPassword ? 'text' : 'password'"
                         hint="At least 8 characters"
                         @click:append="showPassword = !showPassword"
-                    ></v-text-field-->
+                        v-if="uRole(['admin'])"
+                    ></v-text-field>
                     
                     <v-select
                         label="Role*"
@@ -52,6 +53,10 @@
 </template>
 
 <script setup>
+    import { useUserInfo } from '~/composables/useUserInfo'
+    const { userInfo, loggedIn, uRole, fetchUserInfo } = useUserInfo()
+    const { $jwtHelper } = useNuxtApp()
+
     import { ref, computed, onMounted } from 'vue'
 
     const props = defineProps(['dialog','mode','item']);
@@ -72,7 +77,7 @@
     const formUser = ref({ 
         name: '', 
         email: '',
-        password: 'yourPassword',
+        password: '',
         role: 'user'
     })
 
@@ -86,11 +91,12 @@
     
     // Reset Form
     const resetForm = () => { 
-        formUser.value = { name: '', email: '' }
+        formUser.value = { name: '', email: '', password: '' }
     }
     
     // Fetch Data on Mount
     onMounted(async () => {
+        await fetchUserInfo()
         users.value = await $fetch('/api/users')
 
         switch(props.mode) {
@@ -103,7 +109,7 @@
                     id: props.item.id,
                     name: props.item.name,
                     email: props.item.email,
-                    password: props.item.password,
+                    // password: props.item.password,
                     role: props.item.role
                 }
                 break;
@@ -115,19 +121,17 @@
     const handleForm = async (method) => {
         if (!isFormValid.value) return
         
-        let rec = {}
-        if (method === 'POST')  { 
-            rec = {
-                ...formUser.value
-            }
-        }
-
+        // rec is the same for BOTH methods
+        let rec = { ...formUser.value }
         if (method === 'PUT')  { 
-            rec = {
-                ...formUser.value
-            }    
+            if (formUser.value.password != '') {
+                try { const { hashed } = await $fetch('/api/hash', 
+                    { method: 'POST', body: { password: formUser.value.password },})
+                    rec.password = hashed
+                } catch (error) { console.log('fetch hash:', error)}
+            } else console.log('Password not changed.')
         }
-
+        
         // Send data to API
         try {
             await $fetch('/api/users', {
@@ -145,27 +149,6 @@
         }
         
     }
-
-    // // Form Submission
-    // const submitForm = async () => {
-    //     // Check if form is valid and if at least one user is selected
-    //     if (!isFormValid.value) return
-
-    //     // Send data to API
-    //     try {
-    //         await $fetch('/api/users', {
-    //         method: 'POST',
-    //         body: formUser.value,
-    //         })
-
-    //         // Reset the form and close dialog
-    //         resetForm()
-    //         emit('refresh')
-    //         closeDialog()
-    //     } catch (error) {
-    //         console.error('Error submitting form:', error)
-    //     }
-    // }
 
     // Close Dialog without Submission of data
     const closeDialog = () => {

@@ -123,14 +123,12 @@
         
         // rec is the same for BOTH methods
         let rec = { ...formUser.value }
-        if (method === 'PUT')  { 
-            if (formUser.value.password != '') {
-                try { const { hashed } = await $fetch('/api/hash', 
-                    { method: 'POST', body: { password: formUser.value.password },})
-                    rec.password = hashed
-                } catch (error) { console.log('fetch hash:', error)}
-            } else console.log('Password not changed.')
-        }
+        if (formUser.value.password != '') {
+            try { const { hashed } = await $fetch('/api/hash', 
+                { method: 'POST', body: { password: formUser.value.password },})
+                rec.password = hashed
+            } catch (error) { console.log('fetch hash:', error)}
+        } else console.log('Password not changed.')
         
         // Send data to API
         try {

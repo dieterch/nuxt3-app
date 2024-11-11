@@ -38,6 +38,7 @@
 
 <script setup lang="ts">
     import { ref, computed } from 'vue'
+    import { createDialog } from 'vuetify3-dialog'
 
     const props = defineProps(['dialog']);
     const emit = defineEmits(['dialog']);
@@ -65,6 +66,16 @@
       emit('dialog', false)
     } catch (error) {
         console.error('Login failed:', error)
+        await createDialog({ 
+            title: "Login", 
+            text: `Login failed, please check and try again`,
+            level: 'error',
+            icon: 'mdi-alert-circle',
+            buttons: [
+                { title: 'Ok', key: 'ok', /* any v-btn api option */ },
+            ]
+
+        })
     }
   }
 

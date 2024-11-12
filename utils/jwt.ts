@@ -20,6 +20,8 @@ export const verifyToken = async (
 ): Promise<JWTPayload | null> => {
   try {
     if (token) {
+      // console.log('token:', token)
+      // console.log('secret:', secret)
       const { payload } = await jwtVerify(token, secret)
       return payload
     }

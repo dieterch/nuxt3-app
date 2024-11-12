@@ -9,6 +9,7 @@
 </template>
   
 <script setup lang="ts">
-  const isLoginDialogOpen = ref(true)
+
+const isLoginDialogOpen = ref(true)
+
 </script>
-  

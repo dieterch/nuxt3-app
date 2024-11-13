@@ -1,5 +1,6 @@
-# Nuxt 3 Minimal Starter
+# Nuxt 3 Expense Manager
 
+Built with Nuxt3
 Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
 
 ## Setup
@@ -10,14 +11,6 @@ Make sure to install the dependencies:
 # npm
 npm install
 
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
 ```
 
 ## Development Server
@@ -27,15 +20,6 @@ Start the development server on `http://localhost:3000`:
 ```bash
 # npm
 npm run dev
-
-# pnpm
-pnpm run dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
 ```
 
 ## Production
@@ -45,15 +29,6 @@ Build the application for production:
 ```bash
 # npm
 npm run build
-
-# pnpm
-pnpm run build
-
-# yarn
-yarn build
-
-# bun
-bun run build
 ```
 
 Locally preview production build:
@@ -72,4 +47,12 @@ yarn preview
 bun run preview
 ```
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+Expense is a small Web Application with Vuetify UI to distribute Cost/Expenses among Trip participants or other group members. I created this Application to explore Nuxt3 and to be free to implement whatever Function we desire on our extended Camper Trips.
+
+Features are
+
+JWT Authentication
+Role based UI
+Excel download for further analysis
+
+(c) 2024 Dieter Chvatal (dieter.chvatal@gmail.com)

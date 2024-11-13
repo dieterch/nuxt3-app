@@ -1,7 +1,6 @@
 <template>
     <v-container>
-        <h2>Manage Categories</h2>
-
+        <d-appbar />
         <v-row>
           <v-col class="text-right">
             <d-btn icon="mdi-plus" @click="cmode = 'add'; citem={}; isCategoryDialogOpen = true"/>
@@ -13,7 +12,7 @@
               @refresh="refreshCategories"
               @dialog="(e)=>{isCategoryDialogOpen = e}"
               />
-            <d-btn icon="mdi-bug" @click="debug = !debug" />
+            <d-btn icon="mdi-bug" @click="debug = !debug" v-if="uRole(['admin'])"/>
             <d-btn icon="mdi-refresh" @click="refreshCategories" />
           </v-col>
         </v-row>
@@ -30,7 +29,7 @@
                   </template>
                   <template v-slot:item.actions="{ item }">
                     <div class="button-container">
-                      <d-btn icon="mdi-delete" @click="deleteCategory(item)" />
+                      <d-btn icon="mdi-delete" @click="deleteCategory(item)" v-if="uRole(['admin'])"/>
                       <d-btn icon="mdi-square-edit-outline" @click="cmode = 'update'; citem=item; isCategoryDialogOpen = true"/>
                     </div>
                   </template>            
@@ -44,6 +43,14 @@
   </template>
   
   <script setup>
+
+  definePageMeta({
+    middleware: 'auth'
+  })
+
+  import { useUserInfo } from '~/composables/useUserInfo'
+  const { userInfo, loggedIn, uRole, fetchUserInfo } = useUserInfo()
+
   import { ref, onMounted } from 'vue'
   import { confirmDialog } from 'vuetify3-dialog'
 
@@ -66,6 +73,7 @@
 
   // Fetch Data
   onMounted(async () => {
+    await fetchUserInfo()
     fetchCategories()
   })
   

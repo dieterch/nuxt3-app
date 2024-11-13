@@ -1,7 +1,6 @@
 <template>
   <v-container>
-    <h2>Manage Trips</h2>
-
+    <d-appbar />
     <v-row>
       <v-col class="text-right">
         <d-btn icon="mdi-plus" @click="tmode = 'add'; titem={}; isTripsDialogOpen = true"/>
@@ -13,7 +12,7 @@
           @refresh="refreshTrips"
           @dialog="(e)=>{isTripsDialogOpen = e}"
           />
-        <d-btn icon="mdi-bug" @click="debug = !debug" />
+        <d-btn icon="mdi-bug" @click="debug = !debug" v-if="uRole(['admin'])"/>
         <d-btn icon="mdi-refresh" @click="refreshTrips" />
       </v-col>
     </v-row>
@@ -32,7 +31,7 @@
             </template>
             <template v-slot:item.actions="{ item }">
               <div class="button-container">
-                <d-btn icon="mdi-delete" @click="deleteTrip(item)" />
+                <d-btn icon="mdi-delete" @click="deleteTrip(item)" v-if="uRole(['admin'])"/>
                 <d-btn icon="mdi-square-edit-outline" @click="tmode = 'update'; titem=item; isTripsDialogOpen = true"/>
               </div>
             </template>
@@ -46,8 +45,16 @@
 </template>
 
 <script setup>
+
+definePageMeta({
+  middleware: 'auth'
+})
+
+import { useUserInfo } from '~/composables/useUserInfo'
+const { userInfo, loggedIn, uRole, fetchUserInfo } = useUserInfo()
+
 import { ref, onMounted } from 'vue'
- import { confirmDialog } from 'vuetify3-dialog'
+import { confirmDialog } from 'vuetify3-dialog'
 //import VueCookies from 'vue-cookies'
 
 const trips = ref([])
@@ -72,6 +79,7 @@ const fetchTrips = async () => { trips.value = await $fetch('/api/trips') }
 
 // Fetch Data
 onMounted(async () => {
+  await fetchUserInfo()
   fetchTrips()
 })
 
@@ -93,7 +101,8 @@ const deleteTrip = async (item) => {
       method: 'DELETE',
       body: item,
     })
-    VueCookies.remove('selectedTripId')
+    // VueCookies.remove('selectedTripId')
+    useCookie('selectedTripId').value = null
     refreshTrips()
   }
 }

@@ -17,6 +17,8 @@ model User {
   id        String      @id @default(uuid())
   email     String      @unique
   name      String
+  password  String
+  role      String
   trips     TripUser[] // Beziehung zu den Trips
   expenses  Expense[] // Ausgaben des Nutzers
   shares    TripShare[] // Anteil an den Gesamtkosten pro Trip

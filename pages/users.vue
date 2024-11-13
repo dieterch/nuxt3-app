@@ -1,7 +1,6 @@
 <template>
     <v-container>
-      <h2>Manage Users</h2>
-
+      <d-appbar />
       <v-row>
         <v-col class="text-right">
           <d-btn icon="mdi-plus" @click="umode = 'add'; uitem={}; isUserDialogOpen = true"/>
@@ -41,6 +40,11 @@
 </template>
   
 <script setup>
+
+  definePageMeta({
+    middleware: 'auth'
+  })
+
   import { ref, onMounted } from 'vue'
   import { confirmDialog } from 'vuetify3-dialog'
 
@@ -55,6 +59,7 @@
   const usersHeaders = [
     { title: 'Email', key: 'email', width: "20%", align: 'start' },
     { title: 'Name', key: 'name', width: "auto", align: 'start' },
+    { title: 'Role', key: 'role', width: "auto", align: 'start' },
     { title: 'Expenses', key:'countexpenses', value: item => item.expenses.length},
     { title: 'Trips', key:'counttrips', value: item => item.trips.length},
     { title: 'Actions', key: 'actions', width: "5%", sortable: false },

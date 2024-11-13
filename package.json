@@ -13,16 +13,19 @@
   "dependencies": {
     "@mdi/font": "^7.4.47",
     "@prisma/client": "^5.22.0",
+    "bcrypt": "^5.1.1",
+    "jose": "^5.9.6",
     "nuxt": "^3.13.0",
     "vite-plugin-vuetify": "^2.0.4",
     "vue": "latest",
-    "vue-cookies": "^1.8.4",
     "vue-forward-slots": "^5.0.4",
     "vuetify": "^3.7.1",
     "vuetify3-dialog": "^1.5.3",
     "write-excel-file": "^2.0.10"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/node-jose": "^1.1.13",
     "mocha": "^10.8.1",
     "prisma": "^5.22.0"
   }

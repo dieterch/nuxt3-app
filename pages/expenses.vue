@@ -1,6 +1,6 @@
 <template>
     <v-container>
-
+      <d-appbar />
       <v-divider color="black" thickness="1"></v-divider>
       <v-select
         density="compact"
@@ -38,7 +38,7 @@
             :selectedTrip="selectedTrip" 
             :v-bind="selectedTrip"/>
 
-          <d-btn icon="mdi-bug" @click="debug = !debug" />
+          <d-btn icon="mdi-bug" @click="debug = !debug" v-if="uRole(['admin'])"/>
           <d-btn icon="mdi-refresh" @click="tripChanged" />
 
         </v-col>
@@ -78,9 +78,17 @@
 </template>
   
 <script setup>
+
+  definePageMeta({
+    middleware: 'auth'
+  })
+
+  import { useUserInfo } from '~/composables/useUserInfo'
+  const { userInfo, loggedIn, uRole, fetchUserInfo } = useUserInfo()
+
   import { ref, onMounted, computed } from 'vue'
   import { confirmDialog } from 'vuetify3-dialog'
-  import VueCookies from 'vue-cookies'
+  // import VueCookies from 'vue-cookies'
 
   const isExpenseDialogOpen = ref(false)
   const emode = ref('')
@@ -98,14 +106,16 @@
   
   // Fetch Data on Mount
   onMounted(async () => {
+    await fetchUserInfo()
+
     // fetch available trips
     trips.value = await $fetch('/api/trips')
-    // if a Cookie is set, load selectedTrip (selectedTrip was too large in the end )
-    if ( VueCookies.isKey('selectedTripId') ) {
-      selectedTripId.value = VueCookies.get('selectedTripId')
+    if ( useCookie('selectedTripId').value ) {
+      // selectedTripId.value = VueCookies.get('selectedTripId')
+      selectedTripId.value = useCookie('selectedTripId').value
       selectedTrip.value = trips.value.find(( item ) => item.id === selectedTripId.value)
       fetchFilteredExpenses()
-      console.log("selectedTrip", selectedTrip.value, "selectedTripId: ",selectedTripId.value)
+      // console.log("selectedTrip", selectedTrip.value, "selectedTripId: ",selectedTripId.value)
     }
   })
   
@@ -142,7 +152,8 @@
       selectedTripId.value=selectedTrip.value.id
       fetchFilteredExpenses()
       // Store selected Trip in a cookie for 30 days.
-      VueCookies.set('selectedTripId', selectedTrip.value.id, "30d")
+      useCookie('selectedTripId', { maxAge: 60*60*24*30 }).value = selectedTrip.value.id 
+      // VueCookies.set('selectedTripId', selectedTrip.value.id, "30d")
     }
   }
 

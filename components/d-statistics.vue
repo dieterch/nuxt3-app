@@ -20,7 +20,7 @@
     </table>
     <table
         density="compact"
-        class="mt-2"
+        class="mt-1"
         v-if="showsummary"
     >
         <thead>
@@ -39,7 +39,7 @@
                     {{ Number(amount).toFixed(0) }}€
                 </td>
                 <td>
-                    {{ Number(percentage).toFixed(0) }}%
+                    {{ percentage }}%
                 </td>
             </tr>
         </tbody>
@@ -117,7 +117,7 @@ const sumExpensesByCategory = (expenses, userName = null) => {
         for (const [category, amount] of Object.entries(categorySums)) {
                 categorySummary[category] = {
                     amount,
-                    percentage: totalAmount ? ((amount / totalAmount) * 100).toFixed(2) : 0,
+                    percentage: totalAmount ? ((amount / totalAmount) * 100).toFixed(0) : 0,
                 };
         }
         return categorySummary;

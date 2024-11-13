@@ -8,6 +8,7 @@
       >
         <!--v-toolbar-title>Expenses</v-toolbar-title>
         <Display User Role -->
+        <v-icon icon="mdi-web" class="ml-4" color="grey"></v-icon>
         <v-btn variant="plain" :ripple="false" to="/">Expenses</v-btn>
         <v-spacer></v-spacer>
         <span v-if="loggedIn()">{{ userInfo.name }}&NonBreakingSpace;|&NonBreakingSpace;{{ userInfo.role }}</span>

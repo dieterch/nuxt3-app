@@ -15,7 +15,7 @@ npm install
 
 ## Development Server
 
-Start the development server on `http://localhost:3000`:
+Start the development server on `http://localhost:3003`:
 
 ```bash
 # npm
@@ -36,16 +36,11 @@ Locally preview production build:
 ```bash
 # npm
 npm run preview
-
-# pnpm
-pnpm run preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
 ```
+
+However, JWT Authentication requires an HTTPS SSL connection, otherwise you will not be able to log into 
+the app. For development i use Caddy & mkcert to issue a local certificate in my home network. There the App runs in a docker stack with caddy & expense, but it should run in SSL environment.
+
 
 Expense is a small Web Application with Vuetify UI to distribute Cost/Expenses among Trip participants or other group members. I created this Application to explore Nuxt3 and to be free to implement whatever Function we desire on our extended Camper Trips.
 

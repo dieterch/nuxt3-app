@@ -25,3 +25,6 @@ logs
 
 # test environment
 prelab
+
+# the database itself
+prisma/*.db

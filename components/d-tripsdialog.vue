@@ -8,7 +8,7 @@
                 <v-form ref="form" v-model="isFormValid" lazy-validation>
                     <v-row dense>
                         <v-text-field
-                            label="Trip Name"
+                            label="Trip Name*"
                             v-model="formTrip.name"
                             :rules="[v => !!v || 'Name is required']"
                             required
@@ -26,14 +26,15 @@
                                 hide-default-header
                                 return-object
                                 show-select
-                            ></v-data-table>
+                                ></v-data-table>
                         </v-col>
                         <v-col>
                             <v-date-input
-                                label="Start Date"
+                                label="Start Date*"
                                 v-model="formTrip.startDate"
                                 density="compact"
                                 required
+                                :rules="[v => !!v || 'Startdate is required']"
                             ></v-date-input>
                         </v-col>
                     </v-row>
@@ -117,7 +118,7 @@
 
             await createDialog({ 
                 title: 'Select Trip Users', 
-                text: 'At least one user must be selected.',
+                text: 'At least one participant must be selected.',
                 level: 'error',
                 // icon: 'mdi-emoticon-happy-outline',
                 buttons: [

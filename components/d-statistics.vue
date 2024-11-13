@@ -18,7 +18,32 @@
             </tr>
         </tbody>
     </table>
-    <div v-html="htmlcontent" class="mt-2"></div>
+    <table
+        density="compact"
+        class="mt-2"
+        v-if="showsummary"
+    >
+        <thead>
+            <tr>
+                <th>Category</th>
+                <th>Total Amount</th>
+                <th>Percentage</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="([category, { amount, percentage }], index) in Object.entries(expensesummary)" :key="index">
+                <td>
+                    {{  category }}
+                </td>
+                <td>
+                    {{ Number(amount).toFixed(0) }}€
+                </td>
+                <td>
+                    {{ Number(percentage).toFixed(0) }}%
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </template>
 
 <script setup>
@@ -29,6 +54,8 @@ const props = defineProps(['filteredexpenses','selectedTrip'])
 
 const lselectedTrip = ref(props.selectedTrip)
 const lfilteredexpenses = ref(props.filteredexpenses)
+const showsummary = ref(false)
+const expensesummary = ref({})
 
 const overview = computed(() => {
     if (lselectedTrip.value) {
@@ -79,7 +106,7 @@ const sumExpensesByCategory = (expenses, userName = null) => {
                 const category = rec.category.name;
                 acc[category] = (acc[category] || 0) + rec.amount;
             }
-        return acc;
+            return acc;
         }, {});
 
         // Calculate total sum of all categories
@@ -93,31 +120,19 @@ const sumExpensesByCategory = (expenses, userName = null) => {
                     percentage: totalAmount ? ((amount / totalAmount) * 100).toFixed(2) : 0,
                 };
         }
-         return categorySummary;
+        return categorySummary;
     }
 
-const htmlcontent = ref('')
-
-const generateExpenseTable = (expenseSummary) => {
-  let html = '<table border="1"><tr><th>Category</th><th>Total Amount</th><th>Percentage</th></tr>';
-  for (const [category, { amount, percentage }] of Object.entries(expenseSummary)) {
-    html += `<tr><td>${category}</td><td>${amount.toFixed(2)}</td><td>${percentage}%</td></tr>`;
-  }
-  html += '</table>';
-  return html;
-}
-
 const category_summary = () => {
-    // const expenses = lfilteredexpenses.value
     // // Get totals and percentages for a specific user, e.g., "Susanne"
     // const userExpenses = sumExpensesByCategory(expenses, "Susanne");
     // const userExpenseTable = generateExpenseTable(userExpenses);
     // console.log(userExpenses);  // Append the table to the document
 
     // Get totals and percentages for all users
-    const allExpenses = sumExpensesByCategory(lfilteredexpenses.value);
-    const allExpenseTable = generateExpenseTable(allExpenses);
-    htmlcontent.value = allExpenseTable
+    // const allExpenses = sumExpensesByCategory(lfilteredexpenses.value);
+    expensesummary.value = sumExpensesByCategory(lfilteredexpenses.value);
+    showsummary.value = !showsummary.value
     // console.log(allExpenses);  // Append the table to the document
 }
 

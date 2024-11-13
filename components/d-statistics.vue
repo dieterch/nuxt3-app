@@ -48,18 +48,17 @@
 
 <script setup>
 import { ref } from 'vue'
-import Allexpenses from '~/pages/allexpenses.vue';
 
-const props = defineProps(['filteredexpenses','selectedTrip'])
+const props = defineProps(['expenses','selectedTrip'])
 
 const lselectedTrip = ref(props.selectedTrip)
-const lfilteredexpenses = ref(props.filteredexpenses)
+const expenses = ref(props.expenses)
 const showsummary = ref(false)
 const expensesummary = ref({})
 
 const overview = computed(() => {
     if (lselectedTrip.value) {
-        const total = lfilteredexpenses.value.reduce( (sum, { amount }) => sum + amount, 0)
+        const total = expenses.value.reduce( (sum, { amount }) => sum + amount, 0)
         const tdays = Math.ceil(totalDays())
         const avgexpense = total / tdays
 
@@ -69,11 +68,11 @@ const overview = computed(() => {
             { name:"Avg", value: avgexpense.toFixed(0) + "€" }
         ]
         const userbalance = (lselectedTrip.value.users.map((rec) => {
-          const lsum = lfilteredexpenses.value.reduce( (sum, { amount, userId }) => ( userId === rec.user.id) ? sum + amount : sum, 0)
+          const lsum = expenses.value.reduce( (sum, { amount, userId }) => ( userId === rec.user.id) ? sum + amount : sum, 0)
           return {
             name: rec.user.name,
             value: `${lsum.toFixed(0)}€`,
-            share: `(${(lfilteredexpenses.value.length > 0) ? ((lsum / total) * 100).toFixed(0):"0"}%)`
+            share: `(${(expenses.value.length > 0) ? ((lsum / total) * 100).toFixed(0):"0"}%)`
           }
         }))
         return summary.concat(userbalance)
@@ -84,10 +83,10 @@ const overview = computed(() => {
 
 const totalDays = () => {
     try {
-        if ((lselectedTrip) && (lfilteredexpenses.value.length > 0)) {
+        if ((lselectedTrip) && (expenses.value.length > 0)) {
             let startdate = lselectedTrip.value.startDate
-            let lastdate = lfilteredexpenses.value[0].date
-            lfilteredexpenses.value.forEach((rec) => { lastdate = (lastdate > rec.date) ? lastdate : rec.date})
+            let lastdate = expenses.value[0].date
+            expenses.value.forEach((rec) => { lastdate = (lastdate > rec.date) ? lastdate : rec.date})
             let diff = (new Date(lastdate) - new Date(startdate))/(1000*60*60*24)
             return diff
         } else {
@@ -130,8 +129,8 @@ const category_summary = () => {
     // console.log(userExpenses);  // Append the table to the document
 
     // Get totals and percentages for all users
-    // const allExpenses = sumExpensesByCategory(lfilteredexpenses.value);
-    expensesummary.value = sumExpensesByCategory(lfilteredexpenses.value);
+    // const allExpenses = sumExpensesByCategory(expenses.value);
+    expensesummary.value = sumExpensesByCategory(expenses.value);
     showsummary.value = !showsummary.value
     // console.log(allExpenses);  // Append the table to the document
 }

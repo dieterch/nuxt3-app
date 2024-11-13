@@ -2,6 +2,13 @@
     <v-container>
         <d-appbar />
         <v-row>
+          <!--v-col md="6">
+            <d-statistics
+              :key="expenses"
+              :expenses="expenses"
+              :v-bind="expenses"
+            />
+          </v-col-->
           <v-col class="text-right">
           <d-savefile 
             :key="expenses"

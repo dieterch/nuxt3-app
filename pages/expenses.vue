@@ -17,7 +17,7 @@
         <v-col md="6">
           <d-statistics
             :key="filteredexpenses"
-            :filteredexpenses="filteredexpenses"
+            :expenses="filteredexpenses"
             :selectedTrip="selectedTrip"
             :v-bind="selectedTrip"
           />

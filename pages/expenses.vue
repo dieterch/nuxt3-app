@@ -35,7 +35,8 @@
             />
           <d-savefile 
             :key="tripkey(1)" 
-            :selectedTrip="selectedTrip" 
+            :selectedTrip="selectedTrip"
+            mode="single" 
             :v-bind="selectedTrip"/>
 
           <d-btn icon="mdi-bug" @click="debug = !debug" v-if="uRole(['admin'])"/>

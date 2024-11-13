@@ -6,7 +6,7 @@
   import { ref } from 'vue'
   import writeXlsxFile from 'write-excel-file'
 
-  const props=defineProps(['selectedTrip'])
+  const props=defineProps(['selectedTrip','mode'])
   const lselectedTrip = ref(props.selectedTrip)
 
   //   id          String   @id @default(uuid())
@@ -55,19 +55,27 @@
       column: 'Teilnehmer',
       type: String,
       value: rec => rec.user 
-    }
+    },
+    {
+      column: 'Reise',
+      type: String,
+      value: rec => rec.tripname,
+    },
   ]
 
   const saveToExcel = async() => {
 
-    const lfilteredexpenses = await $fetch('/api/tripexpenses', {
+    const lexpenses = (props.mode == 'single') ? 
+    await $fetch('/api/tripexpenses', { // mode 'single'
           method: 'POST',
           body: { id: lselectedTrip.value.id }
-    })
+    }) :
+    await $fetch('/api/expenses') // mode 'all'
 
     // design objects array:
-    const lobjects = lfilteredexpenses.map(rec => ({
+    const lobjects = lexpenses.map(rec => ({
       date: new Date(rec.date),
+      tripname: rec.trip.name,
       category: rec.category.name,
       description: rec.description,
       amount: rec.amount,
@@ -75,9 +83,10 @@
       user: rec.user.name,
     }))
 
+    const lfilename = (props.mode == 'single') ? `${lselectedTrip.value.name}.xlsx` : 'allexpenses.xlsx'
     await writeXlsxFile(lobjects, {
       schema,
-      fileName: `${lselectedTrip.value.name}.xlsx`
+      fileName: lfilename  // `${lselectedTrip.value.name}.xlsx`
     })
   }
 

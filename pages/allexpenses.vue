@@ -1,6 +1,17 @@
 <template>
     <v-container>
         <d-appbar />
+        <v-divider color="black" thickness="1"></v-divider>
+        <v-row>
+          <v-col class="text-right">
+          <d-savefile 
+            :key="expenses"
+            mode="all"
+            :v-bind="expenses"/>
+          <d-btn icon="mdi-bug" @click="debug = !debug" v-if="uRole(['admin'])"/>
+          <d-btn icon="mdi-refresh" @click="fetchAllExpenses" />
+        </v-col>
+    </v-row>
         <v-row>
             <v-col>
                 <d-table 
@@ -18,6 +29,11 @@
                 </d-table>
             </v-col>
         </v-row>
+        <div v-if="debug">
+          All Expenses:
+        <pre>{{ expenses }}</pre>
+    </div>
+
     </v-container>
 </template>
 
@@ -28,10 +44,15 @@
     middleware: 'auth'
   })
 
+import { useUserInfo } from '~/composables/useUserInfo'
+const { userInfo, loggedIn, uRole, fetchUserInfo } = useUserInfo()
+
+
 import { ref, onMounted } from 'vue'
 import { confirmDialog } from 'vuetify3-dialog'
 
 const expenses = ref([])
+const debug = ref(false)
 
 const fetchAllExpenses = async () => {
     const data = await $fetch('/api/expenses')
@@ -39,6 +60,7 @@ const fetchAllExpenses = async () => {
   }
 
 onMounted(async () => {
+  await fetchUserInfo()
   fetchAllExpenses()
 })
 

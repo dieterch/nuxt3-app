@@ -63,9 +63,9 @@
 
   const categoriesHeaders = [
     { title: 'Name', key: 'name', align: 'start' },
-    { title: 'IconText', key: 'icontxt', value: item => `${item.icon}`, align: 'start' },
     { title: 'Icon', key: 'icon', align: 'start' },
     { title: 'Expenses', key:'countexpenses', value: item => item.expenses.length},
+    { title: 'IconText', key: 'icontxt', value: item => `${item.icon}`, align: 'start' },
     { title: 'Actions', key: 'actions', align: 'start', width: '5%', sortable: false },
   ]
 

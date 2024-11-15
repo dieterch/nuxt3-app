@@ -1,11 +1,11 @@
 <template>
     <table
         density="compact"
-        @click="category_summary"
+        @noclick="category_summary"
     >
         <thead>
             <tr>
-                <th v-for="(item, index) in overview" :key="index">
+                <th v-for="(item, index) in overview" :key="index" @click="category_summary(item.name)">
                     {{ item.name }}
                 </th>
             </tr>
@@ -22,6 +22,7 @@
         density="compact"
         class="mt-1"
         v-if="showsummary"
+        @click="showsummary=false"
     >
         <thead>
             <tr>
@@ -122,17 +123,28 @@ const sumExpensesByCategory = (expenses, userName = null) => {
         return categorySummary;
     }
 
-const category_summary = () => {
-    // // Get totals and percentages for a specific user, e.g., "Susanne"
-    // const userExpenses = sumExpensesByCategory(expenses, "Susanne");
-    // const userExpenseTable = generateExpenseTable(userExpenses);
-    // console.log(userExpenses);  // Append the table to the document
+// const category_summary = () => {
+//     // // Get totals and percentages for a specific user, e.g., "Susanne"
+//     // const userExpenses = sumExpensesByCategory(expenses, "Susanne");
+//     // const userExpenseTable = generateExpenseTable(userExpenses);
+//     // console.log(userExpenses);  // Append the table to the document
 
-    // Get totals and percentages for all users
-    // const allExpenses = sumExpensesByCategory(expenses.value);
-    expensesummary.value = sumExpensesByCategory(expenses.value);
-    showsummary.value = !showsummary.value
-    // console.log(allExpenses);  // Append the table to the document
+//     // Get totals and percentages for all users
+//     // const allExpenses = sumExpensesByCategory(expenses.value);
+//     expensesummary.value = sumExpensesByCategory(expenses.value);
+//     showsummary.value = !showsummary.value
+//     // console.log(allExpenses);  // Append the table to the document
+// }
+
+const category_summary = (e) => {
+    if ((e == 'Total') || (e == 'Days') || (e == 'Avg')) {
+        console.log('Total') 
+        expensesummary.value = sumExpensesByCategory(expenses.value);
+    } else {
+        console.log(e) 
+        expensesummary.value = sumExpensesByCategory(expenses.value, e);
+    }
+    showsummary.value = true
 }
 
 </script>

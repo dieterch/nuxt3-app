@@ -6,7 +6,8 @@
             v-model:sort-by="props.sortBy"
             density="compact"
             nothide-default-footer
-            v-if="lshow"            
+            v-if="lshow"
+            @click:row="go"   
         >
         </v-data-table>
     </ForwardSlots>          
@@ -17,6 +18,12 @@ import { ref } from 'vue'
 import {ForwardSlots} from "vue-forward-slots"
 
 const props = defineProps(['items','headers','sortBy','show'])
+const emit = defineEmits(['clickrow']);
+
 const lshow = ref(props.show)
+
+const go = ( event, row ) => {
+   emit('clickrow', row.item.id) 
+}
 
 </script>

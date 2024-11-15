@@ -23,6 +23,8 @@
           :items="trips"
           :headers="tripsHeaders"
           :show=true
+          @clickrow="(e) => clickrow(e)"
+
         >
             <template v-slot:item.users="{ item }">
               <span v-for="(e, index) in item.users" :key="index">
@@ -31,8 +33,8 @@
             </template>
             <template v-slot:item.actions="{ item }">
               <div class="button-container">
-                <d-btn icon="mdi-delete" @click="deleteTrip(item)" v-if="uRole(['admin'])"/>
-                <d-btn icon="mdi-square-edit-outline" @click="tmode = 'update'; titem=item; isTripsDialogOpen = true"/>
+                <d-btn icon="mdi-delete" @click.stop="deleteTrip(item)" v-if="uRole(['admin'])"/>
+                <d-btn icon="mdi-square-edit-outline" @click.stop="tmode = 'update'; titem=item; isTripsDialogOpen = true"/>
               </div>
             </template>
         </d-table>
@@ -109,6 +111,11 @@ const deleteTrip = async (item) => {
 
 const refreshTrips = async () => {
   fetchTrips()
+}
+
+const clickrow = ( id ) => {
+  useCookie('selectedTripId', { maxAge: 60*60*24*30 }).value = id
+  navigateTo('/expenses')
 }
 
 </script>

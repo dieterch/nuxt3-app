@@ -1,7 +1,7 @@
 <template>
     <v-container>
-      <d-appbar />
-      <v-divider color="black" thickness="1"></v-divider>
+      <d-appbar :tripname="ltripname"/>
+      <!--v-divider color="black" thickness="1"></v-divider>
       <v-select
         density="compact"
         v-model="selectedTrip"
@@ -11,7 +11,7 @@
         item-value="id"
         label="Select Trip"
         return-object
-      ></v-select>
+      ></v-select-->
 
       <v-row>
         <v-col md="6">
@@ -95,6 +95,7 @@
   const emode = ref('')
   const eitem = ref({})
   const trips = ref([])
+  const ltripname = ref('')
   const selectedTrip = ref(null)
   const selectedTripId = ref('')
   const filteredexpenses = ref([])
@@ -115,6 +116,7 @@
       // selectedTripId.value = VueCookies.get('selectedTripId')
       selectedTripId.value = useCookie('selectedTripId').value
       selectedTrip.value = trips.value.find(( item ) => item.id === selectedTripId.value)
+      ltripname.value = selectedTrip.value.name
       fetchFilteredExpenses()
       // console.log("selectedTrip", selectedTrip.value, "selectedTripId: ",selectedTripId.value)
     }

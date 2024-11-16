@@ -10,6 +10,7 @@
         <Display User Role -->
         <v-icon icon="mdi-web" class="ml-4" color="grey"></v-icon>
         <v-btn variant="plain" :ripple="false" to="/">Expenses</v-btn>
+        {{ props.tripname }}
         <v-spacer></v-spacer>
         <span v-if="loggedIn()">{{ userInfo.name }}&NonBreakingSpace;|&NonBreakingSpace;{{ userInfo.role }}</span>
         <v-btn>
@@ -47,6 +48,8 @@
     import { ref, onMounted } from 'vue'
     import { useUserInfo } from '~/composables/useUserInfo'
     const { userInfo, loggedIn, uRole, fetchUserInfo } = useUserInfo()
+
+    const props = defineProps(['tripname']);
 
     onMounted(async () => {
       await fetchUserInfo()

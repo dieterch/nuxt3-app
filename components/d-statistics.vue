@@ -18,11 +18,12 @@
             </tr>
         </tbody>
     </table>
+    <small v-if="showsummary">{{ summaryTitle }}</small>
     <table
         density="compact"
         class="mt-1"
         v-if="showsummary"
-        @click="showsummary=false"
+        @click="close_summary"
     >
         <thead>
             <tr>
@@ -55,6 +56,7 @@ const props = defineProps(['expenses','selectedTrip'])
 const lselectedTrip = ref(props.selectedTrip)
 const expenses = ref(props.expenses)
 const showsummary = ref(false)
+const summaryTitle = ref('')
 const expensesummary = ref({})
 
 const overview = computed(() => {
@@ -137,14 +139,21 @@ const sumExpensesByCategory = (expenses, userName = null) => {
 // }
 
 const category_summary = (e) => {
+
+    showsummary.value = !showsummary.value
     if ((e == 'Total') || (e == 'Days') || (e == 'Avg')) {
         console.log('Total') 
         expensesummary.value = sumExpensesByCategory(expenses.value);
+        summaryTitle.value = 'Total'
     } else {
         console.log(e) 
         expensesummary.value = sumExpensesByCategory(expenses.value, e);
+        summaryTitle.value = e
     }
-    showsummary.value = true
+}
+
+const close_summary = () => {
+    showsummary.value = false
 }
 
 </script>

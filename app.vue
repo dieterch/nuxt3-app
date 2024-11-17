@@ -35,7 +35,6 @@
         <v-spacer></v-spacer>
         <v-col class="text-center">
           &copy; {{ new Date().getFullYear() }}&NonBreakingSpace;
-          Expense&NonBreakingSpace;Management
         </v-col>
         <v-spacer></v-spacer>
       </v-footer>

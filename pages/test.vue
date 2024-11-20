@@ -45,6 +45,7 @@
     import { createNotification, notifySuccess } from 'vuetify3-dialog'
     import { createBottomSheet } from 'vuetify3-dialog'
     import { CapacitorHttp } from '@capacitor/core'
+    const { $ifetch } = useNuxtApp()
 
     const test = ref({ test: "nothing" })
 
@@ -98,16 +99,17 @@
         const response = await CapacitorHttp.get({
             url: 'http://192.168.15.175:3600/hello'
         })
-        console.log(response)
-        alert(JSON.stringify(response.data))
+        //const response = await $ifetch.get('http://192.168.15.175:3600/hello')
+        console.log('capfetch called',response.data)
     }
 
     const capfetchexpenses = async () => {
         const response = await CapacitorHttp.get({
             url: 'http://192.168.15.64:3003/api/expenses'
         })
+        // const response = await $ifetch.get('http://192.168.15.64:3003/api/expenses')
         test.value = response.data
-        alert('capfetchexpenses called')
+        console.log('capfetchexpenses called', response.data)
     }
 
 </script>

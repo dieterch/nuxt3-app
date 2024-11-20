@@ -56,6 +56,7 @@
     import { useUserInfo } from '~/composables/useUserInfo'
     const { userInfo, loggedIn, uRole, fetchUserInfo } = useUserInfo()
     const { $jwtHelper } = useNuxtApp()
+    import { hashSync }from 'bcryptjs' // for frontend
 
     import { ref, computed, onMounted } from 'vue'
 
@@ -123,11 +124,9 @@
         
         // rec is the same for BOTH methods
         let rec = { ...formUser.value }
+
         if (formUser.value.password != '') {
-            try { const { hashed } = await $fetch('/api/hash', 
-                { method: 'POST', body: { password: formUser.value.password },})
-                rec.password = hashed
-            } catch (error) { console.log('fetch hash:', error)}
+            rec.password = hashSync(formUser.value.password, 10)
         } else console.log('Password not changed.')
         
         // Send data to API

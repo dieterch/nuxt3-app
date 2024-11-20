@@ -84,6 +84,9 @@
     middleware: 'auth'
   })
 
+  // const config = useRuntimeConfig()
+  // console.log(config.public.DO_NOT_USE_AUTH)
+
   import { useUserInfo } from '~/composables/useUserInfo'
   const { userInfo, loggedIn, uRole, fetchUserInfo } = useUserInfo()
 

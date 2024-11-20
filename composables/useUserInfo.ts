@@ -1,6 +1,7 @@
 // composables/useUserInfo.ts
 import { useNuxtApp } from '#app'
 import { useAuthToken } from './useAuthToken';
+import { compareSync }from 'bcryptjs' // for frontend
 import { type JWTPayload } from 'jose'
 import { ref } from 'vue'
 
@@ -8,20 +9,34 @@ export const useUserInfo = () => {
     const { $jwtHelper } = useNuxtApp()
     const { getToken } = useAuthToken()
     const userInfo = ref<JWTPayload | null>(null)
+    const config = useRuntimeConfig()
 
     const fetchUserInfo = async () => {
-        try {
-            const token = getToken()
-            // console.log('in useUserInfo token:', token)
-            if (token) {
-                const payload = await $jwtHelper.verifyToken(token)
-                //console.log('in useUserInfo payload:', payload)
-                userInfo.value = payload
-            } else {
-                console.warn("No token found")
+        if (!compareSync(
+            'useNoAuthSystem'
+            ,config.public.DO_NOT_USE_AUTH)
+        ) {
+            try {
+                const token = getToken()
+                // console.log('in useUserInfo token:', token)
+                if (token) {
+                    const payload = await $jwtHelper.verifyToken(token)
+                    //console.log('in useUserInfo payload:', payload)
+                    userInfo.value = payload
+                } else {
+                    console.warn("No token found")
+                }
+            } catch (error) {
+                console.error("Error verifying token:", error)
             }
-        } catch (error) {
-            console.error("Error verifying token:", error)
+        } else {
+            userInfo.value = {
+                name: 'NA',
+                role: 'admin'
+            }
+            console.log('in useUserInfo, unas:', 
+                compareSync( 'useNoAuthSystem',
+                config.public.DO_NOT_USE_AUTH))
         }
     }
 

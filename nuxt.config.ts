@@ -12,7 +12,8 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {    
-      JWT_SECRET: process.env.JWT_SECRET, // server-side only
+      JWT_SECRET: process.env.JWT_SECRET,
+      DO_NOT_USE_AUTH: process.env.DO_NOT_USE_AUTH
     }
   },
   build: {
@@ -23,12 +24,6 @@ export default defineNuxtConfig({
     build: {
       target: 'esnext'
     },
-    // resolve: {
-      // alias: {
-      //  'vite': 'vite/dist/node/esm.js', // Force ESM version of Vite
-      //},
-      // extensions: ['.js', '.ts', '.mjs'],
-    //},
     optimizeDeps: {
       esbuildOptions: {
         format: 'esm', // Force Vite to handle modules as ESM
@@ -41,5 +36,4 @@ export default defineNuxtConfig({
     //  'process.env.DEBUG': false,
     // },
   },
-  // plugins: ['@/plugins/vuetify'],  
 })

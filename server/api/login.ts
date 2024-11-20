@@ -2,8 +2,7 @@
 import { createToken } from '~/utils/jwt'
 import { useRuntimeConfig } from '#imports'
 import prisma from '~/prisma/client.js'
-import bcrypt from 'bcrypt'
-
+import bcrypt from 'bcrypt' // for backend
 
 const getUserByEmail = async (email: string) => {
   const user = await prisma.user.findUnique({ where: { email } })

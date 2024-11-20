@@ -25,7 +25,18 @@
                         Dialog 3
                     </v-btn>
             </v-col>
+            <v-col cols="auto">
+                    <v-btn @click="capfetch">
+                        Fetch through capacitor Test
+                    </v-btn>
+            </v-col>
+            <v-col cols="auto">
+                    <v-btn @click="capfetchexpenses">
+                        Fetch expenses through capacitor
+                    </v-btn>
+            </v-col>
         </v-row>
+        <pre>{{ test }}</pre>
     </v-container>
 </template>
 
@@ -33,6 +44,9 @@
     import { createDialog, warnDialog, confirmDialog } from 'vuetify3-dialog'
     import { createNotification, notifySuccess } from 'vuetify3-dialog'
     import { createBottomSheet } from 'vuetify3-dialog'
+    import { CapacitorHttp } from '@capacitor/core'
+
+    const test = ref({ test: "nothing" })
 
     const cdtest1 = async () => {
 
@@ -79,5 +93,21 @@
         })
         console.log(answer)
         }
+
+    const capfetch = async () => {
+        const response = await CapacitorHttp.get({
+            url: 'http://192.168.15.175:3600/hello'
+        })
+        console.log(response)
+        alert(JSON.stringify(response.data))
+    }
+
+    const capfetchexpenses = async () => {
+        const response = await CapacitorHttp.get({
+            url: 'http://192.168.15.64:3003/api/expenses'
+        })
+        test.value = response.data
+        alert('capfetchexpenses called')
+    }
 
 </script>

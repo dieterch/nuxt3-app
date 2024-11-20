@@ -1,5 +1,10 @@
 {
   "appId": "com.dch.ionicexpense",
   "appName": "ionicexpense",
-  "webDir": ".output/public"
+  "webDir": ".output/public",
+  "plugins": {
+    "CapacitorHttp": {
+      "enabled": true
+    }
+  }
 }

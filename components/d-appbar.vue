@@ -29,9 +29,9 @@
               <v-list-item v-if="uRole(['admin'])">
                 <v-btn variant="plain" :ripple="false" to="/allexpenses">All Expenses</v-btn>
               </v-list-item>
-              <!--v-list-item v-if="loggedIn()">
+              <v-list-item v-if="loggedIn()">
                 <v-btn variant="plain" :ripple="false" to="/test">Test (unprotected)</v-btn>
-              </v-list-item-->
+              </v-list-item>
               <v-list-item v-if="!uRole(['user','admin'])">
                 <v-btn variant="plain" :ripple="false" to="/login">Login</v-btn>
               </v-list-item>

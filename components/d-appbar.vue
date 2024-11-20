@@ -10,7 +10,7 @@
         <Display User Role -->
         <v-icon icon="mdi-web" class="ml-4" color="grey"></v-icon>
         <!--v-btn variant="plain" :ripple="false" to="/">Expenses</v-btn-->
-        &NonBreakingSpace;{{ props.tripname }}
+        <span @click="goToTrips">&NonBreakingSpace;{{ props.tripname }}</span>
         <v-spacer></v-spacer>
         <span v-if="loggedIn()">{{ userInfo.name }}&NonBreakingSpace;|&NonBreakingSpace;{{ userInfo.role }}</span>
         <v-btn>
@@ -54,6 +54,10 @@
     onMounted(async () => {
       await fetchUserInfo()
     })
+
+    const goToTrips = () => {
+      navigateTo("/trips")
+    }
 
   </script>
   

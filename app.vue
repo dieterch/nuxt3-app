@@ -25,8 +25,7 @@
           </v-list>
         </v-menu>
       </v-btn>
-    </v-app-bar
-    a test change-->
+    </v-app-bar-->
       
       <v-main>
         <nuxt-page />

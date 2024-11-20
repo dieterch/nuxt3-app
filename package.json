@@ -1,5 +1,5 @@
 {
-  "name": "nuxt-app",
+  "name": "ionicexpense",
   "private": true,
   "type": "module",
   "scripts": {
@@ -8,9 +8,18 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "seed": "node prisma/seed.cjs"
+    "seed": "node prisma/seed.cjs",
+    "ionic:build": "npm run build",
+    "ionic:serve": "npm run dev"
   },
   "dependencies": {
+    "@capacitor/app": "6.0.2",
+    "@capacitor/cli": "6.2.0",
+    "@capacitor/core": "6.2.0",
+    "@capacitor/haptics": "6.0.2",
+    "@capacitor/ios": "6.2.0",
+    "@capacitor/keyboard": "6.0.3",
+    "@capacitor/status-bar": "6.0.2",
     "@mdi/font": "^7.4.47",
     "@prisma/client": "^5.22.0",
     "bcrypt": "^5.1.1",
@@ -30,5 +39,6 @@
     "@types/node-jose": "^1.1.13",
     "mocha": "^10.8.1",
     "prisma": "^5.22.0"
-  }
+  },
+  "version": "0.0.0"
 }

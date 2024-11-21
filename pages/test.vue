@@ -104,12 +104,11 @@
     }
 
     const capfetchexpenses = async () => {
-        const response = await CapacitorHttp.get({
-            url: 'http://192.168.15.64:3003/api/expenses'
-        })
-        // const response = await $ifetch.get('http://192.168.15.64:3003/api/expenses')
+        // const response = await CapacitorHttp.get({
+        //     url: 'http://192.168.15.175:5678/api/expenses'
+        // })
+        const response = await $ifetch.get('/api/expenses')
         test.value = response.data
         console.log('capfetchexpenses called', response.data)
     }
-
 </script>

@@ -130,6 +130,7 @@
 
 <script setup>
     import { ref, computed, onMounted } from 'vue'
+    const { $ifetch } = useNuxtApp()
 
     const props = defineProps(['selectedTrip','dialog', 'mode','item']);
     const emit = defineEmits(['refresh','dialog']);
@@ -172,7 +173,7 @@
 
     // Fetch Data on Mount
     onMounted(async () => {
-        dialogcategories.value = await $fetch('/api/categories')
+        dialogcategories.value = await $ifetch.get('/api/categories')
 
         switch(props.mode) {
             case 'add': 
@@ -221,9 +222,12 @@
 
         // Send data to API
         try {
-            await $fetch('/api/expenses', {
-                method,
-                body: rec,
+            // await $fetch('/api/expenses', {
+            //     method,
+            //     body: rec,
+            // })
+            await $ifetch.post('/api/expenses', {
+                data: rec
             })
 
             // Reset the form

@@ -1,7 +1,7 @@
 <template>
     <v-container>
       <d-appbar :tripname="ltripname"/>
-      <!--v-divider color="black" thickness="1"></v-divider>
+      <v-divider color="black" thickness="1"></v-divider>
       <v-select
         density="compact"
         v-model="selectedTrip"
@@ -11,7 +11,7 @@
         item-value="id"
         label="Select Trip"
         return-object
-      ></v-select-->
+      ></v-select>
 
       <v-row>
         <v-col md="6">
@@ -92,6 +92,8 @@
 
   import { ref, onMounted, computed } from 'vue'
   import { confirmDialog } from 'vuetify3-dialog'
+  const { $ifetch } = useNuxtApp()
+
   // import VueCookies from 'vue-cookies'
 
   const isExpenseDialogOpen = ref(false)
@@ -114,7 +116,8 @@
     await fetchUserInfo()
 
     // fetch available trips
-    trips.value = await $fetch('/api/trips')
+    // trips.value = await $fetch('/api/trips')
+    trips.value = await $ifetch.get('/api/trips')
     if ( useCookie('selectedTripId').value ) {
       // selectedTripId.value = VueCookies.get('selectedTripId')
       selectedTripId.value = useCookie('selectedTripId').value
@@ -144,10 +147,16 @@
   ]
 
   const fetchFilteredExpenses = async () => {
-    try {    filteredexpenses.value = await $fetch('/api/tripexpenses', {
-          method: 'POST',
-          body: { id: selectedTripId.value }
-      })} catch (error) {
+    try {
+          filteredexpenses.value = await $ifetch.post('/api/tripexpenses',
+          {
+            data: { id: selectedTripId.value }
+          })
+          // filteredexpenses.value = await $fetch('/api/tripexpenses', {
+          // method: 'POST',
+          // body: { id: selectedTripId.value }
+          //})
+    } catch (error) {
         console.error('Error fetching filtered Expenses', error);
       }
   }
@@ -176,10 +185,13 @@
         })
 
     if ( permit ) {
-      await $fetch('/api/expenses', {
-        method: 'DELETE',
-        body: item,
+      await $ifetch.delete('/api/expenses', {
+        data: item,
       })
+      // await $fetch('/api/expenses', {
+      //   method: 'DELETE',
+      //   body: item,
+      // })
       // Refresh expenses
       tripChanged()
     }

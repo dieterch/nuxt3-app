@@ -14,7 +14,8 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {    
       JWT_SECRET: process.env.JWT_SECRET,
-      DO_NOT_USE_AUTH: process.env.DO_NOT_USE_AUTH
+      DO_NOT_USE_AUTH: process.env.DO_NOT_USE_AUTH,
+      SERVER_ADDRESS: process.env.SERVER_ADDRESS,
     }
   },
   build: {

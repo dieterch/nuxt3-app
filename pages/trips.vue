@@ -57,7 +57,10 @@ const { userInfo, loggedIn, uRole, fetchUserInfo } = useUserInfo()
 
 import { ref, onMounted } from 'vue'
 import { confirmDialog } from 'vuetify3-dialog'
+const { $ifetch } = useNuxtApp()
+
 //import VueCookies from 'vue-cookies'
+import { CapacitorCookies } from '@capacitor/core';
 
 const trips = ref([])
 // const users = ref([])
@@ -77,7 +80,8 @@ const tripsHeaders = [
   { title: 'Actions', key: 'actions', align: 'center', width: "5%" , sortable: false },
 ]
 
-const fetchTrips = async () => { trips.value = await $fetch('/api/trips') }
+const fetchTrips = async () => { trips.value = await $ifetch.get('/api/trips') }
+// const fetchTrips = async () => { trips.value = await $fetch('/api/trips') }
 
 // Fetch Data
 onMounted(async () => {
@@ -99,12 +103,20 @@ const deleteTrip = async (item) => {
         }) : true
 
   if (permit) {
-    await $fetch('/api/trips', {
+    await $ifetch.delete('/api/trips', {
       method: 'DELETE',
       body: item,
     })
+    // await $fetch('/api/trips', {
+    //   method: 'DELETE',
+    //   body: item,
+    // })
     // VueCookies.remove('selectedTripId')
-    useCookie('selectedTripId').value = null
+    // useCookie('selectedTripId').value = null
+    await CapacitorCookies.deleteCookie({
+      key: 'selectedTripId'
+    })
+
     refreshTrips()
   }
 }
@@ -114,7 +126,12 @@ const refreshTrips = async () => {
 }
 
 const clickrow = ( id ) => {
-  useCookie('selectedTripId', { maxAge: 60*60*24*30 }).value = id
+  // useCookie('selectedTripId', { maxAge: 60*60*24*30 }).value = id
+  CapacitorCookies.setCookie({
+    key: 'selectedTripId',
+    value: id
+  })
+
   navigateTo('/expenses')
 }
 

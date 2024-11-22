@@ -7,10 +7,12 @@ export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
   devtools: { enabled: true },
   ssr: false,
+
   devServer: {
     host: "0.0.0.0",
     port: 3003
   },
+
   runtimeConfig: {
     public: {    
       JWT_SECRET: process.env.JWT_SECRET,
@@ -18,10 +20,13 @@ export default defineNuxtConfig({
       SERVER_ADDRESS: process.env.SERVER_ADDRESS,
     }
   },
+
   build: {
     transpile: ['vuetify'],
   },
+
   css: ['@mdi/font/css/materialdesignicons.min.css'],
+
   vite: {
     build: {
       target: 'esnext'
@@ -38,4 +43,6 @@ export default defineNuxtConfig({
     //  'process.env.DEBUG': false,
     // },
   },
+
+  modules: ['@pinia/nuxt'],
 })

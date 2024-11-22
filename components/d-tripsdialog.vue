@@ -55,6 +55,7 @@
 <script setup>
     import { ref, computed, onMounted } from 'vue'
     import { createDialog } from 'vuetify3-dialog'
+    const { $ifetch } = useNuxtApp()
 
     // import VueCookies from 'vue-cookies'
 
@@ -91,8 +92,10 @@
 
     // Fetch Data on Mount
     onMounted(async () => {
-        trips.value = await $fetch('/api/trips')
-        users.value = await $fetch('/api/tripusers')
+        trips.value = await $ifetch.get('/api/trips')
+        users.value = await $ifetch.get('/api/tripusers')
+        // trips.value = await $fetch('/api/trips')
+        // users.value = await $fetch('/api/tripusers')
         
         switch(props.mode) {
             case 'add': 

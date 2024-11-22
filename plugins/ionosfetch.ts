@@ -17,9 +17,21 @@ export default defineNuxtPlugin(() => {
       return response.data
     },
     //@ts-ignore
+    put: async ( url, options ) => {
+      options.url = baseurl + url;
+      const response = await CapacitorHttp.put( options );
+      return response.data
+    },
+    //@ts-ignore
     delete: async ( url, options ) => {
       options.url = baseurl + url
       const response = await CapacitorHttp.delete( options )
+      return response.data
+    },
+    //@ts-ignore
+    request: async ( url, options ) => {
+      options.url = baseurl + url
+      const response = await CapacitorHttp.request( options )
       return response.data
     },
   };

@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <d-appbar />
+    <d-appbar pagetitle="Trips"/>
     <v-row>
       <v-col class="text-right">
         <d-btn

@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <d-appbar />
+    <d-appbar pagetitle="All Expenses"/>
     <v-row>
       <!--v-col md="6">
             <d-statistics
@@ -57,8 +57,7 @@ const debug = ref(false);
 
 const fetchAllExpenses = async () => {
   // const data = await $fetch('/api/expenses')
-  const data = await $ifetch.get("/api/expenses");
-  expenses.value = data;
+  expenses.value = await $ifetch.get('/api/expenses');
 };
 
 onMounted(async () => {

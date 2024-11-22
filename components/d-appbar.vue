@@ -10,7 +10,7 @@
         <Display User Role -->
         <v-icon icon="mdi-web" class="ml-4" color="grey"></v-icon>
         <!--v-btn variant="plain" :ripple="false" to="/">Expenses</v-btn-->
-        <span @click="goToTrips">&NonBreakingSpace;{{ props.tripname }}</span>
+        <span @click="goToTrips">&NonBreakingSpace;{{ props.pagetitle }}</span>
         <v-spacer></v-spacer>
         <span v-if="loggedIn()">{{ userInfo.name }}&NonBreakingSpace;|&NonBreakingSpace;{{ userInfo.role }}</span>
         <v-btn>
@@ -49,7 +49,7 @@
     import { useUserInfo } from '~/composables/useUserInfo'
     const { userInfo, loggedIn, uRole, fetchUserInfo } = useUserInfo()
 
-    const props = defineProps(['tripname']);
+    const props = defineProps(['pagetitle']);
 
     onMounted(async () => {
       await fetchUserInfo()

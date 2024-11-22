@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <d-appbar :tripname="ltripname" />
+    <d-appbar :pagetitle="ltripname" />
     <!--v-divider color="black" thickness="1"></v-divider>
       <v-select
         density="compact"

@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <d-appbar />
+        <d-appbar pagetitle="Categories"/>
         <v-row>
           <v-col class="text-right">
             <d-btn icon="mdi-plus" @click="cmode = 'add'; citem={}; isCategoryDialogOpen = true"/>

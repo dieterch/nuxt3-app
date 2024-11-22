@@ -109,8 +109,8 @@ const { userInfo, loggedIn, uRole, fetchUserInfo } = useUserInfo();
 
 import { ref, onMounted, computed } from "vue";
 import { confirmDialog } from "vuetify3-dialog";
-const { $ifetch } = useNuxtApp();
 
+const { $ifetch } = useNuxtApp();
 import { CapacitorCookies } from "@capacitor/core";
 // import VueCookies from 'vue-cookies'
 
@@ -138,7 +138,7 @@ onMounted(async () => {
   // trips.value = await $fetch('/api/trips')
   trips.value = await $ifetch.get("/api/trips");
   const temp = await CapacitorCookies.getCookies();
-  console.log("Capacitor Cookies:", temp);
+  // console.log("Capacitor Cookies:", temp);
   //if ( useCookie('selectedTripId').value ) {
   if (temp["selectedTripId"]) {
     // selectedTripId.value = VueCookies.get('selectedTripId')
@@ -220,8 +220,8 @@ const tripChanged = async () => {
     selectedTripId.value = selectedTrip.value.id;
     fetchFilteredExpenses();
     // Store selected Trip in a cookie for 30 days.
-    useCookie("selectedTripId", { maxAge: 60 * 60 * 24 * 30 }).value =
-      selectedTrip.value.id;
+    // useCookie("selectedTripId", { maxAge: 60 * 60 * 24 * 30 }).value =
+    //   selectedTrip.value.id;
     await CapacitorCookies.setCookie({
       key: "selectedTripId",
       value: selectedTrip.value.id,

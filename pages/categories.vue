@@ -9,11 +9,11 @@
               :key="isCategoryDialogOpen"
               :mode="cmode"
               :item="citem"              
-              @refresh="refreshCategories"
+              @refresh="fetchCategories"
               @dialog="(e)=>{isCategoryDialogOpen = e}"
               />
             <d-btn icon="mdi-bug" @click="debug = !debug" v-if="uRole(['admin'])"/>
-            <d-btn icon="mdi-refresh" @click="refreshCategories" />
+            <d-btn icon="mdi-refresh" @click="fetchCategories" />
           </v-col>
         </v-row>
 
@@ -54,6 +54,8 @@
   import { ref, onMounted } from 'vue'
   import { confirmDialog } from 'vuetify3-dialog'
 
+  const { $ifetch } = useNuxtApp();
+  import { CapacitorCookies } from "@capacitor/core";
 
   const categories = ref([])
   const debug = ref(false)
@@ -69,7 +71,8 @@
     { title: 'Actions', key: 'actions', align: 'start', width: '5%', sortable: false },
   ]
 
-  const fetchCategories = async () => { categories.value = await $fetch('/api/categories') }
+  // const fetchCategories = async () => { categories.value = await $fetch('/api/categories') }
+  const fetchCategories = async () => { categories.value = await $ifetch.get('/api/categories') }
 
   // Fetch Data
   onMounted(async () => {
@@ -92,16 +95,16 @@
         }) : true
 
     if ( permit ) {
-      await $fetch('/api/categories', {
-        method: 'DELETE',
-        body: item
+      await $ifetch.delete('/api/categories', {
+        data: { id: item.id },
+        headers: { "Content-Type": "application/json" },    
       })
-      refreshCategories()
+      // await $fetch('/api/categories', {
+      //   method: 'DELETE',
+      //   body: item
+      // })
+      fetchCategories()
     }
-  }
-
-  const refreshCategories = async () => {
-    fetchCategories()
   }
 
   </script>

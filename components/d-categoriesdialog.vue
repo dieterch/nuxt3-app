@@ -57,6 +57,8 @@
 <script setup>
     import { ref, computed, onMounted } from 'vue'
 
+    const { $ifetch } = useNuxtApp();
+
     const props = defineProps(['dialog','mode','item']);
     const emit = defineEmits(['refresh','dialog']);
 
@@ -106,9 +108,14 @@
 
         // Send data to API
         try {
-            await $fetch('/api/categories', {
-                method,
-                body: rec,
+            // await $fetch('/api/categories', {
+            //     method,
+            //     body: rec,
+            // })
+            await $ifetch.request('/api/categories', {
+                method: method,
+                data: rec,
+                headers: { "Content-Type": "application/json" },
             })
 
             // Reset the form

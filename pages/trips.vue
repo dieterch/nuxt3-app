@@ -3,17 +3,28 @@
     <d-appbar />
     <v-row>
       <v-col class="text-right">
-        <d-btn icon="mdi-plus" @click="tmode = 'add'; titem={}; isTripsDialogOpen = true"/>
-        <d-tripsdialog 
+        <d-btn
+          icon="mdi-plus"
+          @click="
+            tmode = 'add';
+            titem = {};
+            isTripsDialogOpen = true;
+          "
+        />
+        <d-tripsdialog
           :dialog="isTripsDialogOpen"
           :key="isTripsDialogOpen"
           :mode="tmode"
           :item="titem"
-          @refresh="refreshTrips"
-          @dialog="(e)=>{isTripsDialogOpen = e}"
-          />
-        <d-btn icon="mdi-bug" @click="debug = !debug" v-if="uRole(['admin'])"/>
-        <d-btn icon="mdi-refresh" @click="refreshTrips" />
+          @refresh="fetchTrips"
+          @dialog="
+            (e) => {
+              isTripsDialogOpen = e;
+            }
+          "
+        />
+        <d-btn icon="mdi-bug" @click="debug = !debug" v-if="uRole(['admin'])" />
+        <d-btn icon="mdi-refresh" @click="fetchTrips" />
       </v-col>
     </v-row>
 
@@ -22,21 +33,32 @@
         <d-table
           :items="trips"
           :headers="tripsHeaders"
-          :show=true
+          :show="true"
           @clickrow="(e) => clickrow(e)"
-
         >
-            <template v-slot:item.users="{ item }">
-              <span v-for="(e, index) in item.users" :key="index">
-                {{ e.user.name }}<span v-if="index < item.users.length - 1">, </span>
-              </span>
-            </template>
-            <template v-slot:item.actions="{ item }">
-              <div class="button-container">
-                <d-btn icon="mdi-delete" @click.stop="deleteTrip(item)" v-if="uRole(['admin'])"/>
-                <d-btn icon="mdi-square-edit-outline" @click.stop="tmode = 'update'; titem=item; isTripsDialogOpen = true"/>
-              </div>
-            </template>
+          <template v-slot:item.users="{ item }">
+            <span v-for="(e, index) in item.users" :key="index">
+              {{ e.user.name
+              }}<span v-if="index < item.users.length - 1">, </span>
+            </span>
+          </template>
+          <template v-slot:item.actions="{ item }">
+            <div class="button-container">
+              <d-btn
+                icon="mdi-delete"
+                @click.stop="deleteTrip(item)"
+                v-if="uRole(['admin'])"
+              />
+              <d-btn
+                icon="mdi-square-edit-outline"
+                @click.stop="
+                  tmode = 'update';
+                  titem = item;
+                  isTripsDialogOpen = true;
+                "
+              />
+            </div>
+          </template>
         </d-table>
       </v-col>
     </v-row>
@@ -47,66 +69,90 @@
 </template>
 
 <script setup>
-
 definePageMeta({
-  middleware: 'auth'
-})
+  middleware: "auth",
+});
 
-import { useUserInfo } from '~/composables/useUserInfo'
-const { userInfo, loggedIn, uRole, fetchUserInfo } = useUserInfo()
+import { useUserInfo } from "~/composables/useUserInfo";
+const { userInfo, loggedIn, uRole, fetchUserInfo } = useUserInfo();
 
-import { ref, onMounted } from 'vue'
-import { confirmDialog } from 'vuetify3-dialog'
-const { $ifetch } = useNuxtApp()
+import { ref, onMounted } from "vue";
+import { confirmDialog } from "vuetify3-dialog";
 
+const { $ifetch } = useNuxtApp();
+import { CapacitorCookies } from "@capacitor/core";
 //import VueCookies from 'vue-cookies'
-import { CapacitorCookies } from '@capacitor/core';
 
-const trips = ref([])
+const trips = ref([]);
 // const users = ref([])
 // const selected = ref([]) // Keep track of selected users
-const debug = ref(false)
-const isTripsDialogOpen = ref(false)
-const tmode = ref('')
-const titem = ref({})
+const debug = ref(false);
+const isTripsDialogOpen = ref(false);
+const tmode = ref("");
+const titem = ref({});
 
 // Data Table Headers
 const tripsHeaders = [
   // { title: 'Start Date', key: 'startDate' },
-  { title: 'Start Date', key: 'formateddate', width: "15%", value: item => new Date(item.startDate).toLocaleDateString("de-CA", {year:"numeric", month: "2-digit", day:"2-digit"}), sortable: "false", align: "end"},
-  { title: 'Trip Name', key: 'name', width: "30%" },
-  { title: 'Participants', key: 'users' },
-  { title: 'Expenses', key:'countexpenses', value: item => item.expenses.length},
-  { title: 'Actions', key: 'actions', align: 'center', width: "5%" , sortable: false },
-]
+  {
+    title: "Start Date",
+    key: "formateddate",
+    width: "15%",
+    value: (item) =>
+      new Date(item.startDate).toLocaleDateString("de-CA", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      }),
+    sortable: "false",
+    align: "end",
+  },
+  { title: "Trip Name", key: "name", width: "30%" },
+  { title: "Participants", key: "users" },
+  {
+    title: "Expenses",
+    key: "countexpenses",
+    value: (item) => item.expenses.length,
+  },
+  {
+    title: "Actions",
+    key: "actions",
+    align: "center",
+    width: "5%",
+    sortable: false,
+  },
+];
 
-const fetchTrips = async () => { trips.value = await $ifetch.get('/api/trips') }
+const fetchTrips = async () => {
+  trips.value = await $ifetch.get("/api/trips");
+};
 // const fetchTrips = async () => { trips.value = await $fetch('/api/trips') }
 
 // Fetch Data
 onMounted(async () => {
-  await fetchUserInfo()
-  fetchTrips()
-})
+  await fetchUserInfo();
+  fetchTrips();
+});
 
 // Delete Trip
 const deleteTrip = async (item) => {
-
-  let permit =  (item.expenses.length > 0) ? 
-        await confirmDialog({ 
-            title: "Please Confirm", 
-            text: `<${item.name}> has ${item.expenses.length} expenses. This expenses will be deleted. Continue ?`,
-            level: 'warning',
-            // icon: 'mdi-emoticon-happy-outline',
-            cancelText: 'Cancel',
-            confirmationText: 'Ok',
-        }) : true
+  let permit =
+    item.expenses.length > 0
+      ? await confirmDialog({
+          title: "Please Confirm",
+          text: `<${item.name}> has ${item.expenses.length} expenses. This expenses will be deleted. Continue ?`,
+          level: "warning",
+          // icon: 'mdi-emoticon-happy-outline',
+          cancelText: "Cancel",
+          confirmationText: "Ok",
+        })
+      : true;
 
   if (permit) {
-    await $ifetch.delete('/api/trips', {
-      method: 'DELETE',
-      body: item,
-    })
+    await $ifetch.delete("/api/trips", {
+      data: { id: item.id },
+      headers: { "Content-Type": "application/json" },
+    });
     // await $fetch('/api/trips', {
     //   method: 'DELETE',
     //   body: item,
@@ -114,27 +160,22 @@ const deleteTrip = async (item) => {
     // VueCookies.remove('selectedTripId')
     // useCookie('selectedTripId').value = null
     await CapacitorCookies.deleteCookie({
-      key: 'selectedTripId'
-    })
+      key: "selectedTripId",
+    });
 
-    refreshTrips()
+    fetchTrips();
   }
-}
+};
 
-const refreshTrips = async () => {
-  fetchTrips()
-}
-
-const clickrow = ( id ) => {
+const clickrow = (id) => {
   // useCookie('selectedTripId', { maxAge: 60*60*24*30 }).value = id
   CapacitorCookies.setCookie({
-    key: 'selectedTripId',
-    value: id
-  })
+    key: "selectedTripId",
+    value: id,
+  });
 
-  navigateTo('/expenses')
-}
-
+  navigateTo("/expenses");
+};
 </script>
 
 <style lang="css" scoped>

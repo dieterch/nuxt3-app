@@ -50,14 +50,16 @@ const { userInfo, loggedIn, uRole, fetchUserInfo } = useUserInfo();
 import { ref, onMounted } from "vue";
 import { confirmDialog } from "vuetify3-dialog";
 
-const { $ifetch } = useNuxtApp();
+import { useIFetch } from "@/composables/UseIonosfetch";
+// Fetch utility composable
+const ifetch = useIFetch();
 
 const expenses = ref([]);
 const debug = ref(false);
 
 const fetchAllExpenses = async () => {
   // const data = await $fetch('/api/expenses')
-  expenses.value = await $ifetch.get('/api/expenses');
+  expenses.value = await ifetch.get('/api/expenses');
 };
 
 onMounted(async () => {
@@ -98,7 +100,7 @@ const deleteExpense = async (item) => {
   });
 
   if (permit) {
-    await $ifetch.delete("/api/expenses", {
+    await ifetch.del("/api/expenses", {
       data: { id: item.id },
       headers: { "Content-Type": "application/json" },
     });

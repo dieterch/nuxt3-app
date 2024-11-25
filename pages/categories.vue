@@ -54,7 +54,10 @@
   import { ref, onMounted } from 'vue'
   import { confirmDialog } from 'vuetify3-dialog'
 
-  const { $ifetch } = useNuxtApp();
+  import { useIFetch } from "@/composables/UseIonosfetch";
+// Fetch utility composable
+const ifetch = useIFetch();
+
   import { CapacitorCookies } from "@capacitor/core";
 
   const categories = ref([])
@@ -72,7 +75,7 @@
   ]
 
   // const fetchCategories = async () => { categories.value = await $fetch('/api/categories') }
-  const fetchCategories = async () => { categories.value = await $ifetch.get('/api/categories') }
+  const fetchCategories = async () => { categories.value = await ifetch.get('/api/categories') }
 
   // Fetch Data
   onMounted(async () => {
@@ -95,7 +98,7 @@
         }) : true
 
     if ( permit ) {
-      await $ifetch.delete('/api/categories', {
+      await ifetch.del('/api/categories', {
         data: { id: item.id },
         headers: { "Content-Type": "application/json" },    
       })

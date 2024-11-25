@@ -61,7 +61,10 @@ definePageMeta({
 import { ref, onMounted } from "vue";
 import { confirmDialog } from "vuetify3-dialog";
 
-const { $ifetch } = useNuxtApp();
+import { useIFetch } from "@/composables/UseIonosfetch";
+// Fetch utility composable
+const ifetch = useIFetch();
+
 import { CapacitorCookies } from "@capacitor/core";
 
 const users = ref([]);
@@ -85,7 +88,7 @@ const usersHeaders = [
 ];
 
 const fetchUsers = async () => {
-  users.value = await $ifetch.get("/api/users");
+  users.value = await ifetch.get("/api/users");
   // users.value = await $fetch("/api/users");
 };
 
@@ -109,7 +112,7 @@ const deleteUser = async (item) => {
       : true;
 
   if (permit) {
-    await $ifetch.delete("/api/users", {
+    await ifetch.del("/api/users", {
       data: { id: item.id },
       headers: { "Content-Type": "application/json" },
     });

@@ -110,7 +110,10 @@ const { userInfo, loggedIn, uRole, fetchUserInfo } = useUserInfo();
 import { ref, onMounted, computed } from "vue";
 import { confirmDialog } from "vuetify3-dialog";
 
-const { $ifetch } = useNuxtApp();
+import { useIFetch } from "@/composables/UseIonosfetch";
+// Fetch utility composable
+const ifetch = useIFetch();
+
 import { CapacitorCookies } from "@capacitor/core";
 // import VueCookies from 'vue-cookies'
 
@@ -136,7 +139,7 @@ onMounted(async () => {
 
   // fetch available trips
   // trips.value = await $fetch('/api/trips')
-  trips.value = await $ifetch.get("/api/trips");
+  trips.value = await ifetch.get("/api/trips");
   const temp = await CapacitorCookies.getCookies();
   // console.log("Capacitor Cookies:", temp);
   //if ( useCookie('selectedTripId').value ) {
@@ -200,7 +203,7 @@ const expense_headers = [
 
 const fetchFilteredExpenses = async () => {
   try {
-    filteredexpenses.value = await $ifetch.post("/api/tripexpenses", {
+    filteredexpenses.value = await ifetch.post("/api/tripexpenses", {
       // data: { id: "9bb38019-873f-4bf4-8a35-ac4dffb49bf7" },
       data: { id: selectedTripId.value },
       headers: { "Content-Type": "application/json" },
@@ -243,7 +246,7 @@ const deleteExpense = async (item) => {
   });
 
   if (permit) {
-    await $ifetch.delete("/api/expenses", {
+    await ifetch.del("/api/expenses", {
       data: { id: item.id },
       headers: { "Content-Type": "application/json" },
     });

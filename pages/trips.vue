@@ -79,7 +79,10 @@ const { userInfo, loggedIn, uRole, fetchUserInfo } = useUserInfo();
 import { ref, onMounted } from "vue";
 import { confirmDialog } from "vuetify3-dialog";
 
-const { $ifetch } = useNuxtApp();
+import { useIFetch } from "@/composables/UseIonosfetch";
+// Fetch utility composable
+const ifetch = useIFetch();
+
 import { CapacitorCookies } from "@capacitor/core";
 //import VueCookies from 'vue-cookies'
 
@@ -124,7 +127,7 @@ const tripsHeaders = [
 ];
 
 const fetchTrips = async () => {
-  trips.value = await $ifetch.get("/api/trips");
+  trips.value = await ifetch.get("/api/trips");
 };
 // const fetchTrips = async () => { trips.value = await $fetch('/api/trips') }
 
@@ -149,7 +152,7 @@ const deleteTrip = async (item) => {
       : true;
 
   if (permit) {
-    await $ifetch.delete("/api/trips", {
+    await ifetch.delete("/api/trips", {
       data: { id: item.id },
       headers: { "Content-Type": "application/json" },
     });

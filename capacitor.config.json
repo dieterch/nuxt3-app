@@ -1,6 +1,6 @@
 {
-  "appId": "com.dch.ionicexpense",
-  "appName": "ionicexpense",
+  "appId": "com.dch.nuxtexpense",
+  "appName": "nuxtexpense",
   "webDir": ".output/public",
   "plugins": {
     "CapacitorHttp": {

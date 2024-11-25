@@ -1,5 +1,5 @@
 {
-  "name": "ionicexpense",
+  "name": "nuxtexpense",
   "integrations": {
     "capacitor": {}
   },
